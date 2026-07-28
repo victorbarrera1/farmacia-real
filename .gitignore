@@ -1,1 +1,18 @@
 .vercel
+
+# dependencias
+node_modules
+
+# build
+dist
+dist-ssr
+
+# logs
+*.log
+npm-debug.log*
+
+# editor / SO
+.DS_Store
+*.local
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,94 @@
+import { Icon } from '../icons/Icon';
+import { Logo } from '../common/Logo';
+import { SUCURSALES } from '../../data/sucursales';
+import { useStore } from '../../store/StoreContext';
+import { useSucursalActual } from '../../hooks/useSucursalActual';
+import { waLink, msgGeneral } from '../../lib/whatsapp';
+
+const SECCIONES = [
+  { href: '#catalogo', et: 'Catálogo y stock' },
+  { href: '#sucursales', et: 'Nuestras sucursales' },
+  { href: '#servicios', et: 'Servicios' },
+  { href: '#ubicacion', et: 'Cómo llegar' },
+];
+
+/** Pie del sitio. */
+export function Footer() {
+  const { dispatch } = useStore();
+  const suc = useSucursalActual();
+
+  return (
+    <footer className="bg-[#12241D] pb-[104px] pt-11 text-white/[0.66]">
+      <div className="env">
+        <div className="grid grid-cols-1 gap-7 border-b border-white/[0.11] pb-[26px] min-[760px]:grid-cols-[1.5fr_1fr_1fr]">
+          <div>
+            <div className="mb-3">
+              <Logo variant="oscuro" />
+            </div>
+            <p className="max-w-[40ch] text-[0.92rem] leading-relaxed">
+              Farmacia de barrio con cuatro locales en Santiago. Remedios, bioequivalentes, dermocosmética y
+              cuidado en casa, con atención de verdad.
+            </p>
+            <div className="mt-4 flex gap-2.5">
+              <a
+                href="https://instagram.com/farmaciareal4"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram de Farmacias Real"
+                className="grid size-11 place-items-center rounded-lg bg-white/[0.09] text-white transition-colors hover:bg-white/20"
+              >
+                <Icon id="i-ig" className="size-[21px]" />
+              </a>
+              <a
+                href={waLink(msgGeneral(suc), suc)}
+                target="_blank"
+                rel="noopener"
+                aria-label="WhatsApp de Farmacias Real"
+                className="grid size-11 place-items-center rounded-lg bg-white/[0.09] text-white transition-colors hover:bg-white/20"
+              >
+                <Icon id="i-wa" className="size-[21px]" />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="mb-3 text-[0.78rem] font-extrabold uppercase tracking-[0.12em] text-white">Sucursales</h4>
+            <ul>
+              {SUCURSALES.map((s) => (
+                <li key={s.id} className="py-1.5 text-[0.92rem]">
+                  <a
+                    href="#ubicacion"
+                    onClick={() => dispatch({ type: 'sucursal', id: s.id })}
+                    className="text-white/[0.72] no-underline hover:text-[#7FE3B0] hover:underline"
+                  >
+                    {s.nombre}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-3 text-[0.78rem] font-extrabold uppercase tracking-[0.12em] text-white">Secciones</h4>
+            <ul>
+              {SECCIONES.map((s) => (
+                <li key={s.href} className="py-1.5 text-[0.92rem]">
+                  <a href={s.href} className="text-white/[0.72] no-underline hover:text-[#7FE3B0] hover:underline">
+                    {s.et}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <p className="mt-[22px] max-w-[86ch] text-[0.79rem] leading-relaxed text-white/40">
+          Los precios publicados son referenciales y pueden variar sin previo aviso; el valor final se confirma en
+          el local. La disponibilidad mostrada es orientativa. Los medicamentos con receta requieren presentación de
+          receta médica vigente. Ante cualquier síntoma, consulta a un profesional de la salud. ©{' '}
+          {new Date().getFullYear()} Farmacias Real.
+        </p>
+      </div>
+    </footer>
+  );
+}
