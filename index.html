@@ -3,20 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Farmacia Real · Medicamentos y salud en Independencia y Ñuñoa</title>
-<meta name="description" content="Farmacia Real: 4 sucursales en Independencia y Ñuñoa. Revisa el stock de tu sucursal y arma tu pedido — te respondemos por WhatsApp.">
-<meta name="theme-color" content="#0A3D30">
+<title>Farmacias Real · Remedios y salud en Independencia y Ñuñoa</title>
+<meta name="description" content="Farmacias Real: 4 sucursales en Independencia y Ñuñoa. Busca tu remedio, revisa si hay stock en tu local y pídelo por WhatsApp. Retiro en tienda.">
+<meta name="theme-color" content="#1B2A55">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Farmacia Real · Medicamentos y salud">
-<meta property="og:description" content="4 sucursales en Independencia y Ñuñoa. Elige tu sucursal, revisa el stock y pide por WhatsApp.">
+<meta property="og:title" content="Farmacias Real · Remedios y salud">
+<meta property="og:description" content="4 sucursales. Busca tu remedio, revisa el stock de tu local y pídelo por WhatsApp.">
 <meta property="og:locale" content="es_CL">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230E5B48'/><path d='M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z' fill='%23fff'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17.66 1H6.34L1 6.34v11.32L6.34 23h11.32L23 17.66V6.34z' fill='%23D6202A'/><path d='M17.04 2.5H6.96L2.5 6.96v10.08l4.46 4.46h10.08l4.46-4.46V6.96z' fill='%231B2A55'/><circle cx='12' cy='12' r='6.55' fill='%23fff'/><path d='M8.6 8.15h6.8c0 3.1-1.55 4.75-2.75 5.2v1.5h2.15v1.5H9.2v-1.5h2.15v-1.5c-1.2-.45-2.75-2.1-2.75-5.2z' fill='%23D6202A'/></svg>">
 
 <style>
-/* ============================================================
-   FARMACIA REAL — landing multi-sucursal
-   Paleta: verde farmacéutico + menta + blanco clínico
-   ============================================================ */
+/* ==============================================================
+   FARMACIA REAL — e-commerce de farmacia
+   Referencias de uso: Cruz Verde, Ahumada, Amazon.
+   Prioridad: legibilidad, contraste alto, botones grandes.
+   ============================================================== */
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body,h1,h2,h3,h4,p,ul,ol,figure{margin:0}
@@ -26,564 +27,543 @@ button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 
 :root{
-  --verde-900:#0A3D30;
-  --verde-800:#0B4A3A;
-  --verde-700:#0E5B48;
-  --verde-500:#12876A;
-  --verde-400:#17A67F;
-  --menta-50:#F2FAF7;
-  --menta-100:#E4F3ED;
-  --menta-200:#CBE8DD;
-  --tinta:#12241F;
-  --gris:#5D746D;
-  --gris-claro:#8A9E98;
-  --linea:#E1EDE8;
-  --fondo:#F7FBF9;
+  /* Marca, tomada del logo del local: azul marino + rojo sobre blanco.
+     El azul arma la estructura; el rojo es el color de acción, igual que
+     "Real" es la palabra que resalta en el letrero. */
+  --azul:#1B2A55;
+  --azul-osc:#111B39;
+  --azul-medio:#33478A;
+  --azul-pale:#EEF1F8;
+  --azul-borde:#C7D0E6;
+  --rojo:#D6202A;
+  --rojo-osc:#AF1720;
+  --rojo-pale:#FDECED;
+  --rojo-borde:#F5C9CC;
+  /* Colores de estado, no de marca: se leen igual en cualquier farmacia. */
+  --ok:#17864B;
+  --ok-pale:#E7F4EC;
+  --ambar:#9A6100;
+  --ambar-pale:#FFF5E0;
+  --frio:#1B5E9C;
+  --frio-pale:#EAF2FA;
+  --texto:#1A2033;
+  --gris:#5A6379;
+  --gris-2:#8A92A6;
+  --linea:#DFE3EC;
+  --linea-2:#EDF0F6;
+  --fondo:#F5F6FA;
   --blanco:#FFFFFF;
   --wa:#25D366;
-  --wa-oscuro:#128C7E;
-  --ambar:#B7791F;
-  --ambar-bg:#FEF6E4;
-  --rojo:#B4443A;
-  --rojo-bg:#FDEDEB;
-  --r-s:10px; --r-m:16px; --r-l:22px; --r-xl:30px;
-  --sombra-s:0 1px 2px rgba(10,61,48,.05), 0 2px 6px rgba(10,61,48,.04);
-  --sombra-m:0 2px 4px rgba(10,61,48,.05), 0 10px 26px rgba(10,61,48,.07);
-  --sombra-l:0 8px 20px rgba(10,61,48,.10), 0 26px 60px rgba(10,61,48,.14);
-  --header-h:60px;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --wa-osc:#1DA851;
+  --sombra:0 1px 2px rgba(20,28,50,.05),0 2px 8px rgba(20,28,50,.06);
+  --sombra-alta:0 4px 14px rgba(20,28,50,.10),0 12px 32px rgba(20,28,50,.12);
+  --r:8px; --r-g:12px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --hcab:58px;      /* alto fijo de la fila del logo */
+  --top-nav:110px;  /* alto real de la cabecera; lo mide el JS */
 }
 
 body{
   font-family:var(--sans);
   background:var(--fondo);
-  color:var(--tinta);
-  line-height:1.55;
+  color:var(--texto);
+  font-size:17px;line-height:1.55;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
-body.bloqueado{overflow:hidden}
+body.trabado{overflow:hidden}
 
-.env{width:100%;max-width:1140px;margin-inline:auto;padding-inline:18px}
-@media(min-width:768px){.env{padding-inline:32px}}
+.env{width:100%;max-width:1280px;margin-inline:auto;padding-inline:14px}
+@media(min-width:768px){.env{padding-inline:28px}}
 
-h1,h2,h3{line-height:1.15;letter-spacing:-.022em;font-weight:800}
-h1{font-size:clamp(2rem,7.5vw,3.6rem)}
-h2{font-size:clamp(1.5rem,4.6vw,2.35rem)}
-h3{font-size:1.05rem;letter-spacing:-.012em;font-weight:700}
-
-.rotulo{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--verde-500);
-}
-.rotulo::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--verde-400)}
-.bajada{color:var(--gris);font-size:1.02rem;max-width:56ch}
+h1{font-size:clamp(1.6rem,4.6vw,2.3rem);line-height:1.18;letter-spacing:-.02em;font-weight:800}
+h2{font-size:clamp(1.25rem,3vw,1.6rem);line-height:1.25;letter-spacing:-.015em;font-weight:800}
+h3{font-size:1.02rem;font-weight:700;line-height:1.35}
+.num{font-variant-numeric:tabular-nums}
 
 /* ---------- botones ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:14px 22px;border-radius:999px;
-  font-weight:700;font-size:.95rem;letter-spacing:-.01em;
-  text-decoration:none;white-space:nowrap;
-  transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+  min-height:50px;padding:12px 22px;border-radius:var(--r);
+  font-size:1rem;font-weight:700;text-decoration:none;white-space:nowrap;
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease;
 }
-.btn:active{transform:scale(.97)}
-.btn svg{width:19px;height:19px;flex:none}
-.btn-wa{background:var(--wa);color:#04301F;box-shadow:0 6px 18px rgba(37,211,102,.34)}
-.btn-wa:hover{background:#1FC15C;box-shadow:0 10px 26px rgba(37,211,102,.42)}
-.btn-solido{background:var(--verde-700);color:#fff;box-shadow:var(--sombra-m)}
-.btn-solido:hover{background:var(--verde-800)}
-.btn-linea{border:1.5px solid var(--linea);background:var(--blanco);color:var(--verde-800)}
-.btn-linea:hover{border-color:var(--verde-400);background:var(--menta-50)}
-.btn-claro{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.3);backdrop-filter:blur(6px)}
-.btn-claro:hover{background:rgba(255,255,255,.24)}
-.btn-bloque{width:100%}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:21px;height:21px;flex:none}
+.btn-wa{background:var(--wa);color:#0A3D22}
+.btn-wa:hover{background:var(--wa-osc);color:#fff}
+.btn-azul{background:var(--azul);color:#fff}
+.btn-azul:hover{background:var(--azul-osc)}
+.btn-borde{background:var(--blanco);border:2px solid var(--linea);color:var(--texto)}
+.btn-borde:hover{border-color:var(--azul);color:var(--azul)}
+.btn-blanco{background:#fff;color:var(--azul)}
+.btn-blanco:hover{background:var(--azul-pale)}
+.btn-ancho{width:100%}
 
-:focus-visible{outline:3px solid var(--verde-400);outline-offset:2px;border-radius:6px}
+:focus-visible{outline:3px solid var(--frio);outline-offset:2px;border-radius:4px}
 
-/* ============================ HEADER ============================ */
-.encabezado{
-  position:sticky;top:0;z-index:60;
-  height:var(--header-h);
-  background:rgba(255,255,255,.88);
-  backdrop-filter:saturate(180%) blur(14px);
-  border-bottom:1px solid var(--linea);
-}
-.encabezado .env{height:100%;display:flex;align-items:center;gap:12px}
-.marca{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--verde-900);margin-right:auto;min-width:0}
-.marca-cruz{
-  width:32px;height:32px;border-radius:9px;flex:none;
-  background:linear-gradient(150deg,var(--verde-500),var(--verde-800));
-  display:grid;place-items:center;box-shadow:0 3px 10px rgba(14,91,72,.3);
-}
-.marca-cruz svg{width:17px;height:17px;color:#fff}
-.marca-txt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
-.marca-txt b{font-size:.98rem;font-weight:800;letter-spacing:-.03em;white-space:nowrap}
-.marca-txt span{display:none;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-500);font-weight:700;white-space:nowrap}
-@media(min-width:700px){.marca-txt span{display:block}}
+/* ============================ BARRA SUPERIOR ============================ */
+.tira-top{background:var(--azul-osc);color:#fff;font-size:.83rem}
+.tira-top .env{display:flex;align-items:center;gap:18px;height:36px;overflow-x:auto;scrollbar-width:none}
+.tira-top .env::-webkit-scrollbar{display:none}
+.tira-top span{display:flex;align-items:center;gap:7px;white-space:nowrap;color:rgba(255,255,255,.9)}
+.tira-top svg{width:14px;height:14px;flex:none;opacity:.85}
+.tira-top a{color:#fff;text-decoration:none;font-weight:700;margin-left:auto;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tira-top a:hover{text-decoration:underline}
 
-.chip-sucursal{
-  display:flex;align-items:center;gap:7px;
-  padding:7px 12px;border-radius:999px;
-  background:var(--menta-100);border:1px solid var(--menta-200);
-  font-size:.78rem;font-weight:700;color:var(--verde-800);
-  min-width:0;max-width:38vw;
-}
-@media(min-width:700px){.chip-sucursal{max-width:none}}
-.chip-sucursal svg{width:14px;height:14px;flex:none;color:var(--verde-500)}
-.chip-sucursal b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
-.chip-sucursal .cambiar{display:none;color:var(--verde-500);font-weight:800;font-size:.72rem}
-@media(min-width:560px){.chip-sucursal .cambiar{display:inline}}
+/* ============================ CABECERA ============================ */
+.cab{position:sticky;top:0;z-index:60;background:var(--blanco);box-shadow:0 1px 0 var(--linea)}
+.cab-fila{display:flex;align-items:center;gap:12px;height:var(--hcab)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--texto);flex:none}
+.logo-cruz{width:40px;height:40px;flex:none;display:grid;place-items:center}
+.logo-cruz svg{width:40px;height:40px}
+.logo b{font-size:1.2rem;font-weight:800;letter-spacing:-.03em;line-height:1;display:block;color:var(--azul)}
+.logo b i{font-style:normal;color:var(--rojo)}
+.logo small{font-size:.64rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gris-2);display:block;margin-top:3px}
+@media(max-width:479px){.logo small{display:none}}
 
-.btn-pedido{
-  position:relative;display:flex;align-items:center;gap:7px;
-  padding:8px 14px;border-radius:999px;background:var(--verde-700);color:#fff;
-  font-size:.82rem;font-weight:700;
+.busca-caja{position:relative;flex:1;display:none;min-width:0}
+@media(min-width:900px){.busca-caja{display:flex;align-items:center}}
+.busca-caja input{
+  width:100%;height:46px;padding:0 44px 0 46px;
+  border:2px solid var(--azul);border-radius:var(--r);background:var(--blanco);
+  font-size:1rem;
 }
-.btn-pedido svg{width:16px;height:16px}
-.btn-pedido .conteo{
-  position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;
-  border-radius:999px;background:var(--wa);color:#04301F;
-  font-size:.7rem;font-weight:800;display:grid;place-items:center;
-  border:2px solid var(--blanco);
-}
-.btn-pedido[data-vacio="si"] .conteo{display:none}
-.btn-pedido .texto{display:none}
-@media(min-width:560px){.btn-pedido .texto{display:inline}}
+.busca-caja input::placeholder{color:var(--gris-2)}
+.busca-caja input:focus{outline:none;border-color:var(--azul-osc);box-shadow:0 0 0 3px var(--azul-pale)}
+.busca-caja > svg{position:absolute;left:15px;width:20px;height:20px;color:var(--azul);pointer-events:none}
+.busca-caja .limpia{position:absolute;right:8px;width:30px;height:30px;display:none;place-items:center;color:var(--gris);border-radius:50%}
+.busca-caja .limpia:hover{background:var(--fondo)}
+.busca-caja .limpia svg{position:static;width:15px;height:15px;color:inherit}
+.busca-caja[data-lleno="si"] .limpia{display:grid}
 
-/* ============================ HERO ============================ */
-.hero{
-  position:relative;overflow:hidden;
-  background:
-    radial-gradient(120% 90% at 82% -10%, #1B9E7A 0%, transparent 55%),
-    linear-gradient(165deg,var(--verde-800) 0%,var(--verde-900) 62%,#082D24 100%);
-  color:#fff;
-  padding:clamp(52px,10vw,96px) 0 clamp(64px,11vw,108px);
+.acciones-cab{display:flex;align-items:center;gap:9px;margin-left:auto;flex:none}
+.btn-ped{
+  position:relative;display:flex;align-items:center;gap:9px;
+  height:44px;padding:0 16px;border-radius:var(--r);
+  background:var(--azul);color:#fff;font-size:.94rem;font-weight:700;
+  transition:background-color .18s ease;
 }
-.hero::before{
-  content:"";position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
-  background-size:56px 56px;
-  mask-image:radial-gradient(90% 70% at 30% 20%,#000,transparent 72%);
-  -webkit-mask-image:radial-gradient(90% 70% at 30% 20%,#000,transparent 72%);
+.btn-ped:hover{background:var(--azul-osc)}
+.btn-ped svg{width:20px;height:20px}
+.btn-ped .txt{display:none}
+@media(min-width:600px){.btn-ped .txt{display:inline}}
+.btn-ped .cta{
+  min-width:23px;height:23px;padding:0 6px;border-radius:999px;
+  background:#fff;color:var(--azul);font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
 }
-.hero::after{
-  content:"";position:absolute;right:-90px;top:-70px;width:340px;height:340px;
-  border-radius:80px;opacity:.07;
-  background:#fff;
-  clip-path:polygon(36% 0,64% 0,64% 36%,100% 36%,100% 64%,64% 64%,64% 100%,36% 100%,36% 64%,0 64%,0 36%,36% 36%);
-}
-.hero .env{position:relative;z-index:2}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 14px 6px 8px;border-radius:999px;
-  background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);
-  font-size:.76rem;font-weight:700;letter-spacing:.01em;
-  margin-bottom:20px;
-}
-.hero-eyebrow .punto{width:7px;height:7px;border-radius:50%;background:var(--wa);box-shadow:0 0 0 4px rgba(37,211,102,.22)}
-.hero h1{max-width:15ch}
-.hero h1 em{font-style:normal;color:#7FE3BE}
-.hero-bajada{margin-top:16px;max-width:46ch;color:rgba(255,255,255,.78);font-size:clamp(1rem,2.4vw,1.14rem)}
-.hero-acciones{display:flex;flex-wrap:wrap;gap:11px;margin-top:30px}
-.hero-acciones .btn{flex:1 1 auto;min-width:190px}
-@media(min-width:640px){.hero-acciones .btn{flex:0 0 auto}}
+.btn-ped[data-vacio="si"] .cta{display:none}
+.cta.late{animation:late .45s cubic-bezier(.34,1.4,.64,1)}
+@keyframes late{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
 
-.hero-datos{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
-  margin-top:40px;border-radius:var(--r-m);overflow:hidden;
-  background:rgba(255,255,255,.14);
-  border:1px solid rgba(255,255,255,.14);
+/* buscador móvil */
+.busca-movil{padding:0 0 11px;display:block}
+@media(min-width:900px){.busca-movil{display:none}}
+.busca-movil .busca-caja{display:flex;align-items:center}
+
+/* ============================ BARRA DE SUCURSAL ============================ */
+.barra-suc{background:var(--azul-pale);border-top:1px solid var(--azul-borde);border-bottom:1px solid var(--azul-borde)}
+.barra-suc .env{display:flex;align-items:center;gap:12px;min-height:52px;padding-block:9px;flex-wrap:wrap}
+.suc-info{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.suc-info > svg{width:22px;height:22px;flex:none;color:var(--azul)}
+.suc-txt{min-width:0;line-height:1.25}
+.suc-txt .et{font-size:.76rem;color:var(--gris);display:block}
+.suc-txt b{font-size:1rem;font-weight:800;color:var(--azul-osc);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-cambiar{
+  height:44px;padding:0 16px;border-radius:var(--r);flex:none;
+  background:var(--blanco);border:2px solid var(--azul);color:var(--azul);
+  font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:7px;
 }
-@media(min-width:720px){.hero-datos{grid-template-columns:repeat(4,1fr)}}
-.hero-datos li{background:rgba(9,48,38,.55);padding:16px 18px;backdrop-filter:blur(4px)}
-.hero-datos b{display:block;font-size:1.32rem;font-weight:800;letter-spacing:-.03em}
-.hero-datos span{font-size:.76rem;color:rgba(255,255,255,.66);font-weight:600}
+.btn-cambiar:hover{background:var(--azul);color:#fff}
+.btn-cambiar svg{width:15px;height:15px}
+.btn-cambiar .larga{display:none}
+@media(min-width:420px){.btn-cambiar .larga{display:inline}}
+.abierto-chip{
+  display:inline-flex;align-items:center;gap:6px;flex:none;
+  font-size:.82rem;font-weight:700;padding:5px 11px;border-radius:999px;
+  background:var(--blanco);border:1px solid var(--azul-borde);color:var(--azul-osc);
+}
+.abierto-chip .pt{width:7px;height:7px;border-radius:50%;background:var(--gris-2)}
+.abierto-chip[data-abierto="si"] .pt{background:var(--ok);box-shadow:0 0 0 3px rgba(23,134,75,.22)}
+@media(max-width:559px){.abierto-chip{display:none}}
+
+/* ============================ CATEGORÍAS ============================ */
+.nav-cats{position:sticky;top:var(--top-nav);z-index:50;background:var(--blanco);border-bottom:1px solid var(--linea)}
+.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-block:8px}
+.cats::-webkit-scrollbar{display:none}
+.cat{
+  flex:none;display:flex;align-items:center;gap:8px;
+  min-height:44px;padding:0 16px;border-radius:999px;
+  background:var(--fondo);border:1px solid transparent;
+  font-size:.92rem;font-weight:600;color:var(--gris);
+  transition:all .16s ease;
+}
+.cat svg{width:19px;height:19px;color:var(--azul);flex:none}
+.cat:hover{background:var(--azul-pale);color:var(--azul-osc)}
+.cat[aria-pressed="true"]{background:var(--azul);color:#fff;font-weight:700}
+.cat[aria-pressed="true"] svg{color:#fff}
+
+/* ============================ BANNER ============================ */
+.banner{background:var(--azul);color:#fff;position:relative;overflow:hidden}
+.banner::after{
+  content:"";position:absolute;right:-60px;top:-70px;width:290px;height:290px;opacity:.08;background:#fff;
+  clip-path:polygon(37% 0,63% 0,63% 37%,100% 37%,100% 63%,63% 63%,63% 100%,37% 100%,37% 63%,0 63%,0 37%,37% 37%);
+}
+.banner .env{position:relative;z-index:2;padding-block:clamp(26px,5vw,44px)}
+.banner h1{max-width:20ch}
+.banner p{margin-top:11px;max-width:52ch;color:rgba(255,255,255,.9);font-size:1.03rem}
+.banner-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.banner-btns .btn{flex:1 1 auto;min-width:210px}
+@media(min-width:640px){.banner-btns .btn{flex:0 0 auto}}
+
+/* ---------- 3 pasos ---------- */
+.pasos{background:var(--blanco);border-bottom:1px solid var(--linea)}
+.pasos ul{display:grid;gap:0;grid-template-columns:1fr}
+@media(min-width:760px){.pasos ul{grid-template-columns:repeat(3,1fr)}}
+.paso{display:flex;gap:14px;align-items:flex-start;padding:20px 0}
+@media(min-width:760px){
+  .paso{padding:24px 22px 24px 0}
+  .paso + .paso{border-left:1px solid var(--linea);padding-left:22px}
+}
+@media(max-width:759px){.paso + .paso{border-top:1px solid var(--linea-2)}}
+.paso-n{
+  width:36px;height:36px;border-radius:50%;flex:none;
+  background:var(--azul-pale);color:var(--azul);
+  display:grid;place-items:center;font-weight:800;font-size:1rem;
+}
+.paso h3{font-size:1rem}
+.paso p{font-size:.9rem;color:var(--gris);margin-top:3px;line-height:1.5}
 
 /* ============================ SECCIONES ============================ */
-.seccion{padding:clamp(52px,8vw,86px) 0}
-.seccion-cabecera{margin-bottom:26px}
-.seccion-cabecera h2{margin-top:12px}
-.seccion-cabecera .bajada{margin-top:10px}
+.sec{padding-block:clamp(30px,5vw,52px)}
+.sec-cab{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sec-cab p{color:var(--gris);font-size:.95rem;margin-top:5px;max-width:56ch}
 
-/* ---------- selector de sucursal ---------- */
-#sucursales{background:var(--blanco);border-block:1px solid var(--linea)}
-.grid-sucursales{display:grid;gap:14px;grid-template-columns:1fr}
-@media(min-width:640px){.grid-sucursales{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1000px){.grid-sucursales{grid-template-columns:repeat(4,1fr)}}
-
-.tarjeta-sucursal{
-  position:relative;text-align:left;
-  display:flex;flex-direction:column;gap:9px;
-  padding:20px 18px 18px;border-radius:var(--r-l);
-  background:var(--menta-50);border:1.5px solid var(--linea);
-  transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+/* ---------- filtros ---------- */
+.filtros-fila{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin-bottom:16px;flex-wrap:wrap;font-size:.94rem;color:var(--gris);
 }
-.tarjeta-sucursal:hover{transform:translateY(-3px);box-shadow:var(--sombra-m);border-color:var(--menta-200)}
-.tarjeta-sucursal[aria-pressed="true"]{
-  background:var(--blanco);border-color:var(--verde-400);
-  box-shadow:0 0 0 3px rgba(23,166,127,.16), var(--sombra-m);
-}
-.tarjeta-sucursal .comuna{
-  font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--verde-500);
-}
-.tarjeta-sucursal .nombre{font-size:1.08rem;font-weight:800;letter-spacing:-.02em;line-height:1.2}
-.tarjeta-sucursal .dato{display:flex;gap:8px;align-items:flex-start;font-size:.84rem;color:var(--gris);line-height:1.4}
-.tarjeta-sucursal .dato svg{width:15px;height:15px;flex:none;margin-top:3px;color:var(--verde-400)}
-.tarjeta-sucursal .marca-activa{
-  display:none;position:absolute;top:14px;right:14px;
-  align-items:center;gap:5px;padding:4px 10px;border-radius:999px;
-  background:var(--verde-700);color:#fff;font-size:.66rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
-}
-.tarjeta-sucursal[aria-pressed="true"] .marca-activa{display:inline-flex}
-.tarjeta-sucursal .accion{
-  margin-top:6px;font-size:.82rem;font-weight:800;color:var(--verde-700);
-  display:flex;align-items:center;gap:6px;
-}
-.tarjeta-sucursal .accion svg{width:14px;height:14px;transition:transform .2s ease}
-.tarjeta-sucursal:hover .accion svg{transform:translateX(3px)}
-.tarjeta-sucursal[aria-pressed="true"] .accion{color:var(--verde-400)}
-
-.estado-local{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:.74rem;font-weight:800;padding:3px 9px;border-radius:999px;align-self:flex-start;
-}
-.estado-local .punto{width:6px;height:6px;border-radius:50%}
-.estado-local[data-abierto="si"]{background:#E4F6EC;color:#186B44}
-.estado-local[data-abierto="si"] .punto{background:#25C16A;box-shadow:0 0 0 3px rgba(37,193,106,.2)}
-.estado-local[data-abierto="no"]{background:#F1F4F3;color:var(--gris)}
-.estado-local[data-abierto="no"] .punto{background:var(--gris-claro)}
-
-/* ---------- barra de catálogo ---------- */
-.barra-catalogo{
-  position:sticky;top:var(--header-h);z-index:40;
-  background:rgba(247,251,249,.94);backdrop-filter:blur(12px);
-  padding:12px 0 10px;margin-bottom:22px;
-  border-bottom:1px solid var(--linea);
-}
-.buscador{position:relative;display:flex;align-items:center}
-.buscador svg{position:absolute;left:16px;width:18px;height:18px;color:var(--gris-claro);pointer-events:none}
-.buscador input{
-  width:100%;padding:13px 16px 13px 44px;
-  border-radius:999px;border:1.5px solid var(--linea);background:var(--blanco);
-  font-size:.95rem;transition:border-color .2s ease, box-shadow .2s ease;
-}
-.buscador input::placeholder{color:var(--gris-claro)}
-.buscador input:focus{outline:none;border-color:var(--verde-400);box-shadow:0 0 0 4px rgba(23,166,127,.13)}
-.buscador .limpiar{
-  position:absolute;right:8px;width:30px;height:30px;border-radius:50%;
-  display:none;place-items:center;color:var(--gris);background:var(--menta-100);
-}
-.buscador .limpiar svg{position:static;width:14px;height:14px;color:inherit}
-.buscador[data-lleno="si"] .limpiar{display:grid}
-
-.filtros{
-  display:flex;gap:8px;margin-top:11px;
-  overflow-x:auto;scrollbar-width:none;
-  padding-bottom:2px;
-  -webkit-overflow-scrolling:touch;
-}
-.filtros::-webkit-scrollbar{display:none}
-.filtro{
-  flex:none;display:inline-flex;align-items:center;gap:7px;
-  padding:9px 15px;border-radius:999px;
-  background:var(--blanco);border:1.5px solid var(--linea);
-  font-size:.84rem;font-weight:700;color:var(--gris);
-  transition:all .18s ease;
-}
-.filtro svg{width:15px;height:15px}
-.filtro:hover{border-color:var(--menta-200);color:var(--verde-700)}
-.filtro[aria-pressed="true"]{background:var(--verde-700);border-color:var(--verde-700);color:#fff}
-.filtro[aria-pressed="true"] svg{color:#7FE3BE}
-
-.resumen-filtro{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  margin-bottom:16px;font-size:.85rem;color:var(--gris);flex-wrap:wrap;
-}
-.resumen-filtro b{color:var(--tinta)}
-.solo-stock{display:inline-flex;align-items:center;gap:8px;font-size:.84rem;font-weight:600;color:var(--gris);cursor:pointer}
+.filtros-fila b{color:var(--texto);font-weight:800}
+.solo-stock{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;min-height:44px}
 .solo-stock input{
-  appearance:none;width:38px;height:22px;border-radius:999px;background:var(--linea);
-  position:relative;transition:background .2s ease;flex:none;cursor:pointer;
+  appearance:none;width:46px;height:26px;border-radius:999px;background:var(--linea);
+  position:relative;flex:none;cursor:pointer;transition:background-color .2s ease;
 }
 .solo-stock input::after{
-  content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
-  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s ease;
+  content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.22);transition:transform .2s ease;
 }
-.solo-stock input:checked{background:var(--verde-400)}
-.solo-stock input:checked::after{transform:translateX(16px)}
+.solo-stock input:checked{background:var(--azul)}
+.solo-stock input:checked::after{transform:translateX(20px)}
 
 /* ---------- grilla de productos ---------- */
-.grid-productos{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-@media(max-width:479px){.grid-productos{grid-template-columns:1fr}}
+.vitrina{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:680px){.vitrina{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1000px){.vitrina{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1240px){.vitrina{grid-template-columns:repeat(5,1fr)}}
 
-.producto{
+.prod{
   display:flex;flex-direction:column;
-  background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-l);
-  padding:16px;transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-g);
+  padding:12px;transition:box-shadow .2s ease,border-color .2s ease;
 }
-.producto:hover{box-shadow:var(--sombra-m);transform:translateY(-2px);border-color:var(--menta-200)}
-.producto[data-agotado="si"]{background:#FBFCFC}
-.producto[data-agotado="si"] .prod-icono{opacity:.5}
+.prod:hover{box-shadow:var(--sombra-alta);border-color:var(--azul-borde)}
 
-.prod-tope{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
-.prod-icono{
-  width:52px;height:52px;border-radius:14px;flex:none;
-  background:linear-gradient(150deg,var(--menta-100),var(--menta-200));
-  display:grid;place-items:center;color:var(--verde-700);
+.prod-img{
+  position:relative;background:var(--fondo);border-radius:var(--r);
+  aspect-ratio:1;display:grid;place-items:center;margin-bottom:11px;overflow:hidden;
 }
-.prod-icono svg{width:25px;height:25px}
-.prod-sellos{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-
+.prod-img svg{width:74%;height:74%}
+.prod[data-agotado="si"] .prod-img{opacity:.5}
+.prod-sellos{position:absolute;top:7px;left:7px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .sello{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:3px 8px;border-radius:7px;
-  font-size:.65rem;font-weight:800;letter-spacing:.02em;
+  font-size:.64rem;font-weight:800;letter-spacing:.03em;
+  padding:3px 7px;border-radius:5px;line-height:1.3;
 }
-.sello-be{background:#FFF6D6;color:#8A6100;border:1px solid #F2DFA0}
-.sello-receta{background:var(--rojo-bg);color:var(--rojo);border:1px solid #F3D3CE}
-.sello-frio{background:#E7F1FC;color:#215D9C;border:1px solid #CFE1F5}
+.sello-be{background:var(--ambar-pale);color:var(--ambar);border:1px solid #EFD9A6}
+.sello-rec{background:var(--rojo-pale);color:var(--rojo);border:1px solid #F5CDC8}
+.sello-frio{background:var(--frio-pale);color:var(--frio);border:1px solid #C8DCF0}
 
-.prod-nombre{font-size:.98rem;font-weight:700;letter-spacing:-.015em;line-height:1.28}
-.prod-meta{margin-top:5px;font-size:.78rem;color:var(--gris-claro);font-weight:600}
-.prod-activo{margin-top:7px;font-size:.76rem;color:var(--gris);line-height:1.35}
-.prod-activo b{color:var(--verde-700);font-weight:700}
+.prod-lab{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gris-2)}
+.prod-nom{
+  font-size:.98rem;font-weight:600;line-height:1.32;margin-top:3px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.prod-pres{font-size:.84rem;color:var(--gris);margin-top:3px}
 
 .prod-stock{
-  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
-  font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;align-self:flex-start;
+  display:inline-flex;align-items:center;gap:6px;margin-top:9px;
+  font-size:.82rem;font-weight:700;align-self:flex-start;
 }
-.prod-stock .punto{width:6px;height:6px;border-radius:50%;flex:none}
-.prod-stock[data-nivel="alto"]{background:#E4F6EC;color:#186B44}
-.prod-stock[data-nivel="alto"] .punto{background:#25C16A}
-.prod-stock[data-nivel="bajo"]{background:var(--ambar-bg);color:var(--ambar)}
-.prod-stock[data-nivel="bajo"] .punto{background:#E0A62B}
-.prod-stock[data-nivel="cero"]{background:#F1F4F3;color:var(--gris)}
-.prod-stock[data-nivel="cero"] .punto{background:var(--gris-claro)}
+.prod-stock .pt{width:7px;height:7px;border-radius:50%;flex:none}
+.prod-stock[data-nivel="alto"]{color:var(--ok)}
+.prod-stock[data-nivel="alto"] .pt{background:var(--ok)}
+.prod-stock[data-nivel="bajo"]{color:var(--ambar)}
+.prod-stock[data-nivel="bajo"] .pt{background:var(--ambar)}
+.prod-stock[data-nivel="cero"]{color:var(--gris-2)}
+.prod-stock[data-nivel="cero"] .pt{background:var(--gris-2)}
 
-.prod-pie{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.prod-precio{display:flex;flex-direction:column;line-height:1.1}
-.prod-precio b{font-size:1.22rem;font-weight:800;letter-spacing:-.03em}
-.prod-precio span{font-size:.68rem;color:var(--gris-claro);font-weight:600}
+.prod-precio{margin-top:9px}
+.prod-precio b{font-size:1.42rem;font-weight:800;letter-spacing:-.03em;line-height:1.1;display:block}
+.prod-precio span{font-size:.74rem;color:var(--gris-2)}
 
-.btn-agregar{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:10px 16px;border-radius:999px;
-  background:var(--verde-700);color:#fff;font-size:.83rem;font-weight:700;
-  transition:background .18s ease, transform .15s ease;
+.sumar{
+  margin-top:11px;width:100%;min-height:46px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:var(--r);background:var(--rojo);color:#fff;
+  font-size:.95rem;font-weight:700;text-decoration:none;
+  transition:background-color .16s ease;
 }
-.btn-agregar svg{width:15px;height:15px}
-.btn-agregar:hover{background:var(--verde-800)}
-.btn-agregar:active{transform:scale(.94)}
-.btn-agregar[data-modo="consultar"]{background:var(--menta-100);color:var(--verde-800)}
-.btn-agregar[data-modo="consultar"]:hover{background:var(--menta-200)}
-.btn-agregar[data-modo="agregado"]{background:var(--wa);color:#04301F}
+.sumar svg{width:18px;height:18px}
+.sumar:hover{background:var(--rojo-osc)}
+.sumar[data-modo="agregado"]{background:var(--rojo-pale);color:var(--rojo-osc);border:2px solid var(--rojo)}
+.sumar[data-modo="consultar"]{background:var(--wa);color:#0A3D22}
+.sumar[data-modo="consultar"]:hover{background:var(--wa-osc);color:#fff}
 
-.sin-resultados{
+.vacio{
   grid-column:1/-1;text-align:center;padding:56px 20px;
-  background:var(--blanco);border:1px dashed var(--linea);border-radius:var(--r-l);
+  background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-g);
 }
-.sin-resultados svg{width:40px;height:40px;color:var(--menta-200);margin:0 auto 14px}
-.sin-resultados p{color:var(--gris);font-size:.92rem;max-width:40ch;margin:0 auto}
-.sin-resultados b{display:block;font-size:1.05rem;color:var(--tinta);margin-bottom:6px}
+.vacio svg{width:52px;height:52px;color:var(--azul-borde);margin:0 auto 14px}
+.vacio b{display:block;font-size:1.15rem;font-weight:800;margin-bottom:7px}
+.vacio p{color:var(--gris);font-size:.95rem;max-width:44ch;margin:0 auto}
 
-.aviso-receta{
-  display:flex;gap:12px;align-items:flex-start;
-  margin-top:26px;padding:16px 18px;border-radius:var(--r-m);
-  background:var(--ambar-bg);border:1px solid #F2DFA0;
-  font-size:.84rem;color:#6D4A0C;line-height:1.5;
+.aviso{
+  display:flex;gap:13px;align-items:flex-start;margin-top:22px;
+  padding:16px 18px;border-radius:var(--r-g);
+  background:var(--ambar-pale);border:1px solid #EFD9A6;
+  font-size:.9rem;color:#6B4A08;line-height:1.55;
 }
-.aviso-receta svg{width:19px;height:19px;flex:none;margin-top:2px;color:var(--ambar)}
-.aviso-receta b{font-weight:800}
+.aviso svg{width:21px;height:21px;flex:none;margin-top:2px;color:var(--ambar)}
+.aviso b{font-weight:800}
+
+/* ---------- sucursales ---------- */
+#sucursales{background:var(--blanco);border-block:1px solid var(--linea)}
+.locales{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:640px){.locales{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.locales{grid-template-columns:repeat(4,1fr)}}
+.local{
+  text-align:left;display:flex;flex-direction:column;gap:8px;
+  padding:18px;border-radius:var(--r-g);
+  background:var(--fondo);border:2px solid transparent;
+  transition:border-color .18s ease,background-color .18s ease;
+}
+.local:hover{border-color:var(--azul-borde);background:var(--azul-pale)}
+.local[aria-pressed="true"]{background:var(--azul-pale);border-color:var(--azul)}
+.local-com{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--azul)}
+.local-nom{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;line-height:1.25}
+.local-dato{display:flex;gap:9px;align-items:flex-start;font-size:.88rem;color:var(--gris);line-height:1.45}
+.local-dato svg{width:16px;height:16px;flex:none;margin-top:3px;color:var(--azul)}
+.local-elegida{
+  display:none;align-items:center;gap:6px;align-self:flex-start;
+  padding:4px 10px;border-radius:999px;background:var(--azul);color:#fff;
+  font-size:.72rem;font-weight:800;
+}
+.local[aria-pressed="true"] .local-elegida{display:inline-flex}
+.local-cta{margin-top:4px;font-size:.9rem;font-weight:700;color:var(--azul);display:flex;align-items:center;gap:7px}
+.local-cta svg{width:15px;height:15px;transition:transform .2s ease}
+.local:hover .local-cta svg{transform:translateX(4px)}
 
 /* ---------- servicios ---------- */
-#servicios{background:var(--blanco);border-block:1px solid var(--linea)}
-.grid-servicios{display:grid;gap:14px;grid-template-columns:1fr}
-@media(min-width:600px){.grid-servicios{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:960px){.grid-servicios{grid-template-columns:repeat(3,1fr)}}
-.servicio{
-  display:flex;gap:14px;padding:20px;border-radius:var(--r-l);
-  background:var(--menta-50);border:1px solid var(--linea);
-}
-.servicio-ico{
-  width:42px;height:42px;border-radius:12px;flex:none;
-  background:var(--blanco);border:1px solid var(--menta-200);
-  display:grid;place-items:center;color:var(--verde-500);
-}
-.servicio-ico svg{width:21px;height:21px}
-.servicio p{margin-top:5px;font-size:.86rem;color:var(--gris);line-height:1.5}
+.servicios{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:600px){.servicios{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.servicios{grid-template-columns:repeat(3,1fr)}}
+.serv{display:flex;gap:14px;padding:20px;background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-g)}
+.serv-ico{width:46px;height:46px;border-radius:10px;flex:none;background:var(--azul-pale);display:grid;place-items:center;color:var(--azul)}
+.serv-ico svg{width:23px;height:23px}
+.serv p{margin-top:5px;font-size:.9rem;color:var(--gris);line-height:1.55}
 
 /* ---------- ubicación ---------- */
-.bloque-ubicacion{display:grid;gap:20px;grid-template-columns:1fr}
-@media(min-width:900px){.bloque-ubicacion{grid-template-columns:.85fr 1.15fr;align-items:start}}
-
-.panel{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-l);padding:22px;box-shadow:var(--sombra-s)}
+.ubic{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:940px){.ubic{grid-template-columns:.85fr 1.15fr;align-items:start}}
+.panel{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-g);padding:20px}
 .panel + .panel{margin-top:14px}
 .panel h3{display:flex;align-items:center;gap:9px;margin-bottom:14px}
-.panel h3 svg{width:17px;height:17px;color:var(--verde-400)}
-
-.lista-horario li{
-  display:flex;justify-content:space-between;gap:14px;
-  padding:10px 0;border-bottom:1px dashed var(--linea);
-  font-size:.88rem;
-}
-.lista-horario li:last-child{border-bottom:0;padding-bottom:0}
-.lista-horario .dia{color:var(--gris);font-weight:600}
-.lista-horario .hora{font-weight:700;font-variant-numeric:tabular-nums}
-.lista-horario li[data-hoy="si"] .dia{color:var(--verde-700);font-weight:800}
-.lista-horario li[data-hoy="si"] .hora{color:var(--verde-700)}
-.lista-horario li[data-hoy="si"] .dia::after{
-  content:"hoy";margin-left:7px;padding:2px 7px;border-radius:6px;
-  background:var(--menta-100);color:var(--verde-600,var(--verde-500));
-  font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-}
-
-.dato-contacto{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed var(--linea)}
-.dato-contacto:last-of-type{border-bottom:0}
-.dato-contacto svg{width:17px;height:17px;flex:none;margin-top:3px;color:var(--verde-400)}
-.dato-contacto .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gris-claro);font-weight:800}
-.dato-contacto .vl{font-size:.92rem;font-weight:600}
-.dato-contacto a{color:inherit;text-decoration:none}
-.dato-contacto a:hover{color:var(--verde-500)}
-
-.mapa{
-  border-radius:var(--r-l);overflow:hidden;border:1px solid var(--linea);
-  box-shadow:var(--sombra-m);background:var(--menta-100);
-  aspect-ratio:4/3;
-}
-@media(min-width:900px){.mapa{aspect-ratio:auto;height:100%;min-height:460px}}
+.panel h3 svg{width:19px;height:19px;color:var(--azul)}
+.dato{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--linea-2)}
+.dato:last-of-type{border-bottom:0}
+.dato svg{width:18px;height:18px;flex:none;margin-top:4px;color:var(--azul)}
+.dato .et{font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:var(--gris-2);font-weight:800}
+.dato .vl{font-size:.98rem;margin-top:1px}
+.dato a{color:var(--frio);font-weight:600}
+.horas li{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--linea-2);font-size:.96rem}
+.horas li:last-child{border-bottom:0}
+.horas .dia{color:var(--gris)}
+.horas .hr{font-weight:700}
+.horas li[data-hoy="si"]{background:var(--azul-pale);margin-inline:-10px;padding-inline:10px;border-radius:6px;border-bottom-color:transparent}
+.horas li[data-hoy="si"] .dia{color:var(--azul-osc);font-weight:800}
+.horas li[data-hoy="si"] .dia::after{content:" · hoy";color:var(--azul)}
+.horas li[data-hoy="si"] .hr{color:var(--azul-osc)}
+.mapa{border-radius:var(--r-g);overflow:hidden;border:1px solid var(--linea);background:var(--azul-pale);aspect-ratio:4/3}
+@media(min-width:940px){.mapa{aspect-ratio:auto;height:100%;min-height:520px}}
 .mapa iframe{width:100%;height:100%;border:0;display:block}
 
-/* ---------- panel de pedido ---------- */
-.velo{
-  position:fixed;inset:0;z-index:80;
-  background:rgba(10,45,36,.5);backdrop-filter:blur(3px);
-  opacity:0;pointer-events:none;transition:opacity .28s ease;
-}
+/* ---------- cajones ---------- */
+.velo{position:fixed;inset:0;z-index:80;background:rgba(15,35,26,.5);opacity:0;pointer-events:none;transition:opacity .28s ease}
 .velo[data-abierto="si"]{opacity:1;pointer-events:auto}
-
 .cajon{
-  position:fixed;z-index:90;background:var(--blanco);
-  display:flex;flex-direction:column;
-  box-shadow:var(--sombra-l);
-  transition:transform .34s cubic-bezier(.32,.72,0,1);
-}
-/* móvil: hoja inferior */
-.cajon{
+  position:fixed;z-index:90;background:var(--blanco);display:flex;flex-direction:column;
   left:0;right:0;bottom:0;max-height:88vh;
-  border-radius:var(--r-xl) var(--r-xl) 0 0;
-  transform:translateY(102%);
-  padding-bottom:env(safe-area-inset-bottom);
+  border-radius:18px 18px 0 0;transform:translateY(102%);
+  box-shadow:var(--sombra-alta);padding-bottom:env(safe-area-inset-bottom);
+  transition:transform .34s cubic-bezier(.32,.72,0,1);touch-action:none;
 }
 .cajon[data-abierto="si"]{transform:translateY(0)}
+.cajon[data-arrastrando="si"]{transition:none}
 @media(min-width:720px){
-  .cajon{
-    left:auto;top:0;right:0;bottom:0;width:420px;max-height:none;
-    border-radius:0;transform:translateX(102%);
-  }
+  .cajon{left:auto;top:0;right:0;bottom:0;width:440px;max-height:none;border-radius:0;transform:translateX(102%);touch-action:auto}
   .cajon[data-abierto="si"]{transform:translateX(0)}
 }
-.cajon-tirador{width:42px;height:4px;border-radius:99px;background:var(--linea);margin:10px auto 0}
-@media(min-width:720px){.cajon-tirador{display:none}}
+.tirador{width:40px;height:4px;background:var(--linea);margin:10px auto 0;border-radius:99px}
+@media(min-width:720px){.tirador{display:none}}
+.cajon-cab{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;border-bottom:1px solid var(--linea)}
+.cajon-cab h3{font-size:1.14rem;font-weight:800;margin-right:auto}
+.cajon-cab .sub{display:block;font-size:.85rem;color:var(--gris);margin-top:2px;font-weight:400}
+.equis{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--gris);flex:none;background:var(--fondo)}
+.equis svg{width:17px;height:17px}
+.equis:hover{background:var(--linea);color:var(--texto)}
+.cajon-cuerpo{flex:1;overflow-y:auto;padding:8px 20px;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.cajon-pie{padding:16px 20px 20px;border-top:1px solid var(--linea);background:var(--fondo)}
 
-.cajon-cabecera{
-  display:flex;align-items:center;gap:12px;
-  padding:16px 20px;border-bottom:1px solid var(--linea);
+.linea-ped{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--linea-2);align-items:flex-start}
+.linea-ped:last-child{border-bottom:0}
+.linea-img{width:52px;height:52px;border-radius:8px;flex:none;background:var(--fondo);display:grid;place-items:center}
+.linea-img svg{width:74%;height:74%}
+.linea-info{flex:1;min-width:0}
+.linea-info .nom{font-size:.94rem;font-weight:700;line-height:1.3}
+.linea-info .det{font-size:.8rem;color:var(--gris-2);margin-top:2px;line-height:1.4}
+.linea-info .pre{font-size:1rem;font-weight:800;margin-top:5px}
+.contador{display:flex;align-items:center;border:2px solid var(--linea);border-radius:999px;flex:none;overflow:hidden}
+.contador button{width:44px;height:44px;display:grid;place-items:center;color:var(--azul);font-size:1.3rem;font-weight:700;line-height:1}
+.contador button:hover{background:var(--azul-pale)}
+.contador .n{min-width:30px;text-align:center;font-size:.98rem;font-weight:800}
+
+.ped-vacio{text-align:center;padding:56px 16px;color:var(--gris)}
+.ped-vacio svg{width:52px;height:52px;color:var(--linea);margin:0 auto 14px}
+.ped-vacio b{display:block;font-size:1.1rem;font-weight:800;color:var(--texto);margin-bottom:7px}
+.ped-vacio p{font-size:.92rem;max-width:34ch;margin:0 auto}
+
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.total .et{font-size:.92rem;color:var(--gris);font-weight:600}
+.total .vl{font-size:1.7rem;font-weight:800;letter-spacing:-.03em}
+.aclara{font-size:.8rem;color:var(--gris-2);line-height:1.5;margin-bottom:13px}
+.destino{display:flex;align-items:center;gap:8px;justify-content:center;font-size:.85rem;color:var(--gris);margin-top:12px}
+.destino svg{width:15px;height:15px;color:var(--azul);flex:none}
+.destino b{color:var(--texto);font-weight:700}
+.aviso-stock{
+  display:flex;gap:11px;align-items:flex-start;margin:14px 0 2px;padding:13px 15px;
+  border-radius:var(--r);background:var(--ambar-pale);border:1px solid #EFD9A6;
+  font-size:.86rem;color:#6B4A08;line-height:1.5;
 }
-.cajon-cabecera h3{margin-right:auto}
-.cajon-cabecera .sub{font-size:.75rem;color:var(--gris);font-weight:600;display:block;margin-top:2px}
-.cerrar{
-  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
-  background:var(--menta-50);color:var(--gris);flex:none;
+.aviso-stock svg{width:18px;height:18px;flex:none;margin-top:1px;color:var(--ambar)}
+.aviso-stock b{font-weight:800}
+
+/* ---------- flotante ---------- */
+.flota{
+  position:fixed;right:16px;z-index:70;bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:10px;min-height:56px;padding:0 20px;
+  background:var(--wa);color:#0A3D22;font-weight:800;font-size:.98rem;
+  text-decoration:none;border-radius:999px;
+  box-shadow:0 4px 16px rgba(37,211,102,.4),0 2px 6px rgba(0,0,0,.1);
+  transition:background-color .18s ease;
 }
-.cerrar svg{width:16px;height:16px}
-.cerrar:hover{background:var(--menta-100);color:var(--tinta)}
-
-.cajon-cuerpo{flex:1;overflow-y:auto;padding:16px 20px;-webkit-overflow-scrolling:touch}
-.cajon-pie{padding:16px 20px 20px;border-top:1px solid var(--linea);background:var(--menta-50)}
-
-.item-pedido{display:flex;gap:12px;padding:13px 0;border-bottom:1px dashed var(--linea);align-items:flex-start}
-.item-pedido:last-child{border-bottom:0}
-.item-ico{
-  width:40px;height:40px;border-radius:11px;flex:none;
-  background:var(--menta-100);display:grid;place-items:center;color:var(--verde-700);
-}
-.item-ico svg{width:19px;height:19px}
-.item-info{flex:1;min-width:0}
-.item-info .nom{font-size:.87rem;font-weight:700;line-height:1.3}
-.item-info .det{font-size:.73rem;color:var(--gris-claro);margin-top:2px}
-.item-info .pre{font-size:.85rem;font-weight:800;margin-top:5px}
-.item-cant{display:flex;align-items:center;gap:2px;background:var(--menta-50);border:1px solid var(--linea);border-radius:999px;padding:3px}
-.item-cant button{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--verde-700);font-weight:800;font-size:1rem;line-height:1}
-.item-cant button:hover{background:var(--menta-200)}
-.item-cant .n{min-width:22px;text-align:center;font-size:.85rem;font-weight:800;font-variant-numeric:tabular-nums}
-
-.pedido-vacio{text-align:center;padding:48px 16px;color:var(--gris)}
-.pedido-vacio svg{width:44px;height:44px;color:var(--menta-200);margin:0 auto 14px}
-.pedido-vacio b{display:block;color:var(--tinta);font-size:1rem;margin-bottom:6px}
-.pedido-vacio p{font-size:.87rem;max-width:32ch;margin:0 auto}
-
-.total-fila{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.total-fila .et{font-size:.83rem;color:var(--gris);font-weight:600}
-.total-fila .vl{font-size:1.5rem;font-weight:800;letter-spacing:-.03em}
-.nota-total{font-size:.72rem;color:var(--gris-claro);line-height:1.45;margin-bottom:14px}
-.destino-pedido{
-  display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--gris);
-  margin-top:12px;justify-content:center;text-align:center;
-}
-.destino-pedido svg{width:14px;height:14px;color:var(--verde-400);flex:none}
-.destino-pedido b{color:var(--verde-800);font-weight:700}
-
-/* ---------- botón flotante ---------- */
-.flotante{
-  position:fixed;right:16px;z-index:70;
-  bottom:calc(16px + env(safe-area-inset-bottom));
-  display:flex;align-items:center;gap:10px;
-  padding:14px 20px 14px 16px;border-radius:999px;
-  background:var(--wa);color:#04301F;font-weight:800;font-size:.9rem;
-  text-decoration:none;
-  box-shadow:0 8px 26px rgba(37,211,102,.45), 0 2px 8px rgba(0,0,0,.12);
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-.flotante svg{width:22px;height:22px}
-.flotante:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,211,102,.5)}
-.flotante:active{transform:scale(.96)}
-.flotante .texto{display:none}
-@media(min-width:520px){.flotante .texto{display:inline}}
-body:has(.cajon[data-abierto="si"]) .flotante{opacity:0;pointer-events:none}
+.flota svg{width:25px;height:25px}
+.flota:hover{background:var(--wa-osc);color:#fff}
+.flota .txt{display:none}
+@media(min-width:520px){.flota .txt{display:inline}}
+body:has(.cajon[data-abierto="si"]) .flota{opacity:0;pointer-events:none}
 
 /* ---------- pie ---------- */
-.pie{background:var(--verde-900);color:rgba(255,255,255,.72);padding:52px 0 100px}
-.pie-grid{display:grid;gap:26px;grid-template-columns:1fr}
-@media(min-width:760px){.pie-grid{grid-template-columns:1.4fr 1fr 1fr}}
-.pie h4{color:#fff;font-size:.74rem;text-transform:uppercase;letter-spacing:.13em;font-weight:800;margin-bottom:13px}
-.pie a{color:rgba(255,255,255,.72);text-decoration:none;font-size:.87rem}
-.pie a:hover{color:#7FE3BE}
-.pie li{padding:4px 0;font-size:.87rem}
-.pie-marca{display:flex;align-items:center;gap:11px;margin-bottom:14px}
-.pie-marca .marca-cruz{width:38px;height:38px;border-radius:11px}
-.pie-marca .marca-cruz svg{width:20px;height:20px}
-.pie-marca b{color:#fff;font-size:1.12rem;font-weight:800;letter-spacing:-.03em;display:block}
-.pie-marca span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#7FE3BE;font-weight:700}
-.pie-bajada{font-size:.87rem;line-height:1.6;max-width:40ch}
-.redes{display:flex;gap:9px;margin-top:16px}
-.redes a{
-  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#fff;
-  transition:background .2s ease, transform .2s ease;
+.pie{background:#12241D;color:rgba(255,255,255,.66);padding:44px 0 104px}
+.pie-grid{display:grid;gap:28px;grid-template-columns:1fr;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.11)}
+@media(min-width:760px){.pie-grid{grid-template-columns:1.5fr 1fr 1fr}}
+.pie h4{color:#fff;font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-bottom:13px}
+.pie a{color:rgba(255,255,255,.72);text-decoration:none;font-size:.92rem}
+.pie a:hover{color:#7FE3B0;text-decoration:underline}
+.pie li{padding:6px 0;font-size:.92rem}
+.pie-logo{display:flex;align-items:center;gap:11px;margin-bottom:13px}
+.pie-logo b{color:#fff;font-size:1.24rem;font-weight:800;letter-spacing:-.03em}
+.pie-logo b i{font-style:normal;color:#FF6B6F}
+.pie-logo .logo-cruz{background:#fff;border-radius:8px;padding:2px}
+.pie-plomo{font-size:.92rem;line-height:1.6;max-width:40ch}
+.redes{display:flex;gap:10px;margin-top:16px}
+.redes a{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.09);color:#fff;transition:background-color .18s ease}
+.redes a:hover{background:rgba(255,255,255,.2)}
+.redes svg{width:21px;height:21px}
+.legal{margin-top:22px;font-size:.79rem;color:rgba(255,255,255,.4);line-height:1.6;max-width:86ch}
+
+/* ---------- salto de contenido (teclado / lectores) ---------- */
+.saltar{
+  position:absolute;left:12px;top:-100px;z-index:200;
+  background:var(--azul);color:#fff;padding:12px 20px;border-radius:0 0 8px 8px;
+  font-weight:700;text-decoration:none;transition:top .18s ease;
 }
-.redes a:hover{background:rgba(255,255,255,.17);transform:translateY(-2px)}
-.redes svg{width:18px;height:18px}
-.pie-legal{
-  margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);
-  font-size:.74rem;color:rgba(255,255,255,.45);line-height:1.6;
+.saltar:focus{top:0}
+
+/* ---------- orden ---------- */
+.orden{display:inline-flex;align-items:center;gap:9px;font-size:.92rem;color:var(--gris)}
+.orden select{
+  min-height:44px;padding:0 36px 0 14px;border-radius:var(--r);
+  border:1px solid var(--linea);background-color:var(--blanco);
+  font-size:.92rem;font-weight:600;color:var(--texto);cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%2355655F' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;
+}
+.orden select:hover{border-color:var(--azul)}
+
+/* ---------- contador dentro de la tarjeta ---------- */
+.stepper{
+  margin-top:11px;display:flex;align-items:center;justify-content:space-between;
+  min-height:46px;border-radius:var(--r);overflow:hidden;
+  border:2px solid var(--rojo);background:var(--rojo-pale);
+}
+.stepper button{width:46px;align-self:stretch;display:grid;place-items:center;color:var(--rojo-osc);font-size:1.35rem;font-weight:700;line-height:1}
+.stepper button:hover{background:var(--rojo-borde)}
+.stepper .n{font-size:1rem;font-weight:800;color:var(--rojo-osc)}
+
+/* ---------- disponible en otros locales ---------- */
+.otros{margin-top:10px;padding-top:10px;border-top:1px dashed var(--linea)}
+.otros b{display:block;font-size:.78rem;font-weight:700;color:var(--texto);margin-bottom:6px}
+.otros-chips{display:flex;flex-wrap:wrap;gap:5px}
+.otro-chip{
+  display:inline-flex;align-items:center;min-height:44px;
+  padding:5px 14px;border-radius:999px;
+  background:var(--azul-pale);border:1px solid var(--azul-borde);color:var(--azul-osc);
+  font-size:.8rem;font-weight:700;text-align:left;
+  transition:background-color .16s ease,color .16s ease;
+}
+.otro-chip:hover{background:var(--azul);color:#fff;border-color:var(--azul)}
+.otros-nada{font-size:.79rem;color:var(--gris-2);line-height:1.45}
+
+/* ---------- barra de pedido fija (móvil) ---------- */
+.barra-pedido{
+  position:fixed;left:0;right:0;bottom:0;z-index:75;
+  background:var(--blanco);border-top:1px solid var(--linea);
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 18px rgba(20,40,32,.11);
+  transform:translateY(115%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+}
+.barra-pedido[data-visible="si"]{transform:translateY(0)}
+@media(min-width:720px){.barra-pedido{display:none}}
+.bp-btn{
+  width:100%;min-height:54px;display:flex;align-items:center;gap:12px;padding:0 18px;
+  border-radius:var(--r);background:var(--azul);color:#fff;font-size:1rem;font-weight:700;
+}
+.bp-btn:hover{background:var(--azul-osc)}
+.bp-btn .cant{
+  min-width:27px;height:27px;padding:0 7px;border-radius:999px;
+  background:rgba(255,255,255,.24);display:grid;place-items:center;font-size:.86rem;font-weight:800;
+}
+.bp-btn .mid{margin-right:auto}
+/* Con la barra de pedido abajo, el botón flotante estorba y duplica el
+   camino a WhatsApp: en móvil lo escondemos y dejamos la barra al mando. */
+@media(max-width:719px){
+  body:has(.barra-pedido[data-visible="si"]) .flota{opacity:0;pointer-events:none}
+  body:has(.barra-pedido[data-visible="si"]) .pie{padding-bottom:130px}
 }
 
-/* ---------- accesibilidad ---------- */
-.oculto-visual{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
@@ -591,190 +571,226 @@ body:has(.cajon[data-abierto="si"]) .flotante{opacity:0;pointer-events:none}
 </head>
 <body>
 
-<!-- ===== sprite de iconos ===== -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <g id="i-cruz"><path d="M13 3h-2a1 1 0 0 0-1 1v6H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6v6a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-6h6a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-6V4a1 1 0 0 0-1-1Z" fill="currentColor"/></g>
-    <g id="i-pastilla" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7Z"/><path d="M7 10l7 7"/></g>
-    <g id="i-gota" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6.2 6.6 6.2 10.6a6.2 6.2 0 0 1-12.4 0C5.8 9.3 12 2.7 12 2.7Z"/><path d="M9 14.2a3 3 0 0 0 3 3"/></g>
-    <g id="i-mamadera" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2h5M10 2v2.4c0 .7-.3 1.1-.9 1.6A3.2 3.2 0 0 0 8 8.5V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8.5a3.2 3.2 0 0 0-1.1-2.5c-.6-.5-.9-.9-.9-1.6V2"/><path d="M8 11.5h8M8 15h8"/></g>
-    <g id="i-hoja" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C10 4 4.5 8.8 4.5 15.5A4.5 4.5 0 0 0 9 20c7 0 11-6.4 11-16Z"/><path d="M4.5 20 13 11.5"/></g>
-    <g id="i-corazon" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.3 6.6a4.7 4.7 0 0 0-6.7 0L12 8.2l-1.6-1.6a4.7 4.7 0 1 0-6.7 6.7L12 21.6l8.3-8.3a4.7 4.7 0 0 0 0-6.7Z"/></g>
-    <g id="i-pulso" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12.5h4l2-5.5 3.5 11 2.5-7 1.5 3h5.5"/></g>
-    <g id="i-pin" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10.5" r="2.6"/></g>
-    <g id="i-reloj" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/></g>
-    <g id="i-tel" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 3.5h-2A1.6 1.6 0 0 0 3 5.2C3 13.9 10.1 21 18.8 21a1.6 1.6 0 0 0 1.7-1.6v-2a1.6 1.6 0 0 0-1.3-1.6l-2.7-.5a1.6 1.6 0 0 0-1.6.7l-.8 1.2a12.4 12.4 0 0 1-5.8-5.8l1.2-.8a1.6 1.6 0 0 0 .7-1.6l-.5-2.7a1.6 1.6 0 0 0-1.1-1.3Z"/></g>
-    <g id="i-wa"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 2 .1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4Z" fill="currentColor"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22.4l5.4-1.4A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.2.8.9-3.1-.2-.3A8.2 8.2 0 1 1 12 20.2Z" fill="currentColor"/></g>
-    <g id="i-ig" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.2"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></g>
-    <g id="i-lupa" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></g>
-    <g id="i-x" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></g>
-    <g id="i-mas" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></g>
-    <g id="i-flecha" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></g>
-    <g id="i-bolsa" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7.5h14l-1 12.5a2 2 0 0 1-2 1.8H8a2 2 0 0 1-2-1.8Z"/><path d="M8.8 7.5V6a3.2 3.2 0 0 1 6.4 0v1.5"/></g>
-    <g id="i-alerta" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 20.5h20.4Z"/><path d="M12 9.5v5M12 17.6h.01"/></g>
-    <g id="i-check" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></g>
-    <g id="i-moto" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3"/><circle cx="18.5" cy="17.5" r="3"/><path d="M8.5 17.5h6.8l-3.6-8H8.8M14 6.5h3.4l2.4 6.5"/></g>
-    <g id="i-escudo" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 4.5 5.5v6c0 4.6 3.1 8.8 7.5 10 4.4-1.2 7.5-5.4 7.5-10v-6Z"/><path d="m9 12 2.2 2.2L15.3 10"/></g>
-  </defs>
-</svg>
+<a class="saltar" href="#catalogo">Saltar al catálogo</a>
+<p class="oculto" aria-live="polite" id="anuncio" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></p>
 
-<!-- ============================ HEADER ============================ -->
-<header class="encabezado">
+<!-- ============ iconos e ilustraciones de producto ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <!-- Emblema aproximado del logo del local: octágono azul con acentos rojos
+       y la copa de Higía al centro. Reemplazar por el archivo original del
+       dueño (SVG o PNG) cuando lo entregue. -->
+  <g id="i-emblema">
+    <path d="M17.66 1H6.34L1 6.34v11.32L6.34 23h11.32L23 17.66V6.34z" fill="#D6202A"/>
+    <path d="M17.04 2.5H6.96L2.5 6.96v10.08l4.46 4.46h10.08l4.46-4.46V6.96z" fill="#1B2A55"/>
+    <circle cx="12" cy="12" r="6.55" fill="#fff"/>
+    <path d="M8.6 8.15h6.8c0 3.1-1.55 4.75-2.75 5.2v1.5h2.15v1.5H9.2v-1.5h2.15v-1.5c-1.2-.45-2.75-2.1-2.75-5.2z" fill="#D6202A"/>
+    <path d="M14.75 8.15c.75-2.5-.5-3.85-1.95-3.5-1.3.3-1.5 2-.2 2.4" fill="none" stroke="#D6202A" stroke-width="1.45" stroke-linecap="round"/>
+  </g>
+  <g id="i-cruz"><path d="M14 3h-4v7H3v4h7v7h4v-7h7v-4h-7z" fill="currentColor"/></g>
+  <g id="i-pin" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10.5" r="2.5"/></g>
+  <g id="i-reloj" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/></g>
+  <g id="i-tel" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 3.5h-2A1.6 1.6 0 0 0 3 5.2C3 13.9 10.1 21 18.8 21a1.6 1.6 0 0 0 1.7-1.6v-2a1.6 1.6 0 0 0-1.3-1.6l-2.7-.5a1.6 1.6 0 0 0-1.6.7l-.8 1.2a12.4 12.4 0 0 1-5.8-5.8l1.2-.8a1.6 1.6 0 0 0 .7-1.6l-.5-2.7a1.6 1.6 0 0 0-1.1-1.3Z"/></g>
+  <g id="i-wa"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 2 .1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4Z" fill="currentColor"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22.4l5.4-1.4A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.2.8.9-3.1-.2-.3A8.2 8.2 0 1 1 12 20.2Z" fill="currentColor"/></g>
+  <g id="i-ig" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="4.8"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></g>
+  <g id="i-lupa" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.4"/><path d="m20 20-4.5-4.5"/></g>
+  <g id="i-x" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/></g>
+  <g id="i-mas" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></g>
+  <g id="i-check" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></g>
+  <g id="i-flecha" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></g>
+  <g id="i-bolsa" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7.5h14l-1 12.5a2 2 0 0 1-2 1.8H8a2 2 0 0 1-2-1.8Z"/><path d="M8.8 7.5V6a3.2 3.2 0 0 1 6.4 0v1.5"/></g>
+  <g id="i-alerta" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 20.5h20.4Z"/><path d="M12 9.5v5M12 17.6h.01"/></g>
+  <g id="i-moto" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3"/><circle cx="18.5" cy="17.5" r="3"/><path d="M8.5 17.5h6.8l-3.6-8H8.8M14 6.5h3.4l2.4 6.5"/></g>
+  <g id="i-escudo" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 4.5 5.5v6c0 4.6 3.1 8.8 7.5 10 4.4-1.2 7.5-5.4 7.5-10v-6Z"/><path d="m9 12 2.2 2.2L15.3 10"/></g>
+  <g id="i-pulso" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12.5h4l2-5.5 3.5 11 2.5-7 1.5 3h5.5"/></g>
+  <g id="i-corazon" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.3 6.6a4.7 4.7 0 0 0-6.7 0L12 8.2l-1.6-1.6a4.7 4.7 0 1 0-6.7 6.7L12 21.6l8.3-8.3a4.7 4.7 0 0 0 0-6.7Z"/></g>
+  <g id="i-pastilla" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7Z"/><path d="M7 10l7 7"/></g>
+  <g id="i-gota" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6.2 6.6 6.2 10.6a6.2 6.2 0 0 1-12.4 0C5.8 9.3 12 2.7 12 2.7Z"/></g>
+  <g id="i-hoja" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C10 4 4.5 8.8 4.5 15.5A4.5 4.5 0 0 0 9 20c7 0 11-6.4 11-16Z"/><path d="M4.5 20 13 11.5"/></g>
+  <g id="i-bebe" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2h5M10 2v2.4c0 .7-.3 1.1-.9 1.6A3.2 3.2 0 0 0 8 8.5V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8.5a3.2 3.2 0 0 0-1.1-2.5c-.6-.5-.9-.9-.9-1.6V2"/><path d="M8 11.5h8"/></g>
+  <g id="i-grilla" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></g>
+
+  <!-- ilustraciones de producto (80x80) -->
+  <g id="il-caja"><rect x="14" y="21" width="52" height="42" rx="4" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><path d="M14 33h52" stroke="#1B2A55" stroke-width="1.6" opacity=".55"/><rect x="21" y="41" width="24" height="4" rx="2" fill="#1B2A55" opacity=".38"/><rect x="21" y="49" width="15" height="4" rx="2" fill="#1B2A55" opacity=".22"/><path d="M55 44h7M58.5 40.5v7" stroke="#D6202A" stroke-width="2.8" stroke-linecap="round"/></g>
+  <g id="il-frasco"><rect x="32" y="11" width="16" height="9" rx="2" fill="#1B2A55" opacity=".42"/><path d="M28 27a6 6 0 0 1 6-6h12a6 6 0 0 1 6 6v33a4 4 0 0 1-4 4H32a4 4 0 0 1-4-4z" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><rect x="33" y="37" width="14" height="17" rx="2" fill="#fff" stroke="#1B2A55" stroke-width="1.6"/></g>
+  <g id="il-tubo"><rect x="34" y="9" width="12" height="8" rx="2" fill="#1B2A55" opacity=".42"/><path d="M29 20h22l2.5 40A5 5 0 0 1 48.5 65h-17A5 5 0 0 1 26.5 60z" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><rect x="32" y="34" width="16" height="4.5" rx="2.2" fill="#1B2A55" opacity=".35"/><rect x="32" y="43" width="11" height="4.5" rx="2.2" fill="#1B2A55" opacity=".22"/></g>
+  <g id="il-bomba"><path d="M40 7v11M40 11h9" stroke="#1B2A55" stroke-width="2.6" stroke-linecap="round"/><rect x="34" y="18" width="12" height="9" rx="2" fill="#1B2A55" opacity=".42"/><rect x="25" y="27" width="30" height="37" rx="5" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><rect x="31" y="38" width="18" height="15" rx="2" fill="#fff" stroke="#1B2A55" stroke-width="1.6"/></g>
+  <g id="il-tarro"><ellipse cx="40" cy="20" rx="18" ry="5.5" fill="#1B2A55" opacity=".35"/><path d="M22 20v39a4 4 0 0 0 4 4h28a4 4 0 0 0 4-4V20" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><rect x="29" y="33" width="22" height="15" rx="2" fill="#fff" stroke="#1B2A55" stroke-width="1.6"/></g>
+  <g id="il-paquete"><path d="M18 25h44v34a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4z" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><path d="M18 25l6-9h32l6 9" fill="none" stroke="#1B2A55" stroke-width="2.4" stroke-linejoin="round"/><rect x="27" y="39" width="26" height="4.5" rx="2.2" fill="#1B2A55" opacity=".35"/><rect x="27" y="48" width="16" height="4.5" rx="2.2" fill="#1B2A55" opacity=".22"/></g>
+  <g id="il-aparato"><rect x="16" y="19" width="48" height="34" rx="5" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><rect x="24" y="26" width="32" height="15" rx="2" fill="#fff" stroke="#1B2A55" stroke-width="1.6"/><path d="M28 34h4.5l2-4.5 3 9 2-4.5H52" fill="none" stroke="#1B2A55" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="47" r="2.6" fill="#1B2A55" opacity=".45"/><path d="M30 53v10M50 53v10" stroke="#1B2A55" stroke-width="2.4" stroke-linecap="round"/></g>
+  <g id="il-inhalador"><rect x="32" y="9" width="13" height="19" rx="3.5" fill="#1B2A55" opacity=".4"/><path d="M27 28h22a4 4 0 0 1 4 4v9H23v-9a4 4 0 0 1 4-4z" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><path d="M23 41h30l-4 21a4 4 0 0 1-4 3.4H31A4 4 0 0 1 27 62z" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/></g>
+  <g id="il-sobre"><rect x="17" y="22" width="46" height="37" rx="4" fill="#E7EBF5" stroke="#1B2A55" stroke-width="2.4"/><path d="M17 32h46" stroke="#1B2A55" stroke-width="1.6" opacity=".55"/><rect x="25" y="40" width="26" height="4.5" rx="2.2" fill="#1B2A55" opacity=".35"/><rect x="25" y="49" width="16" height="4.5" rx="2.2" fill="#1B2A55" opacity=".22"/></g>
+</defs></svg>
+
+<!-- ============================ BARRA SUPERIOR ============================ -->
+<div class="tira-top">
   <div class="env">
-    <a class="marca" href="#inicio">
-      <span class="marca-cruz"><svg viewBox="0 0 24 24"><use href="#i-cruz"></use></svg></span>
-      <span class="marca-txt"><b>Farmacia Real</b><span>Independencia · Ñuñoa</span></span>
-    </a>
+    <span><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg> 4 sucursales · Independencia y Ñuñoa</span>
+    <span><svg viewBox="0 0 24 24"><use href="#i-bolsa"></use></svg> Retiro en tienda</span>
+    <a id="topWa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Pide por WhatsApp</a>
+  </div>
+</div>
 
-    <button class="chip-sucursal" id="chipSucursal" aria-label="Cambiar de sucursal">
-      <svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>
-      <b id="chipNombre">—</b>
-      <span class="cambiar">Cambiar</span>
-    </button>
+<!-- ============================ CABECERA ============================ -->
+<header class="cab">
+  <div class="env">
+    <div class="cab-fila">
+      <a class="logo" href="#inicio">
+        <span class="logo-cruz"><svg viewBox="0 0 24 24"><use href="#i-emblema"></use></svg></span>
+        <span><b>Farmacias <i>Real</i></b><small>Tu farmacia de barrio</small></span>
+      </a>
 
-    <button class="btn-pedido" id="btnPedido" data-vacio="si" aria-label="Ver mi pedido">
-      <svg viewBox="0 0 24 24"><use href="#i-bolsa"></use></svg>
-      <span class="texto">Mi pedido</span>
-      <span class="conteo" id="conteoPedido">0</span>
-    </button>
+      <div class="busca-caja" data-lleno="no">
+        <svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg>
+        <input type="search" class="input-busca" placeholder="Buscar remedio, marca o principio activo…" aria-label="Buscar productos" autocomplete="off">
+        <button class="limpia" aria-label="Limpiar búsqueda"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+      </div>
+
+      <div class="acciones-cab">
+        <button class="btn-ped" id="btnPedido" data-vacio="si" aria-label="Ver mi pedido">
+          <svg viewBox="0 0 24 24"><use href="#i-bolsa"></use></svg>
+          <span class="txt">Mi pedido</span>
+          <span class="cta" id="conteoPedido">0</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="busca-movil">
+      <div class="busca-caja" data-lleno="no">
+        <svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg>
+        <input type="search" class="input-busca" placeholder="Buscar remedio o marca…" aria-label="Buscar productos" autocomplete="off">
+        <button class="limpia" aria-label="Limpiar búsqueda"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+      </div>
+    </div>
   </div>
 </header>
 
-<!-- ============================ HERO ============================ -->
-<section class="hero" id="inicio">
+<!-- ============================ BARRA DE SUCURSAL ============================ -->
+<div class="barra-suc">
   <div class="env">
-    <span class="hero-eyebrow"><span class="punto"></span> <span id="heroEstado">Revisa el stock de tu sucursal</span></span>
-    <h1>Tu farmacia de barrio, con <em>stock real</em> por sucursal.</h1>
-    <p class="hero-bajada">
-      Elige el local más cercano, revisa qué hay disponible hoy y arma tu pedido.
-      Te lo confirmamos por WhatsApp y lo dejamos listo para retirar.
-    </p>
-    <div class="hero-acciones">
-      <a class="btn btn-wa" id="heroWa" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Escríbenos por WhatsApp
-      </a>
-      <a class="btn btn-claro" href="#catalogo">Ver catálogo</a>
+    <div class="suc-info">
+      <svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>
+      <span class="suc-txt">
+        <span class="et">Retiras en</span>
+        <b id="sucNombre">—</b>
+      </span>
     </div>
-    <ul class="hero-datos">
-      <li><b>4</b><span>sucursales</span></li>
-      <li><b id="datoProductos">—</b><span>productos en catálogo</span></li>
-      <li><b>Lun a Dom</b><span>según sucursal</span></li>
-      <li><b>Bioequivalentes</b><span>al mejor precio</span></li>
+    <span class="abierto-chip" id="sucEstado" data-abierto="no"><span class="pt"></span>—</span>
+    <button class="btn-cambiar" id="btnCambiar">
+      <svg viewBox="0 0 24 24"><use href="#i-grilla"></use></svg><span>Cambiar<span class="larga">&nbsp;sucursal</span></span>
+    </button>
+  </div>
+</div>
+
+<!-- ============================ CATEGORÍAS ============================ -->
+<nav class="nav-cats" aria-label="Categorías">
+  <div class="env"><div class="cats" id="cats" role="group"></div></div>
+</nav>
+
+<!-- ============================ BANNER ============================ -->
+<section class="banner" id="inicio">
+  <div class="env">
+    <h1>Busca tu remedio y revisa si lo tenemos hoy</h1>
+    <p>Cada local tiene su propio stock. Elige tu sucursal, arma el pedido y te lo dejamos apartado — sin pagar nada por aquí.</p>
+    <div class="banner-btns">
+      <a class="btn btn-blanco" href="#catalogo"><svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg> Ver el catálogo</a>
+      <a class="btn btn-wa" id="heroWa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Escríbenos por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 3 PASOS ============================ -->
+<section class="pasos">
+  <div class="env">
+    <ul>
+      <li class="paso"><span class="paso-n">1</span><div><h3>Elige tu sucursal</h3><p>El catálogo te muestra solo lo que hay en ese local.</p></div></li>
+      <li class="paso"><span class="paso-n">2</span><div><h3>Arma tu pedido</h3><p>Agrega lo que necesitas. No se paga nada en la página.</p></div></li>
+      <li class="paso"><span class="paso-n">3</span><div><h3>Te respondemos</h3><p>Llega por WhatsApp, confirmamos y lo dejamos apartado.</p></div></li>
     </ul>
   </div>
 </section>
 
-<!-- ============================ SUCURSALES ============================ -->
-<section class="seccion" id="sucursales">
-  <div class="env">
-    <div class="seccion-cabecera">
-      <span class="rotulo">Nuestros locales</span>
-      <h2>Elige tu sucursal</h2>
-      <p class="bajada">El catálogo, el stock y el WhatsApp cambian según el local que selecciones.</p>
-    </div>
-    <div class="grid-sucursales" id="gridSucursales"></div>
-  </div>
-</section>
-
 <!-- ============================ CATÁLOGO ============================ -->
-<section class="seccion" id="catalogo" style="padding-top:clamp(36px,6vw,60px)">
+<section class="sec" id="catalogo">
   <div class="env">
-    <div class="seccion-cabecera">
-      <span class="rotulo">Catálogo</span>
-      <h2>Disponible en <span id="tituloSucursal">tu sucursal</span></h2>
-      <p class="bajada">Precios referenciales. Confirmamos stock y valor final por WhatsApp antes de que vengas.</p>
-    </div>
-
-    <div class="barra-catalogo">
-      <div class="buscador" id="buscador">
-        <svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg>
-        <input type="search" id="inputBusqueda" placeholder="Buscar medicamento, marca o principio activo…" aria-label="Buscar en el catálogo" autocomplete="off">
-        <button class="limpiar" id="limpiarBusqueda" aria-label="Limpiar búsqueda"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+    <div class="sec-cab">
+      <div>
+        <h2>Disponible en <span id="tituloSuc">tu sucursal</span></h2>
+        <p>Precios referenciales. Confirmamos stock y valor final por WhatsApp antes de que vengas.</p>
       </div>
-      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
     </div>
 
-    <div class="resumen-filtro">
-      <span id="resumenConteo">—</span>
+    <div class="filtros-fila">
+      <span id="resumen">—</span>
       <label class="solo-stock">
         <input type="checkbox" id="soloStock" role="switch">
-        Solo con stock disponible
+        Mostrar solo lo que hay hoy
       </label>
+      <span class="orden">
+        <label for="orden">Ordenar por</label>
+        <select id="orden">
+          <option value="destacados">Recomendados</option>
+          <option value="precio-asc">Menor precio</option>
+          <option value="precio-desc">Mayor precio</option>
+          <option value="nombre">Nombre A-Z</option>
+        </select>
+      </span>
     </div>
 
-    <div class="grid-productos" id="gridProductos"></div>
+    <div class="vitrina" id="vitrina"></div>
 
-    <div class="aviso-receta">
+    <div class="aviso">
       <svg viewBox="0 0 24 24"><use href="#i-alerta"></use></svg>
       <div>
-        <b>Productos con receta:</b> los medicamentos marcados como <em>Receta</em> requieren presentar la receta médica
-        en el local al momento del retiro. Escríbenos por WhatsApp y te indicamos qué necesitas traer.
+        <b>Sobre las recetas.</b> Los productos marcados <em>Receta</em> necesitan que traigas la receta médica
+        al local cuando vengas a retirar. Si tienes dudas, escríbenos y te decimos exactamente qué necesitas.
         Esta página no reemplaza la indicación de un profesional de la salud.
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ SERVICIOS ============================ -->
-<section class="seccion" id="servicios">
+<!-- ============================ SUCURSALES ============================ -->
+<section class="sec" id="sucursales">
   <div class="env">
-    <div class="seccion-cabecera">
-      <span class="rotulo">En el local</span>
-      <h2>Más que vender remedios</h2>
-    </div>
-    <div class="grid-servicios">
-      <div class="servicio">
-        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-corazon"></use></svg></span>
-        <div><h3>Consulta farmacéutica</h3><p>Te orientamos sobre dosis, interacciones y alternativas bioequivalentes más económicas.</p></div>
-      </div>
-      <div class="servicio">
-        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-pulso"></use></svg></span>
-        <div><h3>Control de presión</h3><p>Pasa a tomarte la presión sin costo mientras esperas tu pedido.</p></div>
-      </div>
-      <div class="servicio">
-        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-pastilla"></use></svg></span>
-        <div><h3>Tratamientos crónicos</h3><p>Te avisamos cuando llega tu medicamento y lo reservamos hasta que puedas venir.</p></div>
-      </div>
-      <div class="servicio">
-        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-moto"></use></svg></span>
-        <div><h3>Despacho por el sector</h3><p>Coordinamos entrega en Independencia y alrededores. Consulta cobertura por WhatsApp.</p></div>
-      </div>
-      <div class="servicio">
-        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-escudo"></use></svg></span>
-        <div><h3>Bioequivalentes certificados</h3><p>El mismo principio activo, respaldado por el ISP, a una fracción del precio.</p></div>
-      </div>
-      <div class="servicio">
-        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-mamadera"></use></svg></span>
-        <div><h3>Mamá y bebé</h3><p>Fórmulas, pañales y cuidado infantil siempre disponibles en nuestros locales.</p></div>
-      </div>
+    <div class="sec-cab"><div><h2>Nuestras sucursales</h2><p>Toca una para ver su catálogo y su stock.</p></div></div>
+    <div class="locales" id="locales"></div>
+  </div>
+</section>
+
+<!-- ============================ SERVICIOS ============================ -->
+<section class="sec" id="servicios">
+  <div class="env">
+    <div class="sec-cab"><div><h2>También te ayudamos con</h2></div></div>
+    <div class="servicios">
+      <div class="serv"><span class="serv-ico"><svg viewBox="0 0 24 24"><use href="#i-corazon"></use></svg></span><div><h3>Consulta farmacéutica</h3><p>Te orientamos sobre dosis, interacciones y qué bioequivalente te sirve por menos plata.</p></div></div>
+      <div class="serv"><span class="serv-ico"><svg viewBox="0 0 24 24"><use href="#i-pulso"></use></svg></span><div><h3>Control de presión</h3><p>Pasa a tomarte la presión sin costo mientras te preparamos el pedido.</p></div></div>
+      <div class="serv"><span class="serv-ico"><svg viewBox="0 0 24 24"><use href="#i-pastilla"></use></svg></span><div><h3>Tratamientos crónicos</h3><p>Te avisamos cuando llega tu remedio y te lo dejamos apartado hasta que puedas venir.</p></div></div>
+      <div class="serv"><span class="serv-ico"><svg viewBox="0 0 24 24"><use href="#i-moto"></use></svg></span><div><h3>Despacho por el sector</h3><p>Coordinamos entrega en Independencia y alrededores. Consulta cobertura por WhatsApp.</p></div></div>
+      <div class="serv"><span class="serv-ico"><svg viewBox="0 0 24 24"><use href="#i-escudo"></use></svg></span><div><h3>Bioequivalentes certificados</h3><p>El mismo principio activo, respaldado por el ISP, a una fracción del precio de marca.</p></div></div>
+      <div class="serv"><span class="serv-ico"><svg viewBox="0 0 24 24"><use href="#i-bebe"></use></svg></span><div><h3>Mamá y bebé</h3><p>Fórmulas, pañales y cuidado infantil siempre disponibles en nuestros locales.</p></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================ UBICACIÓN ============================ -->
-<section class="seccion" id="ubicacion">
+<section class="sec" id="ubicacion">
   <div class="env">
-    <div class="seccion-cabecera">
-      <span class="rotulo">Cómo llegar</span>
-      <h2 id="tituloUbicacion">Visítanos</h2>
-      <p class="bajada">Datos de la sucursal seleccionada. Cambia de local arriba para ver otra.</p>
-    </div>
-
-    <div class="bloque-ubicacion">
+    <div class="sec-cab"><div><h2 id="tituloUbic">Cómo llegar</h2><p>Datos de la sucursal seleccionada. Cambia de local arriba para ver otra.</p></div></div>
+    <div class="ubic">
       <div>
         <div class="panel">
           <h3><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg> Contacto y dirección</h3>
           <div id="panelContacto"></div>
-          <a class="btn btn-linea btn-bloque" id="btnComoLlegar" href="#" target="_blank" rel="noopener" style="margin-top:16px">
+          <a class="btn btn-borde btn-ancho" id="btnLlegar" href="#" target="_blank" rel="noopener" style="margin-top:16px">
             <svg viewBox="0 0 24 24"><use href="#i-flecha"></use></svg> Cómo llegar en Google Maps
           </a>
         </div>
         <div class="panel">
           <h3><svg viewBox="0 0 24 24"><use href="#i-reloj"></use></svg> Horarios de atención</h3>
-          <ul class="lista-horario" id="listaHorario"></ul>
+          <ul class="horas" id="horas"></ul>
         </div>
       </div>
-      <div class="mapa"><iframe id="mapaIframe" title="Mapa de la sucursal" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+      <div class="mapa"><iframe id="mapa" title="Mapa de la sucursal" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
     </div>
   </div>
 </section>
@@ -784,78 +800,75 @@ body:has(.cajon[data-abierto="si"]) .flotante{opacity:0;pointer-events:none}
   <div class="env">
     <div class="pie-grid">
       <div>
-        <div class="pie-marca">
-          <span class="marca-cruz"><svg viewBox="0 0 24 24"><use href="#i-cruz"></use></svg></span>
-          <span><b>Farmacia Real</b><span>Independencia · Ñuñoa</span></span>
+        <div class="pie-logo">
+          <span class="logo-cruz"><svg viewBox="0 0 24 24"><use href="#i-emblema"></use></svg></span>
+          <b>Farmacias <i>Real</i></b>
         </div>
-        <p class="pie-bajada">Farmacia de barrio con cuatro locales en Santiago. Medicamentos, bioequivalentes, dermocosmética y cuidado en casa, con atención de verdad.</p>
+        <p class="pie-plomo">Farmacia de barrio con cuatro locales en Santiago. Remedios, bioequivalentes, dermocosmética y cuidado en casa, con atención de verdad.</p>
         <div class="redes">
-          <a href="https://instagram.com/farmaciareal4" target="_blank" rel="noopener" aria-label="Instagram de Farmacia Real"><svg viewBox="0 0 24 24"><use href="#i-ig"></use></svg></a>
-          <a id="piePedido" href="#" target="_blank" rel="noopener" aria-label="WhatsApp de Farmacia Real"><svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg></a>
+          <a href="https://instagram.com/farmaciareal4" target="_blank" rel="noopener" aria-label="Instagram de Farmacias Real"><svg viewBox="0 0 24 24"><use href="#i-ig"></use></svg></a>
+          <a id="pieWa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp de Farmacias Real"><svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg></a>
         </div>
       </div>
-      <div>
-        <h4>Sucursales</h4>
-        <ul id="pieSucursales"></ul>
-      </div>
-      <div>
-        <h4>Secciones</h4>
-        <ul>
-          <li><a href="#sucursales">Elegir sucursal</a></li>
-          <li><a href="#catalogo">Catálogo y stock</a></li>
-          <li><a href="#servicios">Servicios</a></li>
-          <li><a href="#ubicacion">Cómo llegar</a></li>
-        </ul>
-      </div>
+      <div><h4>Sucursales</h4><ul id="pieSuc"></ul></div>
+      <div><h4>Secciones</h4><ul>
+        <li><a href="#catalogo">Catálogo y stock</a></li>
+        <li><a href="#sucursales">Nuestras sucursales</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#ubicacion">Cómo llegar</a></li>
+      </ul></div>
     </div>
-    <p class="pie-legal">
+    <p class="legal">
       Los precios publicados son referenciales y pueden variar sin previo aviso; el valor final se confirma en el local.
       La disponibilidad mostrada es orientativa. Los medicamentos con receta requieren presentación de receta médica vigente.
       Ante cualquier síntoma, consulta a un profesional de la salud.
-      © <span id="anio"></span> Farmacia Real. Todos los derechos reservados.
+      © <span id="anio"></span> Farmacias Real.
     </p>
   </div>
 </footer>
 
-<!-- ============================ PEDIDO ============================ -->
+<!-- ============================ CAJONES ============================ -->
 <div class="velo" id="velo" data-abierto="no"></div>
-<aside class="cajon" id="cajonPedido" data-abierto="no" role="dialog" aria-modal="true" aria-labelledby="tituloCajon">
-  <span class="cajon-tirador"></span>
-  <div class="cajon-cabecera">
-    <div>
-      <h3 id="tituloCajon">Mi pedido</h3>
-      <span class="sub" id="subCajon">—</span>
-    </div>
-    <button class="cerrar" id="cerrarCajon" aria-label="Cerrar pedido"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+
+<aside class="cajon" id="cajonPedido" data-abierto="no" role="dialog" aria-modal="true" aria-labelledby="tPed">
+  <span class="tirador"></span>
+  <div class="cajon-cab">
+    <div><h3 id="tPed">Mi pedido</h3><span class="sub" id="subPed">—</span></div>
+    <button class="equis" id="cerrarPed" aria-label="Cerrar pedido"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
   </div>
-  <div class="cajon-cuerpo" id="cuerpoCajon"></div>
+  <div class="cajon-cuerpo" id="cuerpoPed"></div>
   <div class="cajon-pie">
-    <div class="total-fila"><span class="et">Total referencial</span><span class="vl" id="totalPedido">$0</span></div>
-    <p class="nota-total">El valor final se confirma en el local. No es una compra: al enviar, un farmacéutico te responde por WhatsApp con la disponibilidad.</p>
-    <a class="btn btn-wa btn-bloque" id="enviarPedido" href="#" target="_blank" rel="noopener">
+    <div class="total"><span class="et">Total referencial</span><span class="vl num" id="totalPed">$0</span></div>
+    <p class="aclara">Esto no es una compra. Al enviar, te respondemos por WhatsApp confirmando disponibilidad y valor final.</p>
+    <a class="btn btn-wa btn-ancho" id="enviarPed" href="#" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Enviar pedido por WhatsApp
     </a>
-    <p class="destino-pedido"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg> Se envía a <b id="destinoNombre">—</b></p>
+    <p class="destino"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg> Se envía a <b id="destino">—</b></p>
   </div>
 </aside>
 
-<!-- ============================ SELECTOR DE SUCURSAL (modal) ============================ -->
-<aside class="cajon" id="cajonSucursal" data-abierto="no" role="dialog" aria-modal="true" aria-labelledby="tituloCajonSuc">
-  <span class="cajon-tirador"></span>
-  <div class="cajon-cabecera">
-    <div>
-      <h3 id="tituloCajonSuc">Elige tu sucursal</h3>
-      <span class="sub">El stock y el WhatsApp cambian según el local</span>
-    </div>
-    <button class="cerrar" id="cerrarSucursal" aria-label="Cerrar selector"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+<aside class="cajon" id="cajonSuc" data-abierto="no" role="dialog" aria-modal="true" aria-labelledby="tSuc">
+  <span class="tirador"></span>
+  <div class="cajon-cab">
+    <div><h3 id="tSuc">Elige tu sucursal</h3><span class="sub">El stock y el WhatsApp cambian según el local</span></div>
+    <button class="equis" id="cerrarSuc" aria-label="Cerrar selector"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
   </div>
-  <div class="cajon-cuerpo"><div class="grid-sucursales" id="gridSucursalesModal" style="grid-template-columns:1fr"></div></div>
+  <div class="cajon-cuerpo"><div class="locales" id="localesModal" style="grid-template-columns:1fr"></div></div>
 </aside>
 
-<a class="flotante" id="flotanteWa" href="#" target="_blank" rel="noopener">
-  <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg>
-  <span class="texto">Escríbenos</span>
+<a class="flota" id="flotaWa" href="#" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg><span class="txt">Escríbenos</span>
 </a>
+
+<div class="barra-pedido" id="barraPedido" data-visible="no">
+  <div class="env">
+    <button class="bp-btn" id="bpBtn">
+      <span class="cant" id="bpCant">0</span>
+      <span class="mid">Ver mi pedido</span>
+      <span class="num" id="bpTotal">$0</span>
+    </button>
+  </div>
+</div>
 
 <script>
 /* ================================================================
@@ -865,116 +878,101 @@ body:has(.cajon[data-abierto="si"]) .flotante{opacity:0;pointer-events:none}
 /* Días: 0=domingo … 6=sábado. "cerrado" para días sin atención. */
 const SUCURSALES = [
   {
-    id: 'independencia',
-    nombre: 'Independencia 1443',
-    corto: 'Independencia',
-    comuna: 'Independencia',
-    direccion: 'Av. Independencia 1443, Independencia',
-    telefono: '+56 9 4018 4554',
-    whatsapp: '56940184554',
-    horario: [
+    id:'independencia', nombre:'Independencia 1443', corto:'Independencia 1443', comuna:'Independencia',
+    direccion:'Av. Independencia 1443, Independencia',
+    telefono:'+56 9 4018 4554', whatsapp:'56940184554',
+    horario:[
       { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'08:30', cierra:'21:00' },
       { d:[6],         et:'Sábado',          abre:'09:00', cierra:'21:00' },
       { d:[0],         et:'Domingo',         abre:'10:00', cierra:'15:00' }
     ],
-    mapa: 'Av. Independencia 1443, Independencia, Región Metropolitana, Chile'
+    mapa:'Av. Independencia 1443, Independencia, Región Metropolitana, Chile'
   },
   {
-    id: 'sevilla',
-    nombre: 'Sevilla 1201',
-    corto: 'Sevilla',
-    comuna: 'Independencia',
-    direccion: 'Calle Sevilla 1201-1205, Independencia',
-    telefono: '+56 9 8571 5937',
-    whatsapp: '56985715937',
-    horario: [
+    id:'sevilla', nombre:'Sevilla 1201', corto:'Sevilla 1201', comuna:'Independencia',
+    direccion:'Calle Sevilla 1201-1205, Independencia',
+    telefono:'+56 9 8571 5937', whatsapp:'56985715937',
+    horario:[
       { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'09:00', cierra:'20:30' },
       { d:[6],         et:'Sábado',          abre:'09:30', cierra:'20:00' },
       { d:[0],         et:'Domingo',         cerrado:true }
     ],
-    mapa: 'Sevilla 1201, Independencia, Región Metropolitana, Chile'
+    mapa:'Sevilla 1201, Independencia, Región Metropolitana, Chile'
   },
   {
-    id: 'santamaria',
-    nombre: 'Domingo Santa María 1789',
-    corto: 'Sta. María',
-    comuna: 'Independencia',
-    direccion: 'Av. Domingo Santa María 1789, esq. Vivaceta, Independencia',
+    id:'santamaria', nombre:'Domingo Santa María 1789', corto:'Santa María 1789', comuna:'Independencia',
+    direccion:'Av. Domingo Santa María 1789, esq. Vivaceta, Independencia',
     /* TODO: reemplazar por el número propio de esta sucursal */
-    telefono: '+56 9 4018 4554',
-    whatsapp: '56940184554',
-    horario: [
+    telefono:'+56 9 4018 4554', whatsapp:'56940184554',
+    horario:[
       { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'08:30', cierra:'21:00' },
       { d:[6],         et:'Sábado',          abre:'09:00', cierra:'21:00' },
       { d:[0],         et:'Domingo',         abre:'10:00', cierra:'14:00' }
     ],
-    mapa: 'Av. Domingo Santa María 1789, Independencia, Región Metropolitana, Chile'
+    mapa:'Av. Domingo Santa María 1789, Independencia, Región Metropolitana, Chile'
   },
   {
-    id: 'nunoa',
-    nombre: 'Simón Bolívar 3751',
-    corto: 'Ñuñoa',
-    comuna: 'Ñuñoa',
-    direccion: 'Av. Simón Bolívar 3751-A, Ñuñoa',
+    id:'nunoa', nombre:'Simón Bolívar 3751', corto:'Simón Bolívar 3751', comuna:'Ñuñoa',
+    direccion:'Av. Simón Bolívar 3751-A, Ñuñoa',
     /* TODO: reemplazar por el número propio de esta sucursal */
-    telefono: '+56 9 4018 4554',
-    whatsapp: '56940184554',
-    horario: [
+    telefono:'+56 9 4018 4554', whatsapp:'56940184554',
+    horario:[
       { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'09:00', cierra:'21:00' },
       { d:[6],         et:'Sábado',          abre:'10:00', cierra:'20:00' },
       { d:[0],         et:'Domingo',         cerrado:true }
     ],
-    mapa: 'Av. Simón Bolívar 3751, Ñuñoa, Región Metropolitana, Chile'
+    mapa:'Av. Simón Bolívar 3751, Ñuñoa, Región Metropolitana, Chile'
   }
 ];
 
 const CATEGORIAS = [
-  { id:'todos',       et:'Todos',              ico:'i-cruz' },
-  { id:'medicamentos',et:'Medicamentos',       ico:'i-pastilla' },
-  { id:'dermo',       et:'Dermocosmética',     ico:'i-gota' },
-  { id:'vitaminas',   et:'Vitaminas',          ico:'i-hoja' },
-  { id:'infantil',    et:'Mamá y bebé',        ico:'i-mamadera' },
-  { id:'cuidado',     et:'Cuidado personal',   ico:'i-corazon' },
-  { id:'equipos',     et:'Equipos y control',  ico:'i-pulso' }
+  { id:'todos',        et:'Ver todo',          ico:'i-grilla' },
+  { id:'medicamentos', et:'Medicamentos',      ico:'i-pastilla' },
+  { id:'dermo',        et:'Dermocosmética',    ico:'i-gota' },
+  { id:'vitaminas',    et:'Vitaminas',         ico:'i-hoja' },
+  { id:'infantil',     et:'Mamá y bebé',       ico:'i-bebe' },
+  { id:'cuidado',      et:'Cuidado personal',  ico:'i-corazon' },
+  { id:'equipos',      et:'Equipos y control', ico:'i-pulso' }
 ];
 
-/* stock: unidades por sucursal → [independencia, sevilla, santamaria, nunoa] */
+/* il  = ilustración: caja | frasco | tubo | bomba | tarro | paquete | aparato | inhalador | sobre
+   st  = unidades por sucursal → [independencia, sevilla, santamaria, nunoa] */
 const PRODUCTOS = [
-  { n:'Paracetamol 500 mg',        pres:'20 comprimidos', lab:'Laboratorio Chile', act:'Paracetamol', cat:'medicamentos', p:1290,  be:true,  st:[38,24,31,19] },
-  { n:'Ibuprofeno 400 mg',         pres:'20 comprimidos', lab:'Mintlab',           act:'Ibuprofeno',  cat:'medicamentos', p:2390,  be:true,  st:[26,0,18,12] },
-  { n:'Loratadina 10 mg',          pres:'10 comprimidos', lab:'Laboratorio Chile', act:'Loratadina',  cat:'medicamentos', p:1790,  be:true,  st:[41,15,6,22] },
-  { n:'Omeprazol 20 mg',           pres:'30 cápsulas',    lab:'Mintlab',           act:'Omeprazol',   cat:'medicamentos', p:3990,  be:true,  st:[17,9,25,0] },
-  { n:'Amoxicilina 500 mg',        pres:'21 cápsulas',    lab:'Saval',             act:'Amoxicilina', cat:'medicamentos', p:5490,  rec:true, st:[12,7,0,9] },
-  { n:'Losartán 50 mg',            pres:'30 comprimidos', lab:'Andrómaco',         act:'Losartán potásico', cat:'medicamentos', p:4290, be:true, rec:true, st:[22,14,16,11] },
-  { n:'Metformina 850 mg',         pres:'30 comprimidos', lab:'Laboratorio Chile', act:'Metformina',  cat:'medicamentos', p:3690,  be:true, rec:true, st:[19,4,21,8] },
-  { n:'Salbutamol inhalador',      pres:'200 dosis',      lab:'Saval',             act:'Salbutamol',  cat:'medicamentos', p:6990,  rec:true, st:[8,0,5,7] },
-  { n:'Jarabe para la tos',        pres:'120 ml',         lab:'Recalcine',         act:'Ambroxol',    cat:'medicamentos', p:4590,  st:[23,11,14,16] },
-  { n:'Sales de rehidratación',    pres:'Caja 5 sobres',  lab:'Laboratorio Chile', act:'Electrolitos',cat:'medicamentos', p:3290,  st:[30,18,9,13] },
+  { n:'Paracetamol 500 mg',        pres:'20 comprimidos', lab:'Laboratorio Chile', act:'Paracetamol', cat:'medicamentos', il:'caja',   p:1290,  be:true,  st:[38,24,31,19] },
+  { n:'Ibuprofeno 400 mg',         pres:'20 comprimidos', lab:'Mintlab',           act:'Ibuprofeno',  cat:'medicamentos', il:'caja',   p:2390,  be:true,  st:[26,0,18,12] },
+  { n:'Loratadina 10 mg',          pres:'10 comprimidos', lab:'Laboratorio Chile', act:'Loratadina',  cat:'medicamentos', il:'caja',   p:1790,  be:true,  st:[41,15,6,22] },
+  { n:'Omeprazol 20 mg',           pres:'30 cápsulas',    lab:'Mintlab',           act:'Omeprazol',   cat:'medicamentos', il:'caja',   p:3990,  be:true,  st:[17,9,25,0] },
+  { n:'Amoxicilina 500 mg',        pres:'21 cápsulas',    lab:'Saval',             act:'Amoxicilina', cat:'medicamentos', il:'caja',   p:5490,  rec:true, st:[12,7,0,9] },
+  { n:'Losartán 50 mg',            pres:'30 comprimidos', lab:'Andrómaco',         act:'Losartán potásico', cat:'medicamentos', il:'caja', p:4290, be:true, rec:true, st:[22,14,16,11] },
+  { n:'Metformina 850 mg',         pres:'30 comprimidos', lab:'Laboratorio Chile', act:'Metformina',  cat:'medicamentos', il:'caja',   p:3690,  be:true, rec:true, st:[19,4,21,8] },
+  { n:'Salbutamol inhalador',      pres:'200 dosis',      lab:'Saval',             act:'Salbutamol',  cat:'medicamentos', il:'inhalador', p:6990, rec:true, st:[8,0,5,7] },
+  { n:'Jarabe para la tos',        pres:'120 ml',         lab:'Recalcine',         act:'Ambroxol',    cat:'medicamentos', il:'frasco', p:4590,  st:[23,11,14,16] },
+  { n:'Sales de rehidratación',    pres:'Caja 5 sobres',  lab:'Laboratorio Chile', act:'Electrolitos',cat:'medicamentos', il:'sobre',  p:3290,  st:[30,18,9,13] },
 
-  { n:'Protector solar FPS 50+',   pres:'Facial 50 ml',   lab:'ISDIN',             act:'Fotoprotección', cat:'dermo', p:18990, st:[9,3,7,14] },
-  { n:'Crema hidratante piel sensible', pres:'Frasco 473 ml', lab:'Cetaphil',      act:'Emoliente',    cat:'dermo', p:15490, st:[6,0,4,11] },
-  { n:'Gel limpiador facial',      pres:'200 ml',         lab:'La Roche-Posay',    act:'Effaclar',     cat:'dermo', p:13990, st:[4,2,0,8] },
-  { n:'Crema para manos reparadora',pres:'75 ml',         lab:'Eucerin',           act:'Urea 5%',      cat:'dermo', p:7990,  st:[15,8,12,10] },
+  { n:'Protector solar FPS 50+',   pres:'Facial 50 ml',   lab:'ISDIN',             act:'Fotoprotección', cat:'dermo', il:'tubo',  p:18990, st:[9,3,7,14] },
+  { n:'Crema hidratante piel sensible', pres:'Frasco 473 ml', lab:'Cetaphil',      act:'Emoliente',      cat:'dermo', il:'bomba', p:15490, st:[6,0,4,11] },
+  { n:'Gel limpiador facial',      pres:'200 ml',         lab:'La Roche-Posay',    act:'Effaclar',       cat:'dermo', il:'bomba', p:13990, st:[4,2,0,8] },
+  { n:'Crema para manos reparadora',pres:'75 ml',         lab:'Eucerin',           act:'Urea 5%',        cat:'dermo', il:'tubo',  p:7990,  st:[15,8,12,10] },
 
-  { n:'Vitamina C 1000 mg',        pres:'30 comprimidos', lab:'Mintlab',           act:'Ácido ascórbico', cat:'vitaminas', p:5990, st:[27,16,20,18] },
-  { n:'Vitamina D3 1000 UI',       pres:'60 cápsulas',    lab:'Andrómaco',         act:'Colecalciferol',  cat:'vitaminas', p:8490, st:[13,5,0,9] },
-  { n:'Omega 3 1000 mg',           pres:'60 cápsulas',    lab:'Natural Life',      act:'EPA / DHA',       cat:'vitaminas', p:11990, st:[10,0,8,12] },
-  { n:'Multivitamínico adulto',    pres:'30 comprimidos', lab:'Centrum',           act:'Multivitamina',   cat:'vitaminas', p:9990,  st:[18,7,11,15] },
+  { n:'Vitamina C 1000 mg',        pres:'30 comprimidos', lab:'Mintlab',           act:'Ácido ascórbico', cat:'vitaminas', il:'frasco', p:5990, st:[27,16,20,18] },
+  { n:'Vitamina D3 1000 UI',       pres:'60 cápsulas',    lab:'Andrómaco',         act:'Colecalciferol',  cat:'vitaminas', il:'frasco', p:8490, st:[13,5,0,9] },
+  { n:'Omega 3 1000 mg',           pres:'60 cápsulas',    lab:'Natural Life',      act:'EPA / DHA',       cat:'vitaminas', il:'frasco', p:11990, st:[10,0,8,12] },
+  { n:'Multivitamínico adulto',    pres:'30 comprimidos', lab:'Centrum',           act:'Multivitamina',   cat:'vitaminas', il:'frasco', p:9990,  st:[18,7,11,15] },
 
-  { n:'Fórmula infantil etapa 1',  pres:'Tarro 800 g',    lab:'NAN',               act:'Nutrición infantil', cat:'infantil', p:16990, st:[7,3,9,5] },
-  { n:'Pañales bebé talla M',      pres:'Paquete 50 un.', lab:'Babysec',           act:'Higiene infantil',   cat:'infantil', p:12990, st:[12,6,0,8] },
-  { n:'Toallitas húmedas',         pres:'Paquete 100 un.',lab:'Huggies',           act:'Higiene infantil',   cat:'infantil', p:3490,  st:[24,14,19,17] },
-  { n:'Termómetro digital infantil',pres:'1 unidad',      lab:'Omron',             act:'Medición',           cat:'infantil', p:8990,  st:[9,4,6,7] },
+  { n:'Fórmula infantil etapa 1',  pres:'Tarro 800 g',    lab:'NAN',               act:'Nutrición infantil', cat:'infantil', il:'tarro',   p:16990, st:[7,3,9,5] },
+  { n:'Pañales bebé talla M',      pres:'Paquete 50 un.', lab:'Babysec',           act:'Higiene infantil',   cat:'infantil', il:'paquete', p:12990, st:[12,6,0,8] },
+  { n:'Toallitas húmedas',         pres:'Paquete 100 un.',lab:'Huggies',           act:'Higiene infantil',   cat:'infantil', il:'paquete', p:3490,  st:[24,14,19,17] },
+  { n:'Termómetro digital infantil',pres:'1 unidad',      lab:'Omron',             act:'Medición',           cat:'infantil', il:'aparato', p:8990,  st:[9,4,6,7] },
 
-  { n:'Alcohol gel',               pres:'250 ml',         lab:'Genérico',          act:'Etanol 70%',   cat:'cuidado', p:2490, st:[35,22,28,20] },
-  { n:'Mascarillas quirúrgicas',   pres:'Caja 50 un.',    lab:'Genérico',          act:'Protección',   cat:'cuidado', p:3990, st:[28,17,0,14] },
-  { n:'Suero fisiológico',         pres:'Ampollas 5 ml x10', lab:'Sanderson',      act:'NaCl 0,9%',    cat:'cuidado', p:2990, st:[31,12,18,16] },
-  { n:'Pañales adulto talla G',    pres:'Paquete 20 un.', lab:'Cotidian',          act:'Cuidado en casa', cat:'cuidado', p:14990, st:[8,0,10,6] },
+  { n:'Alcohol gel',               pres:'250 ml',         lab:'Genérico',          act:'Etanol 70%',      cat:'cuidado', il:'bomba',   p:2490, st:[35,22,28,20] },
+  { n:'Mascarillas quirúrgicas',   pres:'Caja 50 un.',    lab:'Genérico',          act:'Protección',      cat:'cuidado', il:'sobre',   p:3990, st:[28,17,0,14] },
+  { n:'Suero fisiológico',         pres:'Ampollas 5 ml x10', lab:'Sanderson',      act:'NaCl 0,9%',       cat:'cuidado', il:'sobre',   p:2990, st:[31,12,18,16] },
+  { n:'Pañales adulto talla G',    pres:'Paquete 20 un.', lab:'Cotidian',          act:'Cuidado en casa', cat:'cuidado', il:'paquete', p:14990, st:[8,0,10,6] },
 
-  { n:'Medidor de presión digital',pres:'Brazo, 1 unidad',lab:'Omron',             act:'Presión arterial', cat:'equipos', p:44990, st:[4,2,3,5] },
-  { n:'Oxímetro de pulso',         pres:'1 unidad',       lab:'Genérico',          act:'Saturación',       cat:'equipos', p:12990, st:[6,3,0,4] },
-  { n:'Test de embarazo',          pres:'1 unidad',       lab:'Evatest',           act:'Diagnóstico',      cat:'equipos', p:4990,  st:[16,9,12,10] },
-  { n:'Cintas para glicemia',      pres:'Caja 50 un.',    lab:'Accu-Chek',         act:'Glicemia',         cat:'equipos', p:23990, frio:true, st:[5,0,7,3] }
+  { n:'Medidor de presión digital',pres:'Brazo, 1 unidad',lab:'Omron',             act:'Presión arterial', cat:'equipos', il:'aparato', p:44990, st:[4,2,3,5] },
+  { n:'Oxímetro de pulso',         pres:'1 unidad',       lab:'Genérico',          act:'Saturación',       cat:'equipos', il:'aparato', p:12990, st:[6,3,0,4] },
+  { n:'Test de embarazo',          pres:'1 unidad',       lab:'Evatest',           act:'Diagnóstico',      cat:'equipos', il:'sobre',   p:4990,  st:[16,9,12,10] },
+  { n:'Cintas para glicemia',      pres:'Caja 50 un.',    lab:'Accu-Chek',         act:'Glicemia',         cat:'equipos', il:'sobre',   p:23990, frio:true, st:[5,0,7,3] }
 ];
 
 /* ================================================================
@@ -982,72 +980,72 @@ const PRODUCTOS = [
    ================================================================ */
 const $  = (s, c=document) => c.querySelector(s);
 const $$ = (s, c=document) => [...c.querySelectorAll(s)];
-const ICO_CAT = Object.fromEntries(CATEGORIAS.map(c => [c.id, c.ico]));
-const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MENOS_MOV = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* cada producto recibe un id estable */
 PRODUCTOS.forEach((p,i) => p.id = 'p'+i);
 
-const estado = {
-  sucursal: SUCURSALES[0].id,
-  categoria: 'todos',
-  busqueda: '',
-  soloStock: false,
-  pedido: {}          /* { idProducto: cantidad } */
-};
+const estado = { sucursal:SUCURSALES[0].id, categoria:'todos', busqueda:'', soloStock:false, orden:'destacados', pedido:{} };
 
-const clp = n => '$' + n.toLocaleString('es-CL');
+const clp       = n => '$' + n.toLocaleString('es-CL');
 const sucActual = () => SUCURSALES.find(s => s.id === estado.sucursal) || SUCURSALES[0];
-const idxSuc = () => SUCURSALES.findIndex(s => s.id === estado.sucursal);
-const stockDe = p => p.st[idxSuc()] ?? 0;
-const nivelDe = u => u === 0 ? 'cero' : u <= 8 ? 'bajo' : 'alto';
-const etStock = u => u === 0 ? 'Sin stock hoy' : u <= 8 ? 'Últimas ' + u + ' unidades' : 'Disponible';
-const sinTildes = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const idxSuc    = () => SUCURSALES.findIndex(s => s.id === estado.sucursal);
+const stockDe   = p => p.st[idxSuc()] ?? 0;
+const nivelDe   = u => u === 0 ? 'cero' : u <= 8 ? 'bajo' : 'alto';
+const etStock   = u => u === 0 ? 'Sin stock hoy' : u <= 8 ? 'Quedan ' + u : 'Disponible';
+const sinTildes = t => t.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const ilu       = p => 'il-' + (p.il || 'caja');
+
+/* En qué otras sucursales sí queda este producto. Es la razón de ser de
+   un sitio con varios locales: si acá no hay, decir dónde sí. */
+const otrosLocalesCon = p => SUCURSALES
+  .map((s,i) => ({ s, u:p.st[i] }))
+  .filter(x => x.u > 0 && x.s.id !== estado.sucursal);
 
 /* ---------- horarios ---------- */
-function tramoDeHoy(suc, dia){ return suc.horario.find(h => h.d.includes(dia)); }
+const tramoDe = (suc, dia) => suc.horario.find(h => h.d.includes(dia));
 
 function estaAbierto(suc){
   const ahora = new Date();
-  const t = tramoDeHoy(suc, ahora.getDay());
+  const t = tramoDe(suc, ahora.getDay());
   if(!t || t.cerrado) return false;
   const min = ahora.getHours()*60 + ahora.getMinutes();
   const aMin = s => (+s.slice(0,2))*60 + (+s.slice(3,5));
   return min >= aMin(t.abre) && min < aMin(t.cierra);
 }
 
-function textoHorarioHoy(suc){
-  const t = tramoDeHoy(suc, new Date().getDay());
+function textoHoy(suc){
+  const t = tramoDe(suc, new Date().getDay());
   if(!t || t.cerrado) return 'Hoy cerrado';
-  return (estaAbierto(suc) ? 'Abierto ahora · cierra ' : 'Hoy ') + (estaAbierto(suc) ? t.cierra : t.abre + ' a ' + t.cierra);
+  return estaAbierto(suc) ? 'Abierto · cierra ' + t.cierra : 'Hoy ' + t.abre + ' a ' + t.cierra;
 }
 
 /* ---------- WhatsApp ---------- */
-function waLink(texto, suc = sucActual()){
-  return 'https://wa.me/' + suc.whatsapp + '?text=' + encodeURIComponent(texto);
-}
+const waLink = (texto, suc = sucActual()) => 'https://wa.me/' + suc.whatsapp + '?text=' + encodeURIComponent(texto);
 
 function msgGeneral(){
   const s = sucActual();
-  return `¡Hola Farmacia Real! 👋\nVi su página web y quiero hacer una consulta sobre la sucursal *${s.nombre}* (${s.direccion}).`;
+  return `¡Hola Farmacias Real! 👋\nVi su página web y quiero hacer una consulta sobre la sucursal *${s.nombre}* (${s.direccion}).`;
 }
 
 function msgProducto(p){
-  const s = sucActual();
-  const u = stockDe(p);
-  let t = `¡Hola Farmacia Real! 👋\nVi su página web y quiero consultar por:\n\n`;
+  const s = sucActual(), u = stockDe(p);
+  let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero consultar por:\n\n`;
   t += `💊 *${p.n}* — ${p.pres}\n${p.lab} · ${clp(p.p)} referencial\n`;
   if(p.rec) t += `📄 Sé que requiere receta médica.\n`;
   t += `\n📍 Sucursal: *${s.nombre}* (${s.direccion})\n`;
-  t += u === 0 ? `\n¿Cuándo les llega stock o lo tienen en otro local?` : `\n¿Me lo pueden reservar?`;
+  if(u > 0) return t + `\n¿Me lo pueden apartar?`;
+
+  const disp = otrosLocalesCon(p);
+  t += disp.length
+    ? `\nEn la web aparece sin stock acá, pero sí en ${disp.map(x => x.s.nombre).join(' y ')}.\n¿Me lo pueden apartar allá o traerlo a ${s.nombre}?`
+    : `\nEn la web aparece sin stock. ¿Cuándo les llega o me lo pueden pedir?`;
   return t;
 }
 
 function msgPedido(){
-  const s = sucActual();
-  const items = itemsPedido();
+  const s = sucActual(), items = itemsPedido();
   if(!items.length) return msgGeneral();
-  let t = `¡Hola Farmacia Real! 👋\nVi su página web y quiero hacer este pedido:\n\n`;
+  let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero hacer este pedido:\n\n`;
   items.forEach(({p,c}) => {
     t += `• *${p.n}* — ${p.pres}\n  ${c} ${c===1?'unidad':'unidades'} · ${clp(p.p*c)}`;
     if(p.rec) t += ` · 📄 requiere receta`;
@@ -1056,52 +1054,49 @@ function msgPedido(){
   });
   t += `\n💰 Total referencial: *${clp(totalPedido())}*\n`;
   t += `📍 Retiro en sucursal *${s.nombre}*\n${s.direccion}\n`;
-  const conReceta = items.some(({p}) => p.rec);
-  if(conReceta) t += `\n📄 Llevo la receta médica al retirar.`;
+  if(items.some(({p}) => p.rec)) t += `\n📄 Llevo la receta médica al retirar.`;
   t += `\n\n¿Me confirman disponibilidad y valor final? ¡Gracias!`;
   return t;
 }
 
-function itemsPedido(){
-  return Object.entries(estado.pedido)
-    .map(([id,c]) => ({ p: PRODUCTOS.find(x => x.id === id), c }))
-    .filter(x => x.p && x.c > 0);
-}
-const totalPedido = () => itemsPedido().reduce((a,{p,c}) => a + p.p*c, 0);
+const itemsPedido = () => Object.entries(estado.pedido)
+  .map(([id,c]) => ({ p:PRODUCTOS.find(x => x.id === id), c }))
+  .filter(x => x.p && x.c > 0);
+const totalPedido    = () => itemsPedido().reduce((a,{p,c}) => a + p.p*c, 0);
 const cantidadPedido = () => itemsPedido().reduce((a,{c}) => a + c, 0);
 
-/* ---------- render: sucursales ---------- */
-function tarjetaSucursal(s){
-  const abierto = estaAbierto(s);
+/* ---------- sucursales ---------- */
+function tarjetaLocal(s){
+  const elegida = s.id === estado.sucursal;
   return `
-  <button class="tarjeta-sucursal" data-suc="${s.id}" aria-pressed="${s.id === estado.sucursal}">
-    <span class="marca-activa"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><use href="#i-check"></use></svg> Elegida</span>
-    <span class="comuna">${s.comuna}</span>
-    <span class="nombre">${s.nombre}</span>
-    <span class="estado-local" data-abierto="${abierto ? 'si' : 'no'}"><span class="punto"></span>${textoHorarioHoy(s)}</span>
-    <span class="dato"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>${s.direccion}</span>
-    <span class="dato"><svg viewBox="0 0 24 24"><use href="#i-tel"></use></svg>${s.telefono}</span>
-    <span class="accion">${s.id === estado.sucursal ? 'Viendo este catálogo' : 'Ver catálogo de este local'} <svg viewBox="0 0 24 24"><use href="#i-flecha"></use></svg></span>
+  <button class="local" data-suc="${s.id}" aria-pressed="${elegida}">
+    <span class="local-elegida"><svg viewBox="0 0 24 24" style="width:12px;height:12px"><use href="#i-check"></use></svg> Elegida</span>
+    <span class="local-com">${s.comuna}</span>
+    <span class="local-nom">${s.nombre}</span>
+    <span class="local-dato"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>${s.direccion}</span>
+    <span class="local-dato"><svg viewBox="0 0 24 24"><use href="#i-reloj"></use></svg>${textoHoy(s)}</span>
+    <span class="local-dato"><svg viewBox="0 0 24 24"><use href="#i-tel"></use></svg>${s.telefono}</span>
+    <span class="local-cta">${elegida ? 'Viendo este catálogo' : 'Ver el stock de este local'} <svg viewBox="0 0 24 24"><use href="#i-flecha"></use></svg></span>
   </button>`;
 }
 
-function pintarSucursales(){
-  const html = SUCURSALES.map(tarjetaSucursal).join('');
-  $('#gridSucursales').innerHTML = html;
-  $('#gridSucursalesModal').innerHTML = html;
+function pintarLocales(){
+  const html = SUCURSALES.map(tarjetaLocal).join('');
+  $('#locales').innerHTML = html;
+  $('#localesModal').innerHTML = html;
   $$('[data-suc]').forEach(b => b.addEventListener('click', () => {
     elegirSucursal(b.dataset.suc);
-    if($('#cajonSucursal').dataset.abierto === 'si'){
+    if($('#cajonSuc').dataset.abierto === 'si'){
       cerrarCajones();
-      document.getElementById('catalogo').scrollIntoView({behavior:'smooth', block:'start'});
+      $('#catalogo').scrollIntoView({ behavior: MENOS_MOV ? 'auto':'smooth', block:'start' });
     }
   }));
 }
 
-/* ---------- render: filtros ---------- */
-function pintarFiltros(){
-  $('#filtros').innerHTML = CATEGORIAS.map(c => `
-    <button class="filtro" data-cat="${c.id}" aria-pressed="${c.id === estado.categoria}">
+/* ---------- categorías ---------- */
+function pintarCats(){
+  $('#cats').innerHTML = CATEGORIAS.map(c => `
+    <button class="cat" data-cat="${c.id}" aria-pressed="${c.id === estado.categoria}">
       <svg viewBox="0 0 24 24"><use href="#${c.ico}"></use></svg>${c.et}
     </button>`).join('');
   $$('[data-cat]').forEach(b => b.addEventListener('click', () => {
@@ -1111,188 +1106,223 @@ function pintarFiltros(){
   }));
 }
 
-/* ---------- render: catálogo ---------- */
-function productosVisibles(){
+/* ---------- catálogo ---------- */
+function visibles(){
   const q = sinTildes(estado.busqueda.trim());
-  return PRODUCTOS.filter(p => {
+  const lista = PRODUCTOS.filter(p => {
     if(estado.categoria !== 'todos' && p.cat !== estado.categoria) return false;
     if(estado.soloStock && stockDe(p) === 0) return false;
     if(!q) return true;
     return sinTildes(`${p.n} ${p.pres} ${p.lab} ${p.act}`).includes(q);
   });
+
+  switch(estado.orden){
+    case 'precio-asc':  return lista.sort((a,b) => a.p - b.p);
+    case 'precio-desc': return lista.sort((a,b) => b.p - a.p);
+    case 'nombre':      return lista.sort((a,b) => a.n.localeCompare(b.n,'es'));
+    /* Recomendados: primero lo que sí hay en este local, y mantenemos
+       el orden del catálogo dentro de cada grupo. */
+    default: return lista.sort((a,b) => (stockDe(b) > 0) - (stockDe(a) > 0));
+  }
 }
 
 function tarjetaProducto(p){
-  const u = stockDe(p);
-  const agotado = u === 0;
-  const enPedido = estado.pedido[p.id] || 0;
+  const u = stockDe(p), agotado = u === 0, enPedido = estado.pedido[p.id] || 0;
   const sellos = [
-    p.be   ? '<span class="sello sello-be">BE bioequivalente</span>' : '',
-    p.rec  ? '<span class="sello sello-receta">Receta</span>' : '',
-    p.frio ? '<span class="sello sello-frio">Cadena de frío</span>' : ''
+    p.be   ? '<span class="sello sello-be">Bioequivalente</span>' : '',
+    p.rec  ? '<span class="sello sello-rec">Receta</span>'        : '',
+    p.frio ? '<span class="sello sello-frio">Frío</span>'         : ''
   ].join('');
 
-  const boton = agotado
-    ? `<a class="btn-agregar" data-modo="consultar" href="${waLink(msgProducto(p))}" target="_blank" rel="noopener">
-         <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Consultar</a>`
-    : `<button class="btn-agregar" data-agregar="${p.id}" data-modo="${enPedido ? 'agregado' : 'normal'}">
-         <svg viewBox="0 0 24 24"><use href="#${enPedido ? 'i-check' : 'i-mas'}"></use></svg>${enPedido ? 'En pedido · ' + enPedido : 'Agregar'}</button>`;
+  let accion;
+  if(agotado){
+    accion = `<a class="sumar" data-modo="consultar" href="${waLink(msgProducto(p))}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Consultar</a>`;
+  } else if(enPedido){
+    accion = `<div class="stepper" role="group" aria-label="Cantidad de ${p.n}">
+                <button data-menos="${p.id}" aria-label="Quitar una unidad de ${p.n}">−</button>
+                <span class="n num">${enPedido} en tu pedido</span>
+                <button data-mas="${p.id}" aria-label="Agregar otra unidad de ${p.n}">+</button>
+              </div>`;
+  } else {
+    accion = `<button class="sumar" data-agregar="${p.id}">
+                <svg viewBox="0 0 24 24"><use href="#i-mas"></use></svg> Agregar</button>`;
+  }
+
+  /* Si acá no hay, decimos en qué local sí queda. */
+  let otros = '';
+  if(agotado){
+    const disp = otrosLocalesCon(p);
+    otros = disp.length
+      ? `<div class="otros"><b>Sí hay en:</b><div class="otros-chips">${
+          disp.map(x => `<button class="otro-chip" data-ir="${x.s.id}">${x.s.corto || x.s.nombre}</button>`).join('')
+        }</div></div>`
+      : `<div class="otros"><p class="otros-nada">No queda en ninguna sucursal. Escríbenos y te lo pedimos.</p></div>`;
+  }
 
   return `
-  <article class="producto" data-agotado="${agotado ? 'si' : 'no'}">
-    <div class="prod-tope">
-      <span class="prod-icono"><svg viewBox="0 0 24 24"><use href="#${ICO_CAT[p.cat] || 'i-pastilla'}"></use></svg></span>
+  <article class="prod" data-agotado="${agotado ? 'si':'no'}">
+    <div class="prod-img">
+      <svg viewBox="0 0 80 80"><use href="#${ilu(p)}"></use></svg>
       <span class="prod-sellos">${sellos}</span>
     </div>
-    <h3 class="prod-nombre">${p.n}</h3>
-    <p class="prod-meta">${p.pres} · ${p.lab}</p>
-    <p class="prod-activo">Principio activo: <b>${p.act}</b></p>
-    <span class="prod-stock" data-nivel="${nivelDe(u)}"><span class="punto"></span>${etStock(u)}</span>
-    <div class="prod-pie">
-      <span class="prod-precio"><b>${clp(p.p)}</b><span>precio referencial</span></span>
-      ${boton}
-    </div>
+    <span class="prod-lab">${p.lab}</span>
+    <h3 class="prod-nom">${p.n}</h3>
+    <p class="prod-pres">${p.pres}</p>
+    <span class="prod-stock" data-nivel="${nivelDe(u)}"><span class="pt"></span>${etStock(u)}</span>
+    <div class="prod-precio"><b class="num">${clp(p.p)}</b><span>precio referencial</span></div>
+    ${accion}
+    ${otros}
   </article>`;
 }
 
 function pintarProductos(){
-  const lista = productosVisibles();
-  const grid = $('#gridProductos');
+  const lista = visibles(), grid = $('#vitrina');
 
   if(!lista.length){
     grid.innerHTML = `
-      <div class="sin-resultados">
+      <div class="vacio">
         <svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg>
         <b>No encontramos ese producto</b>
-        <p>Puede que no esté en este local. Escríbenos por WhatsApp y lo buscamos en las otras sucursales o te lo pedimos.</p>
-        <a class="btn btn-wa" style="margin-top:18px" href="${waLink(msgGeneral() + '\n\nEstoy buscando: ' + (estado.busqueda || 'un producto que no aparece en la web'))}" target="_blank" rel="noopener">
+        <p>Puede que no esté en este local. Escríbenos y lo buscamos en las otras sucursales o te lo pedimos.</p>
+        <a class="btn btn-wa" style="margin-top:20px" href="${waLink(msgGeneral() + '\n\nEstoy buscando: ' + (estado.busqueda || 'un producto que no aparece en la web'))}" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Consultar disponibilidad
         </a>
       </div>`;
   } else {
     grid.innerHTML = lista.map(tarjetaProducto).join('');
-    $$('[data-agregar]').forEach(b => b.addEventListener('click', () => agregar(b.dataset.agregar)));
+    /* Los selectores van acotados a la grilla: el cajón del pedido usa los
+       mismos data-mas / data-menos y si no, quedarían enganchados dos veces. */
+    $$('[data-agregar]', grid).forEach(b => b.addEventListener('click', () => agregar(b.dataset.agregar)));
+    $$('[data-mas]',     grid).forEach(b => b.addEventListener('click', () => cambiar(b.dataset.mas, 1)));
+    $$('[data-menos]',   grid).forEach(b => b.addEventListener('click', () => cambiar(b.dataset.menos, -1)));
+    $$('[data-ir]',      grid).forEach(b => b.addEventListener('click', () => {
+      elegirSucursal(b.dataset.ir);
+      anunciar('Cambiaste a ' + sucActual().nombre);
+    }));
   }
 
   const conStock = lista.filter(p => stockDe(p) > 0).length;
-  $('#resumenConteo').innerHTML = `<b>${lista.length}</b> producto${lista.length===1?'':'s'} · <b>${conStock}</b> con stock en ${sucActual().nombre}`;
+  $('#resumen').innerHTML = `<b>${lista.length}</b> producto${lista.length===1?'':'s'} · <b>${conStock}</b> con stock en ${sucActual().nombre}`;
 }
 
-/* ---------- render: ubicación ---------- */
+/* ---------- ubicación ---------- */
 function pintarUbicacion(){
-  const s = sucActual();
-  const hoy = new Date().getDay();
+  const s = sucActual(), hoy = new Date().getDay();
 
   $('#panelContacto').innerHTML = `
-    <div class="dato-contacto">
-      <svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>
-      <div><div class="et">Dirección</div><div class="vl">${s.direccion}</div></div>
-    </div>
-    <div class="dato-contacto">
-      <svg viewBox="0 0 24 24"><use href="#i-tel"></use></svg>
-      <div><div class="et">Teléfono · WhatsApp</div><div class="vl"><a href="tel:${s.telefono.replace(/\s/g,'')}">${s.telefono}</a></div></div>
-    </div>
-    <div class="dato-contacto">
-      <svg viewBox="0 0 24 24"><use href="#i-reloj"></use></svg>
-      <div><div class="et">Ahora</div><div class="vl">${textoHorarioHoy(s)}</div></div>
-    </div>`;
+    <div class="dato"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>
+      <div><div class="et">Dirección</div><div class="vl">${s.direccion}</div></div></div>
+    <div class="dato"><svg viewBox="0 0 24 24"><use href="#i-tel"></use></svg>
+      <div><div class="et">Teléfono · WhatsApp</div><div class="vl"><a href="tel:${s.telefono.replace(/\s/g,'')}">${s.telefono}</a></div></div></div>
+    <div class="dato"><svg viewBox="0 0 24 24"><use href="#i-reloj"></use></svg>
+      <div><div class="et">Ahora</div><div class="vl">${textoHoy(s)}</div></div></div>`;
 
-  $('#listaHorario').innerHTML = s.horario.map(t => `
-    <li data-hoy="${t.d.includes(hoy) ? 'si' : 'no'}">
+  $('#horas').innerHTML = s.horario.map(t => `
+    <li data-hoy="${t.d.includes(hoy) ? 'si':'no'}">
       <span class="dia">${t.et}</span>
-      <span class="hora">${t.cerrado ? 'Cerrado' : t.abre + ' – ' + t.cierra}</span>
+      <span class="hr num">${t.cerrado ? 'Cerrado' : t.abre + ' – ' + t.cierra}</span>
     </li>`).join('');
 
   const q = encodeURIComponent(s.mapa);
-  $('#mapaIframe').src = `https://www.google.com/maps?q=${q}&hl=es&z=16&output=embed`;
-  $('#btnComoLlegar').href = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
-  $('#tituloUbicacion').textContent = `Visítanos en ${s.nombre}`;
+  $('#mapa').src = `https://www.google.com/maps?q=${q}&hl=es&z=16&output=embed`;
+  $('#btnLlegar').href = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+  $('#tituloUbic').textContent = `Cómo llegar a ${s.nombre}`;
 }
 
-/* ---------- render: pedido ---------- */
+/* ---------- pedido ---------- */
 function pintarPedido(){
-  const items = itemsPedido();
-  const n = cantidadPedido();
+  const items = itemsPedido(), n = cantidadPedido();
 
   $('#conteoPedido').textContent = n;
-  $('#btnPedido').dataset.vacio = n ? 'no' : 'si';
-  $('#totalPedido').textContent = clp(totalPedido());
-  $('#subCajon').textContent = n ? `${n} ${n===1?'producto':'productos'} · retiro en ${sucActual().nombre}` : 'Aún no agregas productos';
-  $('#destinoNombre').textContent = sucActual().nombre;
-  $('#enviarPedido').href = waLink(msgPedido());
+  $('#btnPedido').dataset.vacio = n ? 'no':'si';
+  $('#totalPed').textContent = clp(totalPedido());
+  $('#bpCant').textContent  = n;
+  $('#bpTotal').textContent = clp(totalPedido());
+  $('#barraPedido').dataset.visible = n ? 'si':'no';
+  $('#subPed').textContent = n ? `${n} ${n===1?'producto':'productos'} · retiro en ${sucActual().nombre}` : 'Aún no agregas productos';
+  $('#destino').textContent = sucActual().nombre;
+  $('#enviarPed').href = waLink(msgPedido());
 
-  const cuerpo = $('#cuerpoCajon');
+  const cuerpo = $('#cuerpoPed');
   if(!items.length){
     cuerpo.innerHTML = `
-      <div class="pedido-vacio">
+      <div class="ped-vacio">
         <svg viewBox="0 0 24 24"><use href="#i-bolsa"></use></svg>
         <b>Tu pedido está vacío</b>
-        <p>Agrega productos del catálogo y te los reservamos en el local que elijas. No pagas nada aquí.</p>
+        <p>Agrega productos del catálogo y te los apartamos en el local que elijas. No pagas nada aquí.</p>
       </div>`;
     return;
   }
 
   const agotados = items.filter(({p}) => stockDe(p) === 0);
   const aviso = agotados.length ? `
-    <div class="aviso-receta" style="margin:0 0 14px;padding:13px 15px;font-size:.8rem">
+    <div class="aviso-stock">
       <svg viewBox="0 0 24 24"><use href="#i-alerta"></use></svg>
       <div><b>${agotados.length === 1 ? 'Un producto no está' : agotados.length + ' productos no están'}</b> con stock hoy en ${sucActual().nombre}.
       Igual puedes enviar el pedido: lo buscamos en otro local o te avisamos cuando llegue.</div>
     </div>` : '';
 
   cuerpo.innerHTML = aviso + items.map(({p,c}) => `
-    <div class="item-pedido">
-      <span class="item-ico"><svg viewBox="0 0 24 24"><use href="#${ICO_CAT[p.cat] || 'i-pastilla'}"></use></svg></span>
-      <div class="item-info">
+    <div class="linea-ped">
+      <span class="linea-img"><svg viewBox="0 0 80 80"><use href="#${ilu(p)}"></use></svg></span>
+      <div class="linea-info">
         <div class="nom">${p.n}</div>
-        <div class="det">${p.pres} · ${p.lab}${p.rec ? ' · requiere receta' : ''}${stockDe(p) === 0 ? ' · <span style="color:var(--ambar);font-weight:700">sin stock acá</span>' : ''}</div>
-        <div class="pre">${clp(p.p*c)}</div>
+        <div class="det">${p.pres} · ${p.lab}${p.rec ? ' · requiere receta':''}${stockDe(p) === 0 ? ' · <span style="color:var(--ambar);font-weight:700">sin stock acá</span>':''}</div>
+        <div class="pre num">${clp(p.p*c)}</div>
       </div>
-      <div class="item-cant">
+      <div class="contador">
         <button data-menos="${p.id}" aria-label="Quitar una unidad de ${p.n}">−</button>
-        <span class="n">${c}</span>
+        <span class="n num">${c}</span>
         <button data-mas="${p.id}" aria-label="Agregar una unidad de ${p.n}">+</button>
       </div>
     </div>`).join('');
 
-  $$('[data-mas]').forEach(b => b.addEventListener('click', () => cambiar(b.dataset.mas, 1)));
-  $$('[data-menos]').forEach(b => b.addEventListener('click', () => cambiar(b.dataset.menos, -1)));
+  $$('[data-mas]',   cuerpo).forEach(b => b.addEventListener('click', () => cambiar(b.dataset.mas, 1)));
+  $$('[data-menos]', cuerpo).forEach(b => b.addEventListener('click', () => cambiar(b.dataset.menos, -1)));
 }
 
 /* ---------- acciones ---------- */
+function latir(){
+  if(MENOS_MOV) return;
+  const c = $('#conteoPedido');
+  c.classList.remove('late'); void c.offsetWidth; c.classList.add('late');
+}
+
+/* Aviso para lectores de pantalla: la grilla se vuelve a dibujar entera y
+   sin esto el cambio pasaría en silencio. */
+function anunciar(texto){ $('#anuncio').textContent = texto; }
+
 function agregar(id){
   estado.pedido[id] = (estado.pedido[id] || 0) + 1;
-  guardar();
-  pintarProductos();
-  pintarPedido();
+  const p = PRODUCTOS.find(x => x.id === id);
+  guardar(); pintarProductos(); pintarPedido(); latir();
+  if(p) anunciar(`${p.n} agregado. Llevas ${cantidadPedido()} en el pedido.`);
 }
 
 function cambiar(id, delta){
   estado.pedido[id] = (estado.pedido[id] || 0) + delta;
   if(estado.pedido[id] <= 0) delete estado.pedido[id];
-  guardar();
-  pintarProductos();
-  pintarPedido();
+  const p = PRODUCTOS.find(x => x.id === id);
+  guardar(); pintarProductos(); pintarPedido();
+  if(p) anunciar(`${p.n}: ${estado.pedido[id] || 0} en el pedido.`);
 }
 
 function elegirSucursal(id){
   if(!SUCURSALES.some(s => s.id === id)) return;
   estado.sucursal = id;
-  guardar();
-  pintarSucursales();
-  pintarProductos();
-  pintarUbicacion();
-  pintarPedido();
-  pintarCabecera();
+  guardar(); pintarLocales(); pintarProductos(); pintarUbicacion(); pintarPedido(); pintarCabecera();
 }
 
 function pintarCabecera(){
-  const s = sucActual();
-  $('#chipNombre').textContent = s.corto || s.nombre;
-  $('#tituloSucursal').textContent = s.nombre;
-  $('#heroEstado').textContent = estaAbierto(s) ? `${s.nombre} · abierto ahora` : `${s.nombre} · ${textoHorarioHoy(s)}`;
+  const s = sucActual(), abierto = estaAbierto(s);
+  $('#sucNombre').textContent = s.corto || s.nombre;
+  $('#tituloSuc').textContent = s.nombre;
+  const chip = $('#sucEstado');
+  chip.dataset.abierto = abierto ? 'si':'no';
+  chip.innerHTML = '<span class="pt"></span>' + textoHoy(s);
   const link = waLink(msgGeneral());
-  ['#heroWa','#flotanteWa','#piePedido'].forEach(sel => $(sel).href = link);
+  ['#heroWa','#flotaWa','#pieWa','#topWa'].forEach(sel => $(sel).href = link);
 }
 
 /* ---------- cajones ---------- */
@@ -1300,25 +1330,64 @@ function abrirCajon(sel){
   cerrarCajones(true);
   $(sel).dataset.abierto = 'si';
   $('#velo').dataset.abierto = 'si';
-  document.body.classList.add('bloqueado');
-  const cerrar = $(sel).querySelector('.cerrar');
-  if(cerrar) cerrar.focus();
+  document.body.classList.add('trabado');
+  $(sel).querySelector('.equis')?.focus();
 }
 
 function cerrarCajones(soloCajones){
-  $('#cajonPedido').dataset.abierto = 'no';
-  $('#cajonSucursal').dataset.abierto = 'no';
+  ['#cajonPedido','#cajonSuc'].forEach(sel => {
+    const c = $(sel);
+    c.dataset.abierto = 'no'; c.dataset.arrastrando = 'no'; c.style.transform = '';
+  });
   if(!soloCajones){
     $('#velo').dataset.abierto = 'no';
-    document.body.classList.remove('bloqueado');
+    document.body.classList.remove('trabado');
   }
+}
+
+/* Arrastrar para cerrar (solo móvil).
+   Se combinan desplazamiento y velocidad: nunca se decide por velocidad sola. */
+const UMBRAL_PX = 110, UMBRAL_VEL = 0.55;   // px · px/ms
+
+function habilitarArrastre(cajon){
+  let activo = false, y0 = 0, dy = 0, vel = 0, yPrev = 0, tPrev = 0;
+
+  const puedeArrastrar = e => {
+    if(innerWidth >= 720) return false;
+    const cuerpo = cajon.querySelector('.cajon-cuerpo');
+    return !cuerpo.contains(e.target) || cuerpo.scrollTop <= 0;
+  };
+
+  cajon.addEventListener('pointerdown', e => {
+    if(e.pointerType === 'mouse' || !puedeArrastrar(e)) return;
+    activo = true; y0 = yPrev = e.clientY; tPrev = performance.now(); dy = vel = 0;
+    cajon.dataset.arrastrando = 'si';
+  });
+
+  cajon.addEventListener('pointermove', e => {
+    if(!activo) return;
+    dy = Math.max(0, e.clientY - y0);
+    const t = performance.now(), dt = t - tPrev;
+    if(dt > 0) vel = (e.clientY - yPrev) / dt;
+    yPrev = e.clientY; tPrev = t;
+    cajon.style.transform = `translateY(${dy}px)`;
+  });
+
+  const soltar = () => {
+    if(!activo) return;
+    activo = false;
+    cajon.dataset.arrastrando = 'no';
+    cajon.style.transform = '';
+    if(dy > UMBRAL_PX || vel > UMBRAL_VEL) cerrarCajones();
+  };
+  cajon.addEventListener('pointerup', soltar);
+  cajon.addEventListener('pointercancel', soltar);
 }
 
 /* ---------- persistencia ---------- */
 function guardar(){
-  try{
-    localStorage.setItem('fr_estado', JSON.stringify({ sucursal: estado.sucursal, pedido: estado.pedido }));
-  }catch(e){ /* modo privado: seguimos sin persistir */ }
+  try{ localStorage.setItem('fr_estado', JSON.stringify({ sucursal:estado.sucursal, pedido:estado.pedido })); }
+  catch(e){ /* modo privado: seguimos sin persistir */ }
 }
 
 function cargar(){
@@ -1334,40 +1403,84 @@ function cargar(){
 }
 
 /* ---------- eventos ---------- */
-$('#inputBusqueda').addEventListener('input', e => {
-  estado.busqueda = e.target.value;
-  $('#buscador').dataset.lleno = e.target.value ? 'si' : 'no';
-  pintarProductos();
+/* dos buscadores (escritorio y móvil) que se mantienen sincronizados */
+$$('.busca-caja').forEach(caja => {
+  const input = $('.input-busca', caja);
+  input.addEventListener('input', e => {
+    estado.busqueda = e.target.value;
+    $$('.busca-caja').forEach(c => {
+      c.dataset.lleno = e.target.value ? 'si':'no';
+      const i = $('.input-busca', c);
+      if(i !== e.target) i.value = e.target.value;
+    });
+    pintarProductos();
+  });
+  $('.limpia', caja).addEventListener('click', () => {
+    estado.busqueda = '';
+    $$('.busca-caja').forEach(c => { c.dataset.lleno = 'no'; $('.input-busca', c).value = ''; });
+    input.focus();
+    pintarProductos();
+  });
 });
-$('#limpiarBusqueda').addEventListener('click', () => {
-  estado.busqueda = '';
-  $('#inputBusqueda').value = '';
-  $('#buscador').dataset.lleno = 'no';
-  $('#inputBusqueda').focus();
-  pintarProductos();
-});
-$('#soloStock').addEventListener('change', e => { estado.soloStock = e.target.checked; pintarProductos(); });
 
+$('#soloStock').addEventListener('change', e => { estado.soloStock = e.target.checked; pintarProductos(); });
+$('#orden').addEventListener('change', e => { estado.orden = e.target.value; pintarProductos(); });
+$('#bpBtn').addEventListener('click', () => abrirCajon('#cajonPedido'));
 $('#btnPedido').addEventListener('click', () => abrirCajon('#cajonPedido'));
-$('#chipSucursal').addEventListener('click', () => abrirCajon('#cajonSucursal'));
-$('#cerrarCajon').addEventListener('click', () => cerrarCajones());
-$('#cerrarSucursal').addEventListener('click', () => cerrarCajones());
+$('#btnCambiar').addEventListener('click', () => abrirCajon('#cajonSuc'));
+$('#cerrarPed').addEventListener('click', () => cerrarCajones());
+$('#cerrarSuc').addEventListener('click', () => cerrarCajones());
 $('#velo').addEventListener('click', () => cerrarCajones());
 document.addEventListener('keydown', e => { if(e.key === 'Escape') cerrarCajones(); });
 
+/* La cabecera cambia de alto entre móvil y escritorio (el buscador móvil va
+   en una segunda línea), así que medimos su alto real para que la barra de
+   categorías se pegue justo debajo y no quede escondida. */
+function medirCabecera(){
+  const alto = $('.cab').getBoundingClientRect().height;
+  document.documentElement.style.setProperty('--top-nav', Math.round(alto) + 'px');
+}
+
 /* ---------- arranque ---------- */
 cargar();
-pintarSucursales();
-pintarFiltros();
-pintarCabecera();
-pintarProductos();
-pintarUbicacion();
-pintarPedido();
-$('#datoProductos').textContent = PRODUCTOS.length + '+';
+pintarLocales(); pintarCats(); pintarCabecera(); pintarProductos(); pintarUbicacion(); pintarPedido();
+habilitarArrastre($('#cajonPedido'));
+habilitarArrastre($('#cajonSuc'));
+medirCabecera();
+addEventListener('resize', medirCabecera);
+if('ResizeObserver' in window) new ResizeObserver(medirCabecera).observe($('.cab'));
 $('#anio').textContent = new Date().getFullYear();
-$('#pieSucursales').innerHTML = SUCURSALES.map(s =>
-  `<li><a href="#ubicacion" data-suc-pie="${s.id}">${s.nombre} · ${s.comuna}</a></li>`).join('');
-$$('[data-suc-pie]').forEach(a => a.addEventListener('click', () => elegirSucursal(a.dataset.sucPie)));
+$('#pieSuc').innerHTML = SUCURSALES.map(s => `<li><a href="#ubicacion" data-pie="${s.id}">${s.nombre}</a></li>`).join('');
+$$('[data-pie]').forEach(a => a.addEventListener('click', () => elegirSucursal(a.dataset.pie)));
+
+/* Datos estructurados: cada sucursal como Pharmacy, para que Google pueda
+   mostrarlas en búsquedas y en Maps. Se generan desde SUCURSALES para que
+   no queden desincronizados al editar los datos de arriba. */
+(function datosEstructurados(){
+  const DIA = { 0:'Sunday', 1:'Monday', 2:'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday', 6:'Saturday' };
+  const json = {
+    '@context':'https://schema.org',
+    '@graph': SUCURSALES.map(s => ({
+      '@type':'Pharmacy',
+      '@id':location.origin + location.pathname + '#' + s.id,
+      name:'Farmacias Real — ' + s.nombre,
+      telephone:s.telefono.replace(/\s/g,''),
+      address:{ '@type':'PostalAddress', streetAddress:s.direccion, addressLocality:s.comuna,
+                addressRegion:'Región Metropolitana', addressCountry:'CL' },
+      areaServed:s.comuna,
+      currenciesAccepted:'CLP',
+      openingHoursSpecification: s.horario.filter(t => !t.cerrado).map(t => ({
+        '@type':'OpeningHoursSpecification',
+        dayOfWeek:t.d.map(d => DIA[d]),
+        opens:t.abre, closes:t.cierra
+      }))
+    }))
+  };
+  const et = document.createElement('script');
+  et.type = 'application/ld+json';
+  et.textContent = JSON.stringify(json);
+  document.head.appendChild(et);
+})();
 </script>
 </body>
 </html>
