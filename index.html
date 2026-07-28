@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Farmacia Real · Medicamentos y salud en Independencia y Ñuñoa</title>
+<meta name="description" content="Farmacia Real: 4 sucursales en Independencia y Ñuñoa. Revisa el stock de tu sucursal y arma tu pedido — te respondemos por WhatsApp.">
+<meta name="theme-color" content="#0A3D30">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Farmacia Real · Medicamentos y salud">
+<meta property="og:description" content="4 sucursales en Independencia y Ñuñoa. Elige tu sucursal, revisa el stock y pide por WhatsApp.">
+<meta property="og:locale" content="es_CL">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230E5B48'/><path d='M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z' fill='%23fff'/></svg>">
+
+<style>
+/* ============================================================
+   FARMACIA REAL — landing multi-sucursal
+   Paleta: verde farmacéutico + menta + blanco clínico
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body,h1,h2,h3,h4,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+img,svg{display:block;max-width:100%}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+
+:root{
+  --verde-900:#0A3D30;
+  --verde-800:#0B4A3A;
+  --verde-700:#0E5B48;
+  --verde-500:#12876A;
+  --verde-400:#17A67F;
+  --menta-50:#F2FAF7;
+  --menta-100:#E4F3ED;
+  --menta-200:#CBE8DD;
+  --tinta:#12241F;
+  --gris:#5D746D;
+  --gris-claro:#8A9E98;
+  --linea:#E1EDE8;
+  --fondo:#F7FBF9;
+  --blanco:#FFFFFF;
+  --wa:#25D366;
+  --wa-oscuro:#128C7E;
+  --ambar:#B7791F;
+  --ambar-bg:#FEF6E4;
+  --rojo:#B4443A;
+  --rojo-bg:#FDEDEB;
+  --r-s:10px; --r-m:16px; --r-l:22px; --r-xl:30px;
+  --sombra-s:0 1px 2px rgba(10,61,48,.05), 0 2px 6px rgba(10,61,48,.04);
+  --sombra-m:0 2px 4px rgba(10,61,48,.05), 0 10px 26px rgba(10,61,48,.07);
+  --sombra-l:0 8px 20px rgba(10,61,48,.10), 0 26px 60px rgba(10,61,48,.14);
+  --header-h:60px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+
+body{
+  font-family:var(--sans);
+  background:var(--fondo);
+  color:var(--tinta);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.bloqueado{overflow:hidden}
+
+.env{width:100%;max-width:1140px;margin-inline:auto;padding-inline:18px}
+@media(min-width:768px){.env{padding-inline:32px}}
+
+h1,h2,h3{line-height:1.15;letter-spacing:-.022em;font-weight:800}
+h1{font-size:clamp(2rem,7.5vw,3.6rem)}
+h2{font-size:clamp(1.5rem,4.6vw,2.35rem)}
+h3{font-size:1.05rem;letter-spacing:-.012em;font-weight:700}
+
+.rotulo{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--verde-500);
+}
+.rotulo::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--verde-400)}
+.bajada{color:var(--gris);font-size:1.02rem;max-width:56ch}
+
+/* ---------- botones ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 22px;border-radius:999px;
+  font-weight:700;font-size:.95rem;letter-spacing:-.01em;
+  text-decoration:none;white-space:nowrap;
+  transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.btn:active{transform:scale(.97)}
+.btn svg{width:19px;height:19px;flex:none}
+.btn-wa{background:var(--wa);color:#04301F;box-shadow:0 6px 18px rgba(37,211,102,.34)}
+.btn-wa:hover{background:#1FC15C;box-shadow:0 10px 26px rgba(37,211,102,.42)}
+.btn-solido{background:var(--verde-700);color:#fff;box-shadow:var(--sombra-m)}
+.btn-solido:hover{background:var(--verde-800)}
+.btn-linea{border:1.5px solid var(--linea);background:var(--blanco);color:var(--verde-800)}
+.btn-linea:hover{border-color:var(--verde-400);background:var(--menta-50)}
+.btn-claro{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.3);backdrop-filter:blur(6px)}
+.btn-claro:hover{background:rgba(255,255,255,.24)}
+.btn-bloque{width:100%}
+
+:focus-visible{outline:3px solid var(--verde-400);outline-offset:2px;border-radius:6px}
+
+/* ============================ HEADER ============================ */
+.encabezado{
+  position:sticky;top:0;z-index:60;
+  height:var(--header-h);
+  background:rgba(255,255,255,.88);
+  backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--linea);
+}
+.encabezado .env{height:100%;display:flex;align-items:center;gap:12px}
+.marca{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--verde-900);margin-right:auto;min-width:0}
+.marca-cruz{
+  width:32px;height:32px;border-radius:9px;flex:none;
+  background:linear-gradient(150deg,var(--verde-500),var(--verde-800));
+  display:grid;place-items:center;box-shadow:0 3px 10px rgba(14,91,72,.3);
+}
+.marca-cruz svg{width:17px;height:17px;color:#fff}
+.marca-txt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
+.marca-txt b{font-size:.98rem;font-weight:800;letter-spacing:-.03em;white-space:nowrap}
+.marca-txt span{display:none;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-500);font-weight:700;white-space:nowrap}
+@media(min-width:700px){.marca-txt span{display:block}}
+
+.chip-sucursal{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 12px;border-radius:999px;
+  background:var(--menta-100);border:1px solid var(--menta-200);
+  font-size:.78rem;font-weight:700;color:var(--verde-800);
+  min-width:0;max-width:38vw;
+}
+@media(min-width:700px){.chip-sucursal{max-width:none}}
+.chip-sucursal svg{width:14px;height:14px;flex:none;color:var(--verde-500)}
+.chip-sucursal b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.chip-sucursal .cambiar{display:none;color:var(--verde-500);font-weight:800;font-size:.72rem}
+@media(min-width:560px){.chip-sucursal .cambiar{display:inline}}
+
+.btn-pedido{
+  position:relative;display:flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:999px;background:var(--verde-700);color:#fff;
+  font-size:.82rem;font-weight:700;
+}
+.btn-pedido svg{width:16px;height:16px}
+.btn-pedido .conteo{
+  position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;
+  border-radius:999px;background:var(--wa);color:#04301F;
+  font-size:.7rem;font-weight:800;display:grid;place-items:center;
+  border:2px solid var(--blanco);
+}
+.btn-pedido[data-vacio="si"] .conteo{display:none}
+.btn-pedido .texto{display:none}
+@media(min-width:560px){.btn-pedido .texto{display:inline}}
+
+/* ============================ HERO ============================ */
+.hero{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 82% -10%, #1B9E7A 0%, transparent 55%),
+    linear-gradient(165deg,var(--verde-800) 0%,var(--verde-900) 62%,#082D24 100%);
+  color:#fff;
+  padding:clamp(52px,10vw,96px) 0 clamp(64px,11vw,108px);
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(90% 70% at 30% 20%,#000,transparent 72%);
+  -webkit-mask-image:radial-gradient(90% 70% at 30% 20%,#000,transparent 72%);
+}
+.hero::after{
+  content:"";position:absolute;right:-90px;top:-70px;width:340px;height:340px;
+  border-radius:80px;opacity:.07;
+  background:#fff;
+  clip-path:polygon(36% 0,64% 0,64% 36%,100% 36%,100% 64%,64% 64%,64% 100%,36% 100%,36% 64%,0 64%,0 36%,36% 36%);
+}
+.hero .env{position:relative;z-index:2}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px 6px 8px;border-radius:999px;
+  background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);
+  font-size:.76rem;font-weight:700;letter-spacing:.01em;
+  margin-bottom:20px;
+}
+.hero-eyebrow .punto{width:7px;height:7px;border-radius:50%;background:var(--wa);box-shadow:0 0 0 4px rgba(37,211,102,.22)}
+.hero h1{max-width:15ch}
+.hero h1 em{font-style:normal;color:#7FE3BE}
+.hero-bajada{margin-top:16px;max-width:46ch;color:rgba(255,255,255,.78);font-size:clamp(1rem,2.4vw,1.14rem)}
+.hero-acciones{display:flex;flex-wrap:wrap;gap:11px;margin-top:30px}
+.hero-acciones .btn{flex:1 1 auto;min-width:190px}
+@media(min-width:640px){.hero-acciones .btn{flex:0 0 auto}}
+
+.hero-datos{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  margin-top:40px;border-radius:var(--r-m);overflow:hidden;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.14);
+}
+@media(min-width:720px){.hero-datos{grid-template-columns:repeat(4,1fr)}}
+.hero-datos li{background:rgba(9,48,38,.55);padding:16px 18px;backdrop-filter:blur(4px)}
+.hero-datos b{display:block;font-size:1.32rem;font-weight:800;letter-spacing:-.03em}
+.hero-datos span{font-size:.76rem;color:rgba(255,255,255,.66);font-weight:600}
+
+/* ============================ SECCIONES ============================ */
+.seccion{padding:clamp(52px,8vw,86px) 0}
+.seccion-cabecera{margin-bottom:26px}
+.seccion-cabecera h2{margin-top:12px}
+.seccion-cabecera .bajada{margin-top:10px}
+
+/* ---------- selector de sucursal ---------- */
+#sucursales{background:var(--blanco);border-block:1px solid var(--linea)}
+.grid-sucursales{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:640px){.grid-sucursales{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.grid-sucursales{grid-template-columns:repeat(4,1fr)}}
+
+.tarjeta-sucursal{
+  position:relative;text-align:left;
+  display:flex;flex-direction:column;gap:9px;
+  padding:20px 18px 18px;border-radius:var(--r-l);
+  background:var(--menta-50);border:1.5px solid var(--linea);
+  transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+}
+.tarjeta-sucursal:hover{transform:translateY(-3px);box-shadow:var(--sombra-m);border-color:var(--menta-200)}
+.tarjeta-sucursal[aria-pressed="true"]{
+  background:var(--blanco);border-color:var(--verde-400);
+  box-shadow:0 0 0 3px rgba(23,166,127,.16), var(--sombra-m);
+}
+.tarjeta-sucursal .comuna{
+  font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--verde-500);
+}
+.tarjeta-sucursal .nombre{font-size:1.08rem;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.tarjeta-sucursal .dato{display:flex;gap:8px;align-items:flex-start;font-size:.84rem;color:var(--gris);line-height:1.4}
+.tarjeta-sucursal .dato svg{width:15px;height:15px;flex:none;margin-top:3px;color:var(--verde-400)}
+.tarjeta-sucursal .marca-activa{
+  display:none;position:absolute;top:14px;right:14px;
+  align-items:center;gap:5px;padding:4px 10px;border-radius:999px;
+  background:var(--verde-700);color:#fff;font-size:.66rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+}
+.tarjeta-sucursal[aria-pressed="true"] .marca-activa{display:inline-flex}
+.tarjeta-sucursal .accion{
+  margin-top:6px;font-size:.82rem;font-weight:800;color:var(--verde-700);
+  display:flex;align-items:center;gap:6px;
+}
+.tarjeta-sucursal .accion svg{width:14px;height:14px;transition:transform .2s ease}
+.tarjeta-sucursal:hover .accion svg{transform:translateX(3px)}
+.tarjeta-sucursal[aria-pressed="true"] .accion{color:var(--verde-400)}
+
+.estado-local{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.74rem;font-weight:800;padding:3px 9px;border-radius:999px;align-self:flex-start;
+}
+.estado-local .punto{width:6px;height:6px;border-radius:50%}
+.estado-local[data-abierto="si"]{background:#E4F6EC;color:#186B44}
+.estado-local[data-abierto="si"] .punto{background:#25C16A;box-shadow:0 0 0 3px rgba(37,193,106,.2)}
+.estado-local[data-abierto="no"]{background:#F1F4F3;color:var(--gris)}
+.estado-local[data-abierto="no"] .punto{background:var(--gris-claro)}
+
+/* ---------- barra de catálogo ---------- */
+.barra-catalogo{
+  position:sticky;top:var(--header-h);z-index:40;
+  background:rgba(247,251,249,.94);backdrop-filter:blur(12px);
+  padding:12px 0 10px;margin-bottom:22px;
+  border-bottom:1px solid var(--linea);
+}
+.buscador{position:relative;display:flex;align-items:center}
+.buscador svg{position:absolute;left:16px;width:18px;height:18px;color:var(--gris-claro);pointer-events:none}
+.buscador input{
+  width:100%;padding:13px 16px 13px 44px;
+  border-radius:999px;border:1.5px solid var(--linea);background:var(--blanco);
+  font-size:.95rem;transition:border-color .2s ease, box-shadow .2s ease;
+}
+.buscador input::placeholder{color:var(--gris-claro)}
+.buscador input:focus{outline:none;border-color:var(--verde-400);box-shadow:0 0 0 4px rgba(23,166,127,.13)}
+.buscador .limpiar{
+  position:absolute;right:8px;width:30px;height:30px;border-radius:50%;
+  display:none;place-items:center;color:var(--gris);background:var(--menta-100);
+}
+.buscador .limpiar svg{position:static;width:14px;height:14px;color:inherit}
+.buscador[data-lleno="si"] .limpiar{display:grid}
+
+.filtros{
+  display:flex;gap:8px;margin-top:11px;
+  overflow-x:auto;scrollbar-width:none;
+  padding-bottom:2px;
+  -webkit-overflow-scrolling:touch;
+}
+.filtros::-webkit-scrollbar{display:none}
+.filtro{
+  flex:none;display:inline-flex;align-items:center;gap:7px;
+  padding:9px 15px;border-radius:999px;
+  background:var(--blanco);border:1.5px solid var(--linea);
+  font-size:.84rem;font-weight:700;color:var(--gris);
+  transition:all .18s ease;
+}
+.filtro svg{width:15px;height:15px}
+.filtro:hover{border-color:var(--menta-200);color:var(--verde-700)}
+.filtro[aria-pressed="true"]{background:var(--verde-700);border-color:var(--verde-700);color:#fff}
+.filtro[aria-pressed="true"] svg{color:#7FE3BE}
+
+.resumen-filtro{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:16px;font-size:.85rem;color:var(--gris);flex-wrap:wrap;
+}
+.resumen-filtro b{color:var(--tinta)}
+.solo-stock{display:inline-flex;align-items:center;gap:8px;font-size:.84rem;font-weight:600;color:var(--gris);cursor:pointer}
+.solo-stock input{
+  appearance:none;width:38px;height:22px;border-radius:999px;background:var(--linea);
+  position:relative;transition:background .2s ease;flex:none;cursor:pointer;
+}
+.solo-stock input::after{
+  content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s ease;
+}
+.solo-stock input:checked{background:var(--verde-400)}
+.solo-stock input:checked::after{transform:translateX(16px)}
+
+/* ---------- grilla de productos ---------- */
+.grid-productos{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+@media(max-width:479px){.grid-productos{grid-template-columns:1fr}}
+
+.producto{
+  display:flex;flex-direction:column;
+  background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-l);
+  padding:16px;transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+}
+.producto:hover{box-shadow:var(--sombra-m);transform:translateY(-2px);border-color:var(--menta-200)}
+.producto[data-agotado="si"]{background:#FBFCFC}
+.producto[data-agotado="si"] .prod-icono{opacity:.5}
+
+.prod-tope{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.prod-icono{
+  width:52px;height:52px;border-radius:14px;flex:none;
+  background:linear-gradient(150deg,var(--menta-100),var(--menta-200));
+  display:grid;place-items:center;color:var(--verde-700);
+}
+.prod-icono svg{width:25px;height:25px}
+.prod-sellos{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+
+.sello{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:7px;
+  font-size:.65rem;font-weight:800;letter-spacing:.02em;
+}
+.sello-be{background:#FFF6D6;color:#8A6100;border:1px solid #F2DFA0}
+.sello-receta{background:var(--rojo-bg);color:var(--rojo);border:1px solid #F3D3CE}
+.sello-frio{background:#E7F1FC;color:#215D9C;border:1px solid #CFE1F5}
+
+.prod-nombre{font-size:.98rem;font-weight:700;letter-spacing:-.015em;line-height:1.28}
+.prod-meta{margin-top:5px;font-size:.78rem;color:var(--gris-claro);font-weight:600}
+.prod-activo{margin-top:7px;font-size:.76rem;color:var(--gris);line-height:1.35}
+.prod-activo b{color:var(--verde-700);font-weight:700}
+
+.prod-stock{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;align-self:flex-start;
+}
+.prod-stock .punto{width:6px;height:6px;border-radius:50%;flex:none}
+.prod-stock[data-nivel="alto"]{background:#E4F6EC;color:#186B44}
+.prod-stock[data-nivel="alto"] .punto{background:#25C16A}
+.prod-stock[data-nivel="bajo"]{background:var(--ambar-bg);color:var(--ambar)}
+.prod-stock[data-nivel="bajo"] .punto{background:#E0A62B}
+.prod-stock[data-nivel="cero"]{background:#F1F4F3;color:var(--gris)}
+.prod-stock[data-nivel="cero"] .punto{background:var(--gris-claro)}
+
+.prod-pie{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prod-precio{display:flex;flex-direction:column;line-height:1.1}
+.prod-precio b{font-size:1.22rem;font-weight:800;letter-spacing:-.03em}
+.prod-precio span{font-size:.68rem;color:var(--gris-claro);font-weight:600}
+
+.btn-agregar{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 16px;border-radius:999px;
+  background:var(--verde-700);color:#fff;font-size:.83rem;font-weight:700;
+  transition:background .18s ease, transform .15s ease;
+}
+.btn-agregar svg{width:15px;height:15px}
+.btn-agregar:hover{background:var(--verde-800)}
+.btn-agregar:active{transform:scale(.94)}
+.btn-agregar[data-modo="consultar"]{background:var(--menta-100);color:var(--verde-800)}
+.btn-agregar[data-modo="consultar"]:hover{background:var(--menta-200)}
+.btn-agregar[data-modo="agregado"]{background:var(--wa);color:#04301F}
+
+.sin-resultados{
+  grid-column:1/-1;text-align:center;padding:56px 20px;
+  background:var(--blanco);border:1px dashed var(--linea);border-radius:var(--r-l);
+}
+.sin-resultados svg{width:40px;height:40px;color:var(--menta-200);margin:0 auto 14px}
+.sin-resultados p{color:var(--gris);font-size:.92rem;max-width:40ch;margin:0 auto}
+.sin-resultados b{display:block;font-size:1.05rem;color:var(--tinta);margin-bottom:6px}
+
+.aviso-receta{
+  display:flex;gap:12px;align-items:flex-start;
+  margin-top:26px;padding:16px 18px;border-radius:var(--r-m);
+  background:var(--ambar-bg);border:1px solid #F2DFA0;
+  font-size:.84rem;color:#6D4A0C;line-height:1.5;
+}
+.aviso-receta svg{width:19px;height:19px;flex:none;margin-top:2px;color:var(--ambar)}
+.aviso-receta b{font-weight:800}
+
+/* ---------- servicios ---------- */
+#servicios{background:var(--blanco);border-block:1px solid var(--linea)}
+.grid-servicios{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:600px){.grid-servicios{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.grid-servicios{grid-template-columns:repeat(3,1fr)}}
+.servicio{
+  display:flex;gap:14px;padding:20px;border-radius:var(--r-l);
+  background:var(--menta-50);border:1px solid var(--linea);
+}
+.servicio-ico{
+  width:42px;height:42px;border-radius:12px;flex:none;
+  background:var(--blanco);border:1px solid var(--menta-200);
+  display:grid;place-items:center;color:var(--verde-500);
+}
+.servicio-ico svg{width:21px;height:21px}
+.servicio p{margin-top:5px;font-size:.86rem;color:var(--gris);line-height:1.5}
+
+/* ---------- ubicación ---------- */
+.bloque-ubicacion{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:900px){.bloque-ubicacion{grid-template-columns:.85fr 1.15fr;align-items:start}}
+
+.panel{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r-l);padding:22px;box-shadow:var(--sombra-s)}
+.panel + .panel{margin-top:14px}
+.panel h3{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.panel h3 svg{width:17px;height:17px;color:var(--verde-400)}
+
+.lista-horario li{
+  display:flex;justify-content:space-between;gap:14px;
+  padding:10px 0;border-bottom:1px dashed var(--linea);
+  font-size:.88rem;
+}
+.lista-horario li:last-child{border-bottom:0;padding-bottom:0}
+.lista-horario .dia{color:var(--gris);font-weight:600}
+.lista-horario .hora{font-weight:700;font-variant-numeric:tabular-nums}
+.lista-horario li[data-hoy="si"] .dia{color:var(--verde-700);font-weight:800}
+.lista-horario li[data-hoy="si"] .hora{color:var(--verde-700)}
+.lista-horario li[data-hoy="si"] .dia::after{
+  content:"hoy";margin-left:7px;padding:2px 7px;border-radius:6px;
+  background:var(--menta-100);color:var(--verde-600,var(--verde-500));
+  font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+}
+
+.dato-contacto{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed var(--linea)}
+.dato-contacto:last-of-type{border-bottom:0}
+.dato-contacto svg{width:17px;height:17px;flex:none;margin-top:3px;color:var(--verde-400)}
+.dato-contacto .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gris-claro);font-weight:800}
+.dato-contacto .vl{font-size:.92rem;font-weight:600}
+.dato-contacto a{color:inherit;text-decoration:none}
+.dato-contacto a:hover{color:var(--verde-500)}
+
+.mapa{
+  border-radius:var(--r-l);overflow:hidden;border:1px solid var(--linea);
+  box-shadow:var(--sombra-m);background:var(--menta-100);
+  aspect-ratio:4/3;
+}
+@media(min-width:900px){.mapa{aspect-ratio:auto;height:100%;min-height:460px}}
+.mapa iframe{width:100%;height:100%;border:0;display:block}
+
+/* ---------- panel de pedido ---------- */
+.velo{
+  position:fixed;inset:0;z-index:80;
+  background:rgba(10,45,36,.5);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .28s ease;
+}
+.velo[data-abierto="si"]{opacity:1;pointer-events:auto}
+
+.cajon{
+  position:fixed;z-index:90;background:var(--blanco);
+  display:flex;flex-direction:column;
+  box-shadow:var(--sombra-l);
+  transition:transform .34s cubic-bezier(.32,.72,0,1);
+}
+/* móvil: hoja inferior */
+.cajon{
+  left:0;right:0;bottom:0;max-height:88vh;
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  transform:translateY(102%);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.cajon[data-abierto="si"]{transform:translateY(0)}
+@media(min-width:720px){
+  .cajon{
+    left:auto;top:0;right:0;bottom:0;width:420px;max-height:none;
+    border-radius:0;transform:translateX(102%);
+  }
+  .cajon[data-abierto="si"]{transform:translateX(0)}
+}
+.cajon-tirador{width:42px;height:4px;border-radius:99px;background:var(--linea);margin:10px auto 0}
+@media(min-width:720px){.cajon-tirador{display:none}}
+
+.cajon-cabecera{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;border-bottom:1px solid var(--linea);
+}
+.cajon-cabecera h3{margin-right:auto}
+.cajon-cabecera .sub{font-size:.75rem;color:var(--gris);font-weight:600;display:block;margin-top:2px}
+.cerrar{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--menta-50);color:var(--gris);flex:none;
+}
+.cerrar svg{width:16px;height:16px}
+.cerrar:hover{background:var(--menta-100);color:var(--tinta)}
+
+.cajon-cuerpo{flex:1;overflow-y:auto;padding:16px 20px;-webkit-overflow-scrolling:touch}
+.cajon-pie{padding:16px 20px 20px;border-top:1px solid var(--linea);background:var(--menta-50)}
+
+.item-pedido{display:flex;gap:12px;padding:13px 0;border-bottom:1px dashed var(--linea);align-items:flex-start}
+.item-pedido:last-child{border-bottom:0}
+.item-ico{
+  width:40px;height:40px;border-radius:11px;flex:none;
+  background:var(--menta-100);display:grid;place-items:center;color:var(--verde-700);
+}
+.item-ico svg{width:19px;height:19px}
+.item-info{flex:1;min-width:0}
+.item-info .nom{font-size:.87rem;font-weight:700;line-height:1.3}
+.item-info .det{font-size:.73rem;color:var(--gris-claro);margin-top:2px}
+.item-info .pre{font-size:.85rem;font-weight:800;margin-top:5px}
+.item-cant{display:flex;align-items:center;gap:2px;background:var(--menta-50);border:1px solid var(--linea);border-radius:999px;padding:3px}
+.item-cant button{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--verde-700);font-weight:800;font-size:1rem;line-height:1}
+.item-cant button:hover{background:var(--menta-200)}
+.item-cant .n{min-width:22px;text-align:center;font-size:.85rem;font-weight:800;font-variant-numeric:tabular-nums}
+
+.pedido-vacio{text-align:center;padding:48px 16px;color:var(--gris)}
+.pedido-vacio svg{width:44px;height:44px;color:var(--menta-200);margin:0 auto 14px}
+.pedido-vacio b{display:block;color:var(--tinta);font-size:1rem;margin-bottom:6px}
+.pedido-vacio p{font-size:.87rem;max-width:32ch;margin:0 auto}
+
+.total-fila{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.total-fila .et{font-size:.83rem;color:var(--gris);font-weight:600}
+.total-fila .vl{font-size:1.5rem;font-weight:800;letter-spacing:-.03em}
+.nota-total{font-size:.72rem;color:var(--gris-claro);line-height:1.45;margin-bottom:14px}
+.destino-pedido{
+  display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--gris);
+  margin-top:12px;justify-content:center;text-align:center;
+}
+.destino-pedido svg{width:14px;height:14px;color:var(--verde-400);flex:none}
+.destino-pedido b{color:var(--verde-800);font-weight:700}
+
+/* ---------- botón flotante ---------- */
+.flotante{
+  position:fixed;right:16px;z-index:70;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:10px;
+  padding:14px 20px 14px 16px;border-radius:999px;
+  background:var(--wa);color:#04301F;font-weight:800;font-size:.9rem;
+  text-decoration:none;
+  box-shadow:0 8px 26px rgba(37,211,102,.45), 0 2px 8px rgba(0,0,0,.12);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.flotante svg{width:22px;height:22px}
+.flotante:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,211,102,.5)}
+.flotante:active{transform:scale(.96)}
+.flotante .texto{display:none}
+@media(min-width:520px){.flotante .texto{display:inline}}
+body:has(.cajon[data-abierto="si"]) .flotante{opacity:0;pointer-events:none}
+
+/* ---------- pie ---------- */
+.pie{background:var(--verde-900);color:rgba(255,255,255,.72);padding:52px 0 100px}
+.pie-grid{display:grid;gap:26px;grid-template-columns:1fr}
+@media(min-width:760px){.pie-grid{grid-template-columns:1.4fr 1fr 1fr}}
+.pie h4{color:#fff;font-size:.74rem;text-transform:uppercase;letter-spacing:.13em;font-weight:800;margin-bottom:13px}
+.pie a{color:rgba(255,255,255,.72);text-decoration:none;font-size:.87rem}
+.pie a:hover{color:#7FE3BE}
+.pie li{padding:4px 0;font-size:.87rem}
+.pie-marca{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.pie-marca .marca-cruz{width:38px;height:38px;border-radius:11px}
+.pie-marca .marca-cruz svg{width:20px;height:20px}
+.pie-marca b{color:#fff;font-size:1.12rem;font-weight:800;letter-spacing:-.03em;display:block}
+.pie-marca span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#7FE3BE;font-weight:700}
+.pie-bajada{font-size:.87rem;line-height:1.6;max-width:40ch}
+.redes{display:flex;gap:9px;margin-top:16px}
+.redes a{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#fff;
+  transition:background .2s ease, transform .2s ease;
+}
+.redes a:hover{background:rgba(255,255,255,.17);transform:translateY(-2px)}
+.redes svg{width:18px;height:18px}
+.pie-legal{
+  margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);
+  font-size:.74rem;color:rgba(255,255,255,.45);line-height:1.6;
+}
+
+/* ---------- accesibilidad ---------- */
+.oculto-visual{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== sprite de iconos ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-cruz"><path d="M13 3h-2a1 1 0 0 0-1 1v6H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6v6a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-6h6a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-6V4a1 1 0 0 0-1-1Z" fill="currentColor"/></g>
+    <g id="i-pastilla" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7Z"/><path d="M7 10l7 7"/></g>
+    <g id="i-gota" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6.2 6.6 6.2 10.6a6.2 6.2 0 0 1-12.4 0C5.8 9.3 12 2.7 12 2.7Z"/><path d="M9 14.2a3 3 0 0 0 3 3"/></g>
+    <g id="i-mamadera" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2h5M10 2v2.4c0 .7-.3 1.1-.9 1.6A3.2 3.2 0 0 0 8 8.5V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8.5a3.2 3.2 0 0 0-1.1-2.5c-.6-.5-.9-.9-.9-1.6V2"/><path d="M8 11.5h8M8 15h8"/></g>
+    <g id="i-hoja" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C10 4 4.5 8.8 4.5 15.5A4.5 4.5 0 0 0 9 20c7 0 11-6.4 11-16Z"/><path d="M4.5 20 13 11.5"/></g>
+    <g id="i-corazon" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.3 6.6a4.7 4.7 0 0 0-6.7 0L12 8.2l-1.6-1.6a4.7 4.7 0 1 0-6.7 6.7L12 21.6l8.3-8.3a4.7 4.7 0 0 0 0-6.7Z"/></g>
+    <g id="i-pulso" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12.5h4l2-5.5 3.5 11 2.5-7 1.5 3h5.5"/></g>
+    <g id="i-pin" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10.5" r="2.6"/></g>
+    <g id="i-reloj" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/></g>
+    <g id="i-tel" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 3.5h-2A1.6 1.6 0 0 0 3 5.2C3 13.9 10.1 21 18.8 21a1.6 1.6 0 0 0 1.7-1.6v-2a1.6 1.6 0 0 0-1.3-1.6l-2.7-.5a1.6 1.6 0 0 0-1.6.7l-.8 1.2a12.4 12.4 0 0 1-5.8-5.8l1.2-.8a1.6 1.6 0 0 0 .7-1.6l-.5-2.7a1.6 1.6 0 0 0-1.1-1.3Z"/></g>
+    <g id="i-wa"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 2 .1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4Z" fill="currentColor"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22.4l5.4-1.4A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.2.8.9-3.1-.2-.3A8.2 8.2 0 1 1 12 20.2Z" fill="currentColor"/></g>
+    <g id="i-ig" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.2"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></g>
+    <g id="i-lupa" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></g>
+    <g id="i-x" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></g>
+    <g id="i-mas" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></g>
+    <g id="i-flecha" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></g>
+    <g id="i-bolsa" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7.5h14l-1 12.5a2 2 0 0 1-2 1.8H8a2 2 0 0 1-2-1.8Z"/><path d="M8.8 7.5V6a3.2 3.2 0 0 1 6.4 0v1.5"/></g>
+    <g id="i-alerta" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 20.5h20.4Z"/><path d="M12 9.5v5M12 17.6h.01"/></g>
+    <g id="i-check" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></g>
+    <g id="i-moto" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3"/><circle cx="18.5" cy="17.5" r="3"/><path d="M8.5 17.5h6.8l-3.6-8H8.8M14 6.5h3.4l2.4 6.5"/></g>
+    <g id="i-escudo" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 4.5 5.5v6c0 4.6 3.1 8.8 7.5 10 4.4-1.2 7.5-5.4 7.5-10v-6Z"/><path d="m9 12 2.2 2.2L15.3 10"/></g>
+  </defs>
+</svg>
+
+<!-- ============================ HEADER ============================ -->
+<header class="encabezado">
+  <div class="env">
+    <a class="marca" href="#inicio">
+      <span class="marca-cruz"><svg viewBox="0 0 24 24"><use href="#i-cruz"></use></svg></span>
+      <span class="marca-txt"><b>Farmacia Real</b><span>Independencia · Ñuñoa</span></span>
+    </a>
+
+    <button class="chip-sucursal" id="chipSucursal" aria-label="Cambiar de sucursal">
+      <svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>
+      <b id="chipNombre">—</b>
+      <span class="cambiar">Cambiar</span>
+    </button>
+
+    <button class="btn-pedido" id="btnPedido" data-vacio="si" aria-label="Ver mi pedido">
+      <svg viewBox="0 0 24 24"><use href="#i-bolsa"></use></svg>
+      <span class="texto">Mi pedido</span>
+      <span class="conteo" id="conteoPedido">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="inicio">
+  <div class="env">
+    <span class="hero-eyebrow"><span class="punto"></span> <span id="heroEstado">Revisa el stock de tu sucursal</span></span>
+    <h1>Tu farmacia de barrio, con <em>stock real</em> por sucursal.</h1>
+    <p class="hero-bajada">
+      Elige el local más cercano, revisa qué hay disponible hoy y arma tu pedido.
+      Te lo confirmamos por WhatsApp y lo dejamos listo para retirar.
+    </p>
+    <div class="hero-acciones">
+      <a class="btn btn-wa" id="heroWa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Escríbenos por WhatsApp
+      </a>
+      <a class="btn btn-claro" href="#catalogo">Ver catálogo</a>
+    </div>
+    <ul class="hero-datos">
+      <li><b>4</b><span>sucursales</span></li>
+      <li><b id="datoProductos">—</b><span>productos en catálogo</span></li>
+      <li><b>Lun a Dom</b><span>según sucursal</span></li>
+      <li><b>Bioequivalentes</b><span>al mejor precio</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================ SUCURSALES ============================ -->
+<section class="seccion" id="sucursales">
+  <div class="env">
+    <div class="seccion-cabecera">
+      <span class="rotulo">Nuestros locales</span>
+      <h2>Elige tu sucursal</h2>
+      <p class="bajada">El catálogo, el stock y el WhatsApp cambian según el local que selecciones.</p>
+    </div>
+    <div class="grid-sucursales" id="gridSucursales"></div>
+  </div>
+</section>
+
+<!-- ============================ CATÁLOGO ============================ -->
+<section class="seccion" id="catalogo" style="padding-top:clamp(36px,6vw,60px)">
+  <div class="env">
+    <div class="seccion-cabecera">
+      <span class="rotulo">Catálogo</span>
+      <h2>Disponible en <span id="tituloSucursal">tu sucursal</span></h2>
+      <p class="bajada">Precios referenciales. Confirmamos stock y valor final por WhatsApp antes de que vengas.</p>
+    </div>
+
+    <div class="barra-catalogo">
+      <div class="buscador" id="buscador">
+        <svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg>
+        <input type="search" id="inputBusqueda" placeholder="Buscar medicamento, marca o principio activo…" aria-label="Buscar en el catálogo" autocomplete="off">
+        <button class="limpiar" id="limpiarBusqueda" aria-label="Limpiar búsqueda"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
+    </div>
+
+    <div class="resumen-filtro">
+      <span id="resumenConteo">—</span>
+      <label class="solo-stock">
+        <input type="checkbox" id="soloStock" role="switch">
+        Solo con stock disponible
+      </label>
+    </div>
+
+    <div class="grid-productos" id="gridProductos"></div>
+
+    <div class="aviso-receta">
+      <svg viewBox="0 0 24 24"><use href="#i-alerta"></use></svg>
+      <div>
+        <b>Productos con receta:</b> los medicamentos marcados como <em>Receta</em> requieren presentar la receta médica
+        en el local al momento del retiro. Escríbenos por WhatsApp y te indicamos qué necesitas traer.
+        Esta página no reemplaza la indicación de un profesional de la salud.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SERVICIOS ============================ -->
+<section class="seccion" id="servicios">
+  <div class="env">
+    <div class="seccion-cabecera">
+      <span class="rotulo">En el local</span>
+      <h2>Más que vender remedios</h2>
+    </div>
+    <div class="grid-servicios">
+      <div class="servicio">
+        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-corazon"></use></svg></span>
+        <div><h3>Consulta farmacéutica</h3><p>Te orientamos sobre dosis, interacciones y alternativas bioequivalentes más económicas.</p></div>
+      </div>
+      <div class="servicio">
+        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-pulso"></use></svg></span>
+        <div><h3>Control de presión</h3><p>Pasa a tomarte la presión sin costo mientras esperas tu pedido.</p></div>
+      </div>
+      <div class="servicio">
+        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-pastilla"></use></svg></span>
+        <div><h3>Tratamientos crónicos</h3><p>Te avisamos cuando llega tu medicamento y lo reservamos hasta que puedas venir.</p></div>
+      </div>
+      <div class="servicio">
+        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-moto"></use></svg></span>
+        <div><h3>Despacho por el sector</h3><p>Coordinamos entrega en Independencia y alrededores. Consulta cobertura por WhatsApp.</p></div>
+      </div>
+      <div class="servicio">
+        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-escudo"></use></svg></span>
+        <div><h3>Bioequivalentes certificados</h3><p>El mismo principio activo, respaldado por el ISP, a una fracción del precio.</p></div>
+      </div>
+      <div class="servicio">
+        <span class="servicio-ico"><svg viewBox="0 0 24 24"><use href="#i-mamadera"></use></svg></span>
+        <div><h3>Mamá y bebé</h3><p>Fórmulas, pañales y cuidado infantil siempre disponibles en nuestros locales.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ UBICACIÓN ============================ -->
+<section class="seccion" id="ubicacion">
+  <div class="env">
+    <div class="seccion-cabecera">
+      <span class="rotulo">Cómo llegar</span>
+      <h2 id="tituloUbicacion">Visítanos</h2>
+      <p class="bajada">Datos de la sucursal seleccionada. Cambia de local arriba para ver otra.</p>
+    </div>
+
+    <div class="bloque-ubicacion">
+      <div>
+        <div class="panel">
+          <h3><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg> Contacto y dirección</h3>
+          <div id="panelContacto"></div>
+          <a class="btn btn-linea btn-bloque" id="btnComoLlegar" href="#" target="_blank" rel="noopener" style="margin-top:16px">
+            <svg viewBox="0 0 24 24"><use href="#i-flecha"></use></svg> Cómo llegar en Google Maps
+          </a>
+        </div>
+        <div class="panel">
+          <h3><svg viewBox="0 0 24 24"><use href="#i-reloj"></use></svg> Horarios de atención</h3>
+          <ul class="lista-horario" id="listaHorario"></ul>
+        </div>
+      </div>
+      <div class="mapa"><iframe id="mapaIframe" title="Mapa de la sucursal" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PIE ============================ -->
+<footer class="pie">
+  <div class="env">
+    <div class="pie-grid">
+      <div>
+        <div class="pie-marca">
+          <span class="marca-cruz"><svg viewBox="0 0 24 24"><use href="#i-cruz"></use></svg></span>
+          <span><b>Farmacia Real</b><span>Independencia · Ñuñoa</span></span>
+        </div>
+        <p class="pie-bajada">Farmacia de barrio con cuatro locales en Santiago. Medicamentos, bioequivalentes, dermocosmética y cuidado en casa, con atención de verdad.</p>
+        <div class="redes">
+          <a href="https://instagram.com/farmaciareal4" target="_blank" rel="noopener" aria-label="Instagram de Farmacia Real"><svg viewBox="0 0 24 24"><use href="#i-ig"></use></svg></a>
+          <a id="piePedido" href="#" target="_blank" rel="noopener" aria-label="WhatsApp de Farmacia Real"><svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Sucursales</h4>
+        <ul id="pieSucursales"></ul>
+      </div>
+      <div>
+        <h4>Secciones</h4>
+        <ul>
+          <li><a href="#sucursales">Elegir sucursal</a></li>
+          <li><a href="#catalogo">Catálogo y stock</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#ubicacion">Cómo llegar</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="pie-legal">
+      Los precios publicados son referenciales y pueden variar sin previo aviso; el valor final se confirma en el local.
+      La disponibilidad mostrada es orientativa. Los medicamentos con receta requieren presentación de receta médica vigente.
+      Ante cualquier síntoma, consulta a un profesional de la salud.
+      © <span id="anio"></span> Farmacia Real. Todos los derechos reservados.
+    </p>
+  </div>
+</footer>
+
+<!-- ============================ PEDIDO ============================ -->
+<div class="velo" id="velo" data-abierto="no"></div>
+<aside class="cajon" id="cajonPedido" data-abierto="no" role="dialog" aria-modal="true" aria-labelledby="tituloCajon">
+  <span class="cajon-tirador"></span>
+  <div class="cajon-cabecera">
+    <div>
+      <h3 id="tituloCajon">Mi pedido</h3>
+      <span class="sub" id="subCajon">—</span>
+    </div>
+    <button class="cerrar" id="cerrarCajon" aria-label="Cerrar pedido"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+  </div>
+  <div class="cajon-cuerpo" id="cuerpoCajon"></div>
+  <div class="cajon-pie">
+    <div class="total-fila"><span class="et">Total referencial</span><span class="vl" id="totalPedido">$0</span></div>
+    <p class="nota-total">El valor final se confirma en el local. No es una compra: al enviar, un farmacéutico te responde por WhatsApp con la disponibilidad.</p>
+    <a class="btn btn-wa btn-bloque" id="enviarPedido" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Enviar pedido por WhatsApp
+    </a>
+    <p class="destino-pedido"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg> Se envía a <b id="destinoNombre">—</b></p>
+  </div>
+</aside>
+
+<!-- ============================ SELECTOR DE SUCURSAL (modal) ============================ -->
+<aside class="cajon" id="cajonSucursal" data-abierto="no" role="dialog" aria-modal="true" aria-labelledby="tituloCajonSuc">
+  <span class="cajon-tirador"></span>
+  <div class="cajon-cabecera">
+    <div>
+      <h3 id="tituloCajonSuc">Elige tu sucursal</h3>
+      <span class="sub">El stock y el WhatsApp cambian según el local</span>
+    </div>
+    <button class="cerrar" id="cerrarSucursal" aria-label="Cerrar selector"><svg viewBox="0 0 24 24"><use href="#i-x"></use></svg></button>
+  </div>
+  <div class="cajon-cuerpo"><div class="grid-sucursales" id="gridSucursalesModal" style="grid-template-columns:1fr"></div></div>
+</aside>
+
+<a class="flotante" id="flotanteWa" href="#" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg>
+  <span class="texto">Escríbenos</span>
+</a>
+
+<script>
+/* ================================================================
+   1) DATOS — edita aquí para actualizar sucursales y catálogo
+   ================================================================ */
+
+/* Días: 0=domingo … 6=sábado. "cerrado" para días sin atención. */
+const SUCURSALES = [
+  {
+    id: 'independencia',
+    nombre: 'Independencia 1443',
+    corto: 'Independencia',
+    comuna: 'Independencia',
+    direccion: 'Av. Independencia 1443, Independencia',
+    telefono: '+56 9 4018 4554',
+    whatsapp: '56940184554',
+    horario: [
+      { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'08:30', cierra:'21:00' },
+      { d:[6],         et:'Sábado',          abre:'09:00', cierra:'21:00' },
+      { d:[0],         et:'Domingo',         abre:'10:00', cierra:'15:00' }
+    ],
+    mapa: 'Av. Independencia 1443, Independencia, Región Metropolitana, Chile'
+  },
+  {
+    id: 'sevilla',
+    nombre: 'Sevilla 1201',
+    corto: 'Sevilla',
+    comuna: 'Independencia',
+    direccion: 'Calle Sevilla 1201-1205, Independencia',
+    telefono: '+56 9 8571 5937',
+    whatsapp: '56985715937',
+    horario: [
+      { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'09:00', cierra:'20:30' },
+      { d:[6],         et:'Sábado',          abre:'09:30', cierra:'20:00' },
+      { d:[0],         et:'Domingo',         cerrado:true }
+    ],
+    mapa: 'Sevilla 1201, Independencia, Región Metropolitana, Chile'
+  },
+  {
+    id: 'santamaria',
+    nombre: 'Domingo Santa María 1789',
+    corto: 'Sta. María',
+    comuna: 'Independencia',
+    direccion: 'Av. Domingo Santa María 1789, esq. Vivaceta, Independencia',
+    /* TODO: reemplazar por el número propio de esta sucursal */
+    telefono: '+56 9 4018 4554',
+    whatsapp: '56940184554',
+    horario: [
+      { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'08:30', cierra:'21:00' },
+      { d:[6],         et:'Sábado',          abre:'09:00', cierra:'21:00' },
+      { d:[0],         et:'Domingo',         abre:'10:00', cierra:'14:00' }
+    ],
+    mapa: 'Av. Domingo Santa María 1789, Independencia, Región Metropolitana, Chile'
+  },
+  {
+    id: 'nunoa',
+    nombre: 'Simón Bolívar 3751',
+    corto: 'Ñuñoa',
+    comuna: 'Ñuñoa',
+    direccion: 'Av. Simón Bolívar 3751-A, Ñuñoa',
+    /* TODO: reemplazar por el número propio de esta sucursal */
+    telefono: '+56 9 4018 4554',
+    whatsapp: '56940184554',
+    horario: [
+      { d:[1,2,3,4,5], et:'Lunes a viernes', abre:'09:00', cierra:'21:00' },
+      { d:[6],         et:'Sábado',          abre:'10:00', cierra:'20:00' },
+      { d:[0],         et:'Domingo',         cerrado:true }
+    ],
+    mapa: 'Av. Simón Bolívar 3751, Ñuñoa, Región Metropolitana, Chile'
+  }
+];
+
+const CATEGORIAS = [
+  { id:'todos',       et:'Todos',              ico:'i-cruz' },
+  { id:'medicamentos',et:'Medicamentos',       ico:'i-pastilla' },
+  { id:'dermo',       et:'Dermocosmética',     ico:'i-gota' },
+  { id:'vitaminas',   et:'Vitaminas',          ico:'i-hoja' },
+  { id:'infantil',    et:'Mamá y bebé',        ico:'i-mamadera' },
+  { id:'cuidado',     et:'Cuidado personal',   ico:'i-corazon' },
+  { id:'equipos',     et:'Equipos y control',  ico:'i-pulso' }
+];
+
+/* stock: unidades por sucursal → [independencia, sevilla, santamaria, nunoa] */
+const PRODUCTOS = [
+  { n:'Paracetamol 500 mg',        pres:'20 comprimidos', lab:'Laboratorio Chile', act:'Paracetamol', cat:'medicamentos', p:1290,  be:true,  st:[38,24,31,19] },
+  { n:'Ibuprofeno 400 mg',         pres:'20 comprimidos', lab:'Mintlab',           act:'Ibuprofeno',  cat:'medicamentos', p:2390,  be:true,  st:[26,0,18,12] },
+  { n:'Loratadina 10 mg',          pres:'10 comprimidos', lab:'Laboratorio Chile', act:'Loratadina',  cat:'medicamentos', p:1790,  be:true,  st:[41,15,6,22] },
+  { n:'Omeprazol 20 mg',           pres:'30 cápsulas',    lab:'Mintlab',           act:'Omeprazol',   cat:'medicamentos', p:3990,  be:true,  st:[17,9,25,0] },
+  { n:'Amoxicilina 500 mg',        pres:'21 cápsulas',    lab:'Saval',             act:'Amoxicilina', cat:'medicamentos', p:5490,  rec:true, st:[12,7,0,9] },
+  { n:'Losartán 50 mg',            pres:'30 comprimidos', lab:'Andrómaco',         act:'Losartán potásico', cat:'medicamentos', p:4290, be:true, rec:true, st:[22,14,16,11] },
+  { n:'Metformina 850 mg',         pres:'30 comprimidos', lab:'Laboratorio Chile', act:'Metformina',  cat:'medicamentos', p:3690,  be:true, rec:true, st:[19,4,21,8] },
+  { n:'Salbutamol inhalador',      pres:'200 dosis',      lab:'Saval',             act:'Salbutamol',  cat:'medicamentos', p:6990,  rec:true, st:[8,0,5,7] },
+  { n:'Jarabe para la tos',        pres:'120 ml',         lab:'Recalcine',         act:'Ambroxol',    cat:'medicamentos', p:4590,  st:[23,11,14,16] },
+  { n:'Sales de rehidratación',    pres:'Caja 5 sobres',  lab:'Laboratorio Chile', act:'Electrolitos',cat:'medicamentos', p:3290,  st:[30,18,9,13] },
+
+  { n:'Protector solar FPS 50+',   pres:'Facial 50 ml',   lab:'ISDIN',             act:'Fotoprotección', cat:'dermo', p:18990, st:[9,3,7,14] },
+  { n:'Crema hidratante piel sensible', pres:'Frasco 473 ml', lab:'Cetaphil',      act:'Emoliente',    cat:'dermo', p:15490, st:[6,0,4,11] },
+  { n:'Gel limpiador facial',      pres:'200 ml',         lab:'La Roche-Posay',    act:'Effaclar',     cat:'dermo', p:13990, st:[4,2,0,8] },
+  { n:'Crema para manos reparadora',pres:'75 ml',         lab:'Eucerin',           act:'Urea 5%',      cat:'dermo', p:7990,  st:[15,8,12,10] },
+
+  { n:'Vitamina C 1000 mg',        pres:'30 comprimidos', lab:'Mintlab',           act:'Ácido ascórbico', cat:'vitaminas', p:5990, st:[27,16,20,18] },
+  { n:'Vitamina D3 1000 UI',       pres:'60 cápsulas',    lab:'Andrómaco',         act:'Colecalciferol',  cat:'vitaminas', p:8490, st:[13,5,0,9] },
+  { n:'Omega 3 1000 mg',           pres:'60 cápsulas',    lab:'Natural Life',      act:'EPA / DHA',       cat:'vitaminas', p:11990, st:[10,0,8,12] },
+  { n:'Multivitamínico adulto',    pres:'30 comprimidos', lab:'Centrum',           act:'Multivitamina',   cat:'vitaminas', p:9990,  st:[18,7,11,15] },
+
+  { n:'Fórmula infantil etapa 1',  pres:'Tarro 800 g',    lab:'NAN',               act:'Nutrición infantil', cat:'infantil', p:16990, st:[7,3,9,5] },
+  { n:'Pañales bebé talla M',      pres:'Paquete 50 un.', lab:'Babysec',           act:'Higiene infantil',   cat:'infantil', p:12990, st:[12,6,0,8] },
+  { n:'Toallitas húmedas',         pres:'Paquete 100 un.',lab:'Huggies',           act:'Higiene infantil',   cat:'infantil', p:3490,  st:[24,14,19,17] },
+  { n:'Termómetro digital infantil',pres:'1 unidad',      lab:'Omron',             act:'Medición',           cat:'infantil', p:8990,  st:[9,4,6,7] },
+
+  { n:'Alcohol gel',               pres:'250 ml',         lab:'Genérico',          act:'Etanol 70%',   cat:'cuidado', p:2490, st:[35,22,28,20] },
+  { n:'Mascarillas quirúrgicas',   pres:'Caja 50 un.',    lab:'Genérico',          act:'Protección',   cat:'cuidado', p:3990, st:[28,17,0,14] },
+  { n:'Suero fisiológico',         pres:'Ampollas 5 ml x10', lab:'Sanderson',      act:'NaCl 0,9%',    cat:'cuidado', p:2990, st:[31,12,18,16] },
+  { n:'Pañales adulto talla G',    pres:'Paquete 20 un.', lab:'Cotidian',          act:'Cuidado en casa', cat:'cuidado', p:14990, st:[8,0,10,6] },
+
+  { n:'Medidor de presión digital',pres:'Brazo, 1 unidad',lab:'Omron',             act:'Presión arterial', cat:'equipos', p:44990, st:[4,2,3,5] },
+  { n:'Oxímetro de pulso',         pres:'1 unidad',       lab:'Genérico',          act:'Saturación',       cat:'equipos', p:12990, st:[6,3,0,4] },
+  { n:'Test de embarazo',          pres:'1 unidad',       lab:'Evatest',           act:'Diagnóstico',      cat:'equipos', p:4990,  st:[16,9,12,10] },
+  { n:'Cintas para glicemia',      pres:'Caja 50 un.',    lab:'Accu-Chek',         act:'Glicemia',         cat:'equipos', p:23990, frio:true, st:[5,0,7,3] }
+];
+
+/* ================================================================
+   2) LÓGICA
+   ================================================================ */
+const $  = (s, c=document) => c.querySelector(s);
+const $$ = (s, c=document) => [...c.querySelectorAll(s)];
+const ICO_CAT = Object.fromEntries(CATEGORIAS.map(c => [c.id, c.ico]));
+const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+
+/* cada producto recibe un id estable */
+PRODUCTOS.forEach((p,i) => p.id = 'p'+i);
+
+const estado = {
+  sucursal: SUCURSALES[0].id,
+  categoria: 'todos',
+  busqueda: '',
+  soloStock: false,
+  pedido: {}          /* { idProducto: cantidad } */
+};
+
+const clp = n => '$' + n.toLocaleString('es-CL');
+const sucActual = () => SUCURSALES.find(s => s.id === estado.sucursal) || SUCURSALES[0];
+const idxSuc = () => SUCURSALES.findIndex(s => s.id === estado.sucursal);
+const stockDe = p => p.st[idxSuc()] ?? 0;
+const nivelDe = u => u === 0 ? 'cero' : u <= 8 ? 'bajo' : 'alto';
+const etStock = u => u === 0 ? 'Sin stock hoy' : u <= 8 ? 'Últimas ' + u + ' unidades' : 'Disponible';
+const sinTildes = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+
+/* ---------- horarios ---------- */
+function tramoDeHoy(suc, dia){ return suc.horario.find(h => h.d.includes(dia)); }
+
+function estaAbierto(suc){
+  const ahora = new Date();
+  const t = tramoDeHoy(suc, ahora.getDay());
+  if(!t || t.cerrado) return false;
+  const min = ahora.getHours()*60 + ahora.getMinutes();
+  const aMin = s => (+s.slice(0,2))*60 + (+s.slice(3,5));
+  return min >= aMin(t.abre) && min < aMin(t.cierra);
+}
+
+function textoHorarioHoy(suc){
+  const t = tramoDeHoy(suc, new Date().getDay());
+  if(!t || t.cerrado) return 'Hoy cerrado';
+  return (estaAbierto(suc) ? 'Abierto ahora · cierra ' : 'Hoy ') + (estaAbierto(suc) ? t.cierra : t.abre + ' a ' + t.cierra);
+}
+
+/* ---------- WhatsApp ---------- */
+function waLink(texto, suc = sucActual()){
+  return 'https://wa.me/' + suc.whatsapp + '?text=' + encodeURIComponent(texto);
+}
+
+function msgGeneral(){
+  const s = sucActual();
+  return `¡Hola Farmacia Real! 👋\nVi su página web y quiero hacer una consulta sobre la sucursal *${s.nombre}* (${s.direccion}).`;
+}
+
+function msgProducto(p){
+  const s = sucActual();
+  const u = stockDe(p);
+  let t = `¡Hola Farmacia Real! 👋\nVi su página web y quiero consultar por:\n\n`;
+  t += `💊 *${p.n}* — ${p.pres}\n${p.lab} · ${clp(p.p)} referencial\n`;
+  if(p.rec) t += `📄 Sé que requiere receta médica.\n`;
+  t += `\n📍 Sucursal: *${s.nombre}* (${s.direccion})\n`;
+  t += u === 0 ? `\n¿Cuándo les llega stock o lo tienen en otro local?` : `\n¿Me lo pueden reservar?`;
+  return t;
+}
+
+function msgPedido(){
+  const s = sucActual();
+  const items = itemsPedido();
+  if(!items.length) return msgGeneral();
+  let t = `¡Hola Farmacia Real! 👋\nVi su página web y quiero hacer este pedido:\n\n`;
+  items.forEach(({p,c}) => {
+    t += `• *${p.n}* — ${p.pres}\n  ${c} ${c===1?'unidad':'unidades'} · ${clp(p.p*c)}`;
+    if(p.rec) t += ` · 📄 requiere receta`;
+    if(stockDe(p) === 0) t += ` · ⚠️ aparece sin stock en la web`;
+    t += `\n`;
+  });
+  t += `\n💰 Total referencial: *${clp(totalPedido())}*\n`;
+  t += `📍 Retiro en sucursal *${s.nombre}*\n${s.direccion}\n`;
+  const conReceta = items.some(({p}) => p.rec);
+  if(conReceta) t += `\n📄 Llevo la receta médica al retirar.`;
+  t += `\n\n¿Me confirman disponibilidad y valor final? ¡Gracias!`;
+  return t;
+}
+
+function itemsPedido(){
+  return Object.entries(estado.pedido)
+    .map(([id,c]) => ({ p: PRODUCTOS.find(x => x.id === id), c }))
+    .filter(x => x.p && x.c > 0);
+}
+const totalPedido = () => itemsPedido().reduce((a,{p,c}) => a + p.p*c, 0);
+const cantidadPedido = () => itemsPedido().reduce((a,{c}) => a + c, 0);
+
+/* ---------- render: sucursales ---------- */
+function tarjetaSucursal(s){
+  const abierto = estaAbierto(s);
+  return `
+  <button class="tarjeta-sucursal" data-suc="${s.id}" aria-pressed="${s.id === estado.sucursal}">
+    <span class="marca-activa"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><use href="#i-check"></use></svg> Elegida</span>
+    <span class="comuna">${s.comuna}</span>
+    <span class="nombre">${s.nombre}</span>
+    <span class="estado-local" data-abierto="${abierto ? 'si' : 'no'}"><span class="punto"></span>${textoHorarioHoy(s)}</span>
+    <span class="dato"><svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>${s.direccion}</span>
+    <span class="dato"><svg viewBox="0 0 24 24"><use href="#i-tel"></use></svg>${s.telefono}</span>
+    <span class="accion">${s.id === estado.sucursal ? 'Viendo este catálogo' : 'Ver catálogo de este local'} <svg viewBox="0 0 24 24"><use href="#i-flecha"></use></svg></span>
+  </button>`;
+}
+
+function pintarSucursales(){
+  const html = SUCURSALES.map(tarjetaSucursal).join('');
+  $('#gridSucursales').innerHTML = html;
+  $('#gridSucursalesModal').innerHTML = html;
+  $$('[data-suc]').forEach(b => b.addEventListener('click', () => {
+    elegirSucursal(b.dataset.suc);
+    if($('#cajonSucursal').dataset.abierto === 'si'){
+      cerrarCajones();
+      document.getElementById('catalogo').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }));
+}
+
+/* ---------- render: filtros ---------- */
+function pintarFiltros(){
+  $('#filtros').innerHTML = CATEGORIAS.map(c => `
+    <button class="filtro" data-cat="${c.id}" aria-pressed="${c.id === estado.categoria}">
+      <svg viewBox="0 0 24 24"><use href="#${c.ico}"></use></svg>${c.et}
+    </button>`).join('');
+  $$('[data-cat]').forEach(b => b.addEventListener('click', () => {
+    estado.categoria = b.dataset.cat;
+    $$('[data-cat]').forEach(x => x.setAttribute('aria-pressed', x.dataset.cat === estado.categoria));
+    pintarProductos();
+  }));
+}
+
+/* ---------- render: catálogo ---------- */
+function productosVisibles(){
+  const q = sinTildes(estado.busqueda.trim());
+  return PRODUCTOS.filter(p => {
+    if(estado.categoria !== 'todos' && p.cat !== estado.categoria) return false;
+    if(estado.soloStock && stockDe(p) === 0) return false;
+    if(!q) return true;
+    return sinTildes(`${p.n} ${p.pres} ${p.lab} ${p.act}`).includes(q);
+  });
+}
+
+function tarjetaProducto(p){
+  const u = stockDe(p);
+  const agotado = u === 0;
+  const enPedido = estado.pedido[p.id] || 0;
+  const sellos = [
+    p.be   ? '<span class="sello sello-be">BE bioequivalente</span>' : '',
+    p.rec  ? '<span class="sello sello-receta">Receta</span>' : '',
+    p.frio ? '<span class="sello sello-frio">Cadena de frío</span>' : ''
+  ].join('');
+
+  const boton = agotado
+    ? `<a class="btn-agregar" data-modo="consultar" href="${waLink(msgProducto(p))}" target="_blank" rel="noopener">
+         <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Consultar</a>`
+    : `<button class="btn-agregar" data-agregar="${p.id}" data-modo="${enPedido ? 'agregado' : 'normal'}">
+         <svg viewBox="0 0 24 24"><use href="#${enPedido ? 'i-check' : 'i-mas'}"></use></svg>${enPedido ? 'En pedido · ' + enPedido : 'Agregar'}</button>`;
+
+  return `
+  <article class="producto" data-agotado="${agotado ? 'si' : 'no'}">
+    <div class="prod-tope">
+      <span class="prod-icono"><svg viewBox="0 0 24 24"><use href="#${ICO_CAT[p.cat] || 'i-pastilla'}"></use></svg></span>
+      <span class="prod-sellos">${sellos}</span>
+    </div>
+    <h3 class="prod-nombre">${p.n}</h3>
+    <p class="prod-meta">${p.pres} · ${p.lab}</p>
+    <p class="prod-activo">Principio activo: <b>${p.act}</b></p>
+    <span class="prod-stock" data-nivel="${nivelDe(u)}"><span class="punto"></span>${etStock(u)}</span>
+    <div class="prod-pie">
+      <span class="prod-precio"><b>${clp(p.p)}</b><span>precio referencial</span></span>
+      ${boton}
+    </div>
+  </article>`;
+}
+
+function pintarProductos(){
+  const lista = productosVisibles();
+  const grid = $('#gridProductos');
+
+  if(!lista.length){
+    grid.innerHTML = `
+      <div class="sin-resultados">
+        <svg viewBox="0 0 24 24"><use href="#i-lupa"></use></svg>
+        <b>No encontramos ese producto</b>
+        <p>Puede que no esté en este local. Escríbenos por WhatsApp y lo buscamos en las otras sucursales o te lo pedimos.</p>
+        <a class="btn btn-wa" style="margin-top:18px" href="${waLink(msgGeneral() + '\n\nEstoy buscando: ' + (estado.busqueda || 'un producto que no aparece en la web'))}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><use href="#i-wa"></use></svg> Consultar disponibilidad
+        </a>
+      </div>`;
+  } else {
+    grid.innerHTML = lista.map(tarjetaProducto).join('');
+    $$('[data-agregar]').forEach(b => b.addEventListener('click', () => agregar(b.dataset.agregar)));
+  }
+
+  const conStock = lista.filter(p => stockDe(p) > 0).length;
+  $('#resumenConteo').innerHTML = `<b>${lista.length}</b> producto${lista.length===1?'':'s'} · <b>${conStock}</b> con stock en ${sucActual().nombre}`;
+}
+
+/* ---------- render: ubicación ---------- */
+function pintarUbicacion(){
+  const s = sucActual();
+  const hoy = new Date().getDay();
+
+  $('#panelContacto').innerHTML = `
+    <div class="dato-contacto">
+      <svg viewBox="0 0 24 24"><use href="#i-pin"></use></svg>
+      <div><div class="et">Dirección</div><div class="vl">${s.direccion}</div></div>
+    </div>
+    <div class="dato-contacto">
+      <svg viewBox="0 0 24 24"><use href="#i-tel"></use></svg>
+      <div><div class="et">Teléfono · WhatsApp</div><div class="vl"><a href="tel:${s.telefono.replace(/\s/g,'')}">${s.telefono}</a></div></div>
+    </div>
+    <div class="dato-contacto">
+      <svg viewBox="0 0 24 24"><use href="#i-reloj"></use></svg>
+      <div><div class="et">Ahora</div><div class="vl">${textoHorarioHoy(s)}</div></div>
+    </div>`;
+
+  $('#listaHorario').innerHTML = s.horario.map(t => `
+    <li data-hoy="${t.d.includes(hoy) ? 'si' : 'no'}">
+      <span class="dia">${t.et}</span>
+      <span class="hora">${t.cerrado ? 'Cerrado' : t.abre + ' – ' + t.cierra}</span>
+    </li>`).join('');
+
+  const q = encodeURIComponent(s.mapa);
+  $('#mapaIframe').src = `https://www.google.com/maps?q=${q}&hl=es&z=16&output=embed`;
+  $('#btnComoLlegar').href = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+  $('#tituloUbicacion').textContent = `Visítanos en ${s.nombre}`;
+}
+
+/* ---------- render: pedido ---------- */
+function pintarPedido(){
+  const items = itemsPedido();
+  const n = cantidadPedido();
+
+  $('#conteoPedido').textContent = n;
+  $('#btnPedido').dataset.vacio = n ? 'no' : 'si';
+  $('#totalPedido').textContent = clp(totalPedido());
+  $('#subCajon').textContent = n ? `${n} ${n===1?'producto':'productos'} · retiro en ${sucActual().nombre}` : 'Aún no agregas productos';
+  $('#destinoNombre').textContent = sucActual().nombre;
+  $('#enviarPedido').href = waLink(msgPedido());
+
+  const cuerpo = $('#cuerpoCajon');
+  if(!items.length){
+    cuerpo.innerHTML = `
+      <div class="pedido-vacio">
+        <svg viewBox="0 0 24 24"><use href="#i-bolsa"></use></svg>
+        <b>Tu pedido está vacío</b>
+        <p>Agrega productos del catálogo y te los reservamos en el local que elijas. No pagas nada aquí.</p>
+      </div>`;
+    return;
+  }
+
+  const agotados = items.filter(({p}) => stockDe(p) === 0);
+  const aviso = agotados.length ? `
+    <div class="aviso-receta" style="margin:0 0 14px;padding:13px 15px;font-size:.8rem">
+      <svg viewBox="0 0 24 24"><use href="#i-alerta"></use></svg>
+      <div><b>${agotados.length === 1 ? 'Un producto no está' : agotados.length + ' productos no están'}</b> con stock hoy en ${sucActual().nombre}.
+      Igual puedes enviar el pedido: lo buscamos en otro local o te avisamos cuando llegue.</div>
+    </div>` : '';
+
+  cuerpo.innerHTML = aviso + items.map(({p,c}) => `
+    <div class="item-pedido">
+      <span class="item-ico"><svg viewBox="0 0 24 24"><use href="#${ICO_CAT[p.cat] || 'i-pastilla'}"></use></svg></span>
+      <div class="item-info">
+        <div class="nom">${p.n}</div>
+        <div class="det">${p.pres} · ${p.lab}${p.rec ? ' · requiere receta' : ''}${stockDe(p) === 0 ? ' · <span style="color:var(--ambar);font-weight:700">sin stock acá</span>' : ''}</div>
+        <div class="pre">${clp(p.p*c)}</div>
+      </div>
+      <div class="item-cant">
+        <button data-menos="${p.id}" aria-label="Quitar una unidad de ${p.n}">−</button>
+        <span class="n">${c}</span>
+        <button data-mas="${p.id}" aria-label="Agregar una unidad de ${p.n}">+</button>
+      </div>
+    </div>`).join('');
+
+  $$('[data-mas]').forEach(b => b.addEventListener('click', () => cambiar(b.dataset.mas, 1)));
+  $$('[data-menos]').forEach(b => b.addEventListener('click', () => cambiar(b.dataset.menos, -1)));
+}
+
+/* ---------- acciones ---------- */
+function agregar(id){
+  estado.pedido[id] = (estado.pedido[id] || 0) + 1;
+  guardar();
+  pintarProductos();
+  pintarPedido();
+}
+
+function cambiar(id, delta){
+  estado.pedido[id] = (estado.pedido[id] || 0) + delta;
+  if(estado.pedido[id] <= 0) delete estado.pedido[id];
+  guardar();
+  pintarProductos();
+  pintarPedido();
+}
+
+function elegirSucursal(id){
+  if(!SUCURSALES.some(s => s.id === id)) return;
+  estado.sucursal = id;
+  guardar();
+  pintarSucursales();
+  pintarProductos();
+  pintarUbicacion();
+  pintarPedido();
+  pintarCabecera();
+}
+
+function pintarCabecera(){
+  const s = sucActual();
+  $('#chipNombre').textContent = s.corto || s.nombre;
+  $('#tituloSucursal').textContent = s.nombre;
+  $('#heroEstado').textContent = estaAbierto(s) ? `${s.nombre} · abierto ahora` : `${s.nombre} · ${textoHorarioHoy(s)}`;
+  const link = waLink(msgGeneral());
+  ['#heroWa','#flotanteWa','#piePedido'].forEach(sel => $(sel).href = link);
+}
+
+/* ---------- cajones ---------- */
+function abrirCajon(sel){
+  cerrarCajones(true);
+  $(sel).dataset.abierto = 'si';
+  $('#velo').dataset.abierto = 'si';
+  document.body.classList.add('bloqueado');
+  const cerrar = $(sel).querySelector('.cerrar');
+  if(cerrar) cerrar.focus();
+}
+
+function cerrarCajones(soloCajones){
+  $('#cajonPedido').dataset.abierto = 'no';
+  $('#cajonSucursal').dataset.abierto = 'no';
+  if(!soloCajones){
+    $('#velo').dataset.abierto = 'no';
+    document.body.classList.remove('bloqueado');
+  }
+}
+
+/* ---------- persistencia ---------- */
+function guardar(){
+  try{
+    localStorage.setItem('fr_estado', JSON.stringify({ sucursal: estado.sucursal, pedido: estado.pedido }));
+  }catch(e){ /* modo privado: seguimos sin persistir */ }
+}
+
+function cargar(){
+  try{
+    const g = JSON.parse(localStorage.getItem('fr_estado') || '{}');
+    if(g.sucursal && SUCURSALES.some(s => s.id === g.sucursal)) estado.sucursal = g.sucursal;
+    if(g.pedido && typeof g.pedido === 'object'){
+      Object.entries(g.pedido).forEach(([id,c]) => {
+        if(PRODUCTOS.some(p => p.id === id) && Number.isFinite(c) && c > 0) estado.pedido[id] = c;
+      });
+    }
+  }catch(e){ /* ignoramos datos corruptos */ }
+}
+
+/* ---------- eventos ---------- */
+$('#inputBusqueda').addEventListener('input', e => {
+  estado.busqueda = e.target.value;
+  $('#buscador').dataset.lleno = e.target.value ? 'si' : 'no';
+  pintarProductos();
+});
+$('#limpiarBusqueda').addEventListener('click', () => {
+  estado.busqueda = '';
+  $('#inputBusqueda').value = '';
+  $('#buscador').dataset.lleno = 'no';
+  $('#inputBusqueda').focus();
+  pintarProductos();
+});
+$('#soloStock').addEventListener('change', e => { estado.soloStock = e.target.checked; pintarProductos(); });
+
+$('#btnPedido').addEventListener('click', () => abrirCajon('#cajonPedido'));
+$('#chipSucursal').addEventListener('click', () => abrirCajon('#cajonSucursal'));
+$('#cerrarCajon').addEventListener('click', () => cerrarCajones());
+$('#cerrarSucursal').addEventListener('click', () => cerrarCajones());
+$('#velo').addEventListener('click', () => cerrarCajones());
+document.addEventListener('keydown', e => { if(e.key === 'Escape') cerrarCajones(); });
+
+/* ---------- arranque ---------- */
+cargar();
+pintarSucursales();
+pintarFiltros();
+pintarCabecera();
+pintarProductos();
+pintarUbicacion();
+pintarPedido();
+$('#datoProductos').textContent = PRODUCTOS.length + '+';
+$('#anio').textContent = new Date().getFullYear();
+$('#pieSucursales').innerHTML = SUCURSALES.map(s =>
+  `<li><a href="#ubicacion" data-suc-pie="${s.id}">${s.nombre} · ${s.comuna}</a></li>`).join('');
+$$('[data-suc-pie]').forEach(a => a.addEventListener('click', () => elegirSucursal(a.dataset.sucPie)));
+</script>
+</body>
+</html>
