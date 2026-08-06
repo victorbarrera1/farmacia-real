@@ -1,9 +1,11 @@
+import { useRef } from 'react';
 import { Icon } from '../icons/Icon';
 import { Banknote, Snowflake, Store } from 'lucide-react';
 import { useStore } from '../../store/StoreContext';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { usePrefiereMenosMov } from '../../hooks/useMediaQuery';
 import { waLink, msgGeneral } from '../../lib/whatsapp';
+import { gsap, useGSAP } from '../../lib/gsap';
 import type { IconId } from '../../types';
 
 const CRUZ =
@@ -33,6 +35,37 @@ export function Banner() {
   const { dispatch, anunciar } = useStore();
   const suc = useSucursalActual();
   const menosMov = usePrefiereMenosMov();
+  const refHero = useRef<HTMLElement>(null);
+
+  /* Entrada escalonada del contenido y giro lento de las cruces de fondo. */
+  useGSAP(() => {
+    const mq = gsap.matchMedia();
+    mq.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.fromTo('[data-hero]', { opacity: 0, y: 22 }, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.09,
+        delay: 0.1,
+      });
+      gsap.fromTo('[data-hero-grid]', { opacity: 0, y: 30 }, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0.45,
+      });
+      gsap.to('[data-cruz]', {
+        rotation: 360,
+        duration: 120,
+        ease: 'none',
+        repeat: -1,
+        transformOrigin: 'center',
+      });
+    });
+    return () => mq.revert();
+  }, { scope: refHero });
 
   function irA(cat: string, et: string) {
     dispatch({ type: 'categoria', id: cat });
@@ -44,6 +77,7 @@ export function Banner() {
 
   return (
     <section
+      ref={refHero}
       id="inicio"
       className="relative overflow-hidden bg-azul text-white"
       style={{ backgroundImage: 'linear-gradient(135deg, var(--color-azul) 0%, var(--color-azul-osc) 100%)' }}
@@ -51,28 +85,30 @@ export function Banner() {
       {/* Cruces decorativas de marca */}
       <span
         aria-hidden="true"
+        data-cruz
         className="absolute -right-[60px] -top-[70px] size-[290px] bg-white opacity-[0.07]"
         style={{ clipPath: CRUZ }}
       />
       <span
         aria-hidden="true"
+        data-cruz
         className="absolute -bottom-[120px] right-[210px] hidden size-[210px] bg-rojo opacity-[0.12] min-[1100px]:block"
         style={{ clipPath: CRUZ }}
       />
 
       <div className="env relative z-[2] grid grid-cols-1 items-center gap-7 py-[clamp(26px,5vw,46px)] min-[1000px]:grid-cols-[1.05fr_1fr]">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-rojo px-3 py-1 text-[0.78rem] font-extrabold uppercase tracking-[0.08em]">
+          <span data-hero className="inline-flex items-center gap-2 rounded-full bg-rojo px-3 py-1 text-[0.78rem] font-extrabold uppercase tracking-[0.08em]">
             <Icon id="i-cruz" className="size-3.5" /> Catálogo y reserva
           </span>
 
-          <h1 className="mt-3 max-w-[22ch]">Busca tu remedio y revisa si lo tenemos hoy</h1>
-          <p className="mt-[11px] max-w-[54ch] text-[1.03rem] text-white/90">
+          <h1 data-hero className="mt-3 max-w-[22ch]">Busca tu remedio y revisa si lo tenemos hoy</h1>
+          <p data-hero className="mt-[11px] max-w-[54ch] text-[1.03rem] text-white/90">
             Cada local maneja su propio stock. Elige tu sucursal, arma tu lista y te reservamos los productos para
             retiro en tienda. No es una tienda en línea: el pago y la entrega son presenciales en el local.
           </p>
 
-          <div className="mt-[22px] flex flex-wrap gap-2.5">
+          <div data-hero className="mt-[22px] flex flex-wrap gap-2.5">
             <a href="#catalogo" className="btn btn-blanco flex-auto min-w-[210px] sm:flex-none">
               <Icon id="i-lupa" /> Ver el catálogo
             </a>
@@ -86,7 +122,7 @@ export function Banner() {
             </a>
           </div>
 
-          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+          <ul data-hero className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
             {BENEFICIOS.map(({ Ico, et }) => (
               <li key={et} className="flex items-center gap-2 text-[0.86rem] text-white/85">
                 <Ico className="size-[17px] shrink-0 text-white/70" aria-hidden="true" /> {et}
@@ -96,7 +132,7 @@ export function Banner() {
         </div>
 
         {/* Accesos promocionales por categoría */}
-        <div className="grid grid-cols-2 gap-2.5">
+        <div data-hero-grid className="grid grid-cols-2 gap-2.5">
           {PROMOS.map((p) => (
             <button
               key={p.cat}

@@ -1,3 +1,5 @@
+import { Reveal } from '../common/Reveal';
+
 const PASOS = [
   { n: 1, t: 'Elige tu sucursal', d: 'El catálogo muestra solo el stock disponible en ese local.' },
   { n: 2, t: 'Arma tu reserva', d: 'Agrega los productos que necesitas. No hay pago en línea ni despacho a domicilio.' },
@@ -11,8 +13,10 @@ export function Steps() {
       <div className="env">
         <ul className="grid grid-cols-1 md:grid-cols-3">
           {PASOS.map((p, i) => (
-            <li
+            <Reveal
+              as="li"
               key={p.n}
+              delay={i * 0.12}
               className={`flex items-start gap-3.5 py-5 md:py-6 md:pr-[22px] ${
                 i > 0 ? 'border-t border-linea-2 md:border-l md:border-t-0 md:border-linea md:pl-[22px]' : ''
               }`}
@@ -24,7 +28,7 @@ export function Steps() {
                 <h3 className="text-[1rem]">{p.t}</h3>
                 <p className="mt-[3px] text-[0.9rem] leading-relaxed text-gris">{p.d}</p>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

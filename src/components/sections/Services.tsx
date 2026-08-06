@@ -1,5 +1,6 @@
 import { Icon } from '../icons/Icon';
 import { SectionHeader } from '../common/SectionHeader';
+import { Reveal } from '../common/Reveal';
 import type { IconId } from '../../types';
 
 /* Servicios de la farmacia. Redacción neutral e informativa: no se
@@ -19,18 +20,22 @@ export function Services() {
   return (
     <section id="servicios" className="py-[clamp(30px,5vw,52px)]">
       <div className="env">
-        <SectionHeader titulo="También te ayudamos con" />
+        <Reveal>
+          <SectionHeader titulo="También te ayudamos con" />
+        </Reveal>
         <div className="grid grid-cols-1 gap-3 min-[600px]:grid-cols-2 min-[980px]:grid-cols-3">
-          {SERVICIOS.map((s) => (
-            <div key={s.t} className="card flex gap-3.5 p-5">
-              <span className="grid size-[46px] shrink-0 place-items-center rounded-lg bg-azul-pale text-azul">
-                <Icon id={s.ico} className="size-[23px]" />
-              </span>
-              <div>
-                <h3>{s.t}</h3>
-                <p className="mt-[5px] text-[0.9rem] leading-relaxed text-gris">{s.d}</p>
+          {SERVICIOS.map((s, i) => (
+            <Reveal key={s.t} delay={i * 0.08} className="h-full">
+              <div className="card flex h-full gap-3.5 p-5">
+                <span className="grid size-[46px] shrink-0 place-items-center rounded-lg bg-azul-pale text-azul">
+                  <Icon id={s.ico} className="size-[23px]" />
+                </span>
+                <div>
+                  <h3>{s.t}</h3>
+                  <p className="mt-[5px] text-[0.9rem] leading-relaxed text-gris">{s.d}</p>
+                </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

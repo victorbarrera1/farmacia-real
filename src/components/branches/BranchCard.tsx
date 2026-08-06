@@ -17,7 +17,7 @@ export function BranchCard({
       type="button"
       aria-pressed={elegida}
       onClick={onSelect}
-      className={`group flex flex-col gap-2 rounded-2xl border-2 p-5 text-left transition-colors ${
+      className={`group flex h-full flex-col gap-2 rounded-2xl border-2 p-5 text-left transition-colors ${
         elegida
           ? 'border-azul bg-azul-pale'
           : 'border-transparent bg-fondo hover:border-azul-borde hover:bg-azul-pale'

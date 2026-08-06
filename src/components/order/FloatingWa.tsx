@@ -1,9 +1,11 @@
+import { useRef } from 'react';
 import { Icon } from '../icons/Icon';
 import { useStore } from '../../store/StoreContext';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { cantidadPedido } from '../../lib/pedido';
 import { waLink, msgGeneral } from '../../lib/whatsapp';
+import { gsap, useGSAP } from '../../lib/gsap';
 
 /** Botón flotante de WhatsApp. Se oculta si hay un cajón o la barra móvil. */
 export function FloatingWa() {
@@ -11,12 +13,29 @@ export function FloatingWa() {
   const suc = useSucursalActual();
   const movil = useMediaQuery('(max-width: 719px)');
   const hayPedido = cantidadPedido(estado.pedido) > 0;
+  const refBot = useRef<HTMLAnchorElement>(null);
 
   /* Con un cajón abierto o la barra de pedido móvil visible, estorba. */
   const oculto = estado.cajon !== null || (movil && hayPedido);
 
+  /* Respiración suave del ícono para llamar la atención sin ser invasivo. */
+  useGSAP(() => {
+    const mq = gsap.matchMedia();
+    mq.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.to('[data-wa-pulso]', {
+        scale: 1.14,
+        duration: 1.1,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+      });
+    });
+    return () => mq.revert();
+  }, { scope: refBot });
+
   return (
     <a
+      ref={refBot}
       href={waLink(msgGeneral(suc), suc)}
       target="_blank"
       rel="noopener"
@@ -25,7 +44,9 @@ export function FloatingWa() {
       }`}
       style={{ bottom: 'calc(16px + env(safe-area-inset-bottom))' }}
     >
-      <Icon id="i-wa" className="size-[25px]" />
+      <span data-wa-pulso className="inline-flex">
+        <Icon id="i-wa" className="size-[25px]" />
+      </span>
       <span className="hidden min-[520px]:inline">Escríbenos</span>
     </a>
   );

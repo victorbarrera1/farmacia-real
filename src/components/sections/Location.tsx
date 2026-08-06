@@ -1,5 +1,6 @@
 import { Icon } from '../icons/Icon';
 import { SectionHeader } from '../common/SectionHeader';
+import { Reveal } from '../common/Reveal';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { textoHoy } from '../../lib/horarios';
 import type { ReactNode } from 'react';
@@ -25,12 +26,15 @@ export function Location() {
   return (
     <section id="ubicacion" className="py-[clamp(30px,5vw,52px)]">
       <div className="env">
-        <SectionHeader titulo={`Cómo llegar a ${suc.nombre}`}>
-          Datos de la sucursal seleccionada. Cambia de local arriba para ver otra.
-        </SectionHeader>
+        <Reveal>
+          <SectionHeader titulo={`Cómo llegar a ${suc.nombre}`}>
+            Datos de la sucursal seleccionada. Cambia de local arriba para ver otra.
+          </SectionHeader>
+        </Reveal>
 
         <div className="grid grid-cols-1 gap-4 min-[940px]:grid-cols-[0.85fr_1.15fr] min-[940px]:items-start">
-          <div>
+          <Reveal>
+            <div>
             <div className="card p-5">
               <h3 className="mb-3.5 flex items-center gap-[9px]">
                 <Icon id="i-pin" className="size-[19px] text-azul" /> Contacto y dirección
@@ -80,16 +84,19 @@ export function Location() {
               </ul>
             </div>
           </div>
+          </Reveal>
 
-          <div className="overflow-hidden rounded-2xl border border-linea bg-azul-pale aspect-[4/3] min-[940px]:aspect-auto min-[940px]:h-full min-[940px]:min-h-[520px]">
-            <iframe
-              title="Mapa de la sucursal"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="block size-full border-0"
-              src={`https://www.google.com/maps?q=${q}&hl=es&z=16&output=embed`}
-            />
-          </div>
+          <Reveal delay={0.12} className="min-[940px]:h-full">
+            <div className="overflow-hidden rounded-2xl border border-linea bg-azul-pale aspect-[4/3] min-[940px]:aspect-auto min-[940px]:h-full min-[940px]:min-h-[520px]">
+              <iframe
+                title="Mapa de la sucursal"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="block size-full border-0"
+                src={`https://www.google.com/maps?q=${q}&hl=es&z=16&output=embed`}
+              />
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
