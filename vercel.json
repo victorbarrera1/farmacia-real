@@ -7,6 +7,6 @@
     "api/*.ts": { "maxDuration": 10 }
   },
   "rewrites": [
-    { "source": "/((?!api/|assets/).*)", "destination": "/" }
+    { "source": "/((?!api/)[^.]*)", "destination": "/" }
   ]
 }

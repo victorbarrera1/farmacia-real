@@ -34,10 +34,15 @@ export const authConfigurada = (): boolean =>
 
 /* --------------------------- la clave -------------------------- */
 
-/** Formato: `scrypt$N$r$p$sal_hex$hash_hex`. */
+/**
+ * Formato: `scrypt:N:r:p:sal_hex:hash_hex`.
+ * Se usa `:` y no `$` porque los cargadores de `.env` (dotenv-expand, que usa
+ * Vite) interpretan `$algo` como interpolación de variables y mutilarían el
+ * hash. Se sigue aceptando el formato con `$` por compatibilidad.
+ */
 export async function claveCorrecta(clave: string): Promise<boolean> {
   const guardado = process.env.ADMIN_PASS_HASH ?? '';
-  const [algo, N, r, p, salHex, hashHex] = guardado.split('$');
+  const [algo, N, r, p, salHex, hashHex] = guardado.split(/[:$]/);
   if (algo !== 'scrypt' || !salHex || !hashHex) return false;
 
   const esperado = Buffer.from(hashHex, 'hex');
@@ -54,7 +59,7 @@ export async function hashDeClave(clave: string): Promise<string> {
   const N = 16384, r = 8, p = 1;
   const sal = randomBytes(16);
   const hash = await scrypt(clave, sal, 32, { N, r, p });
-  return `scrypt$${N}$${r}$${p}$${sal.toString('hex')}$${hash.toString('hex')}`;
+  return `scrypt:${N}:${r}:${p}:${sal.toString('hex')}:${hash.toString('hex')}`;
 }
 
 /* -------------------------- la sesión -------------------------- */

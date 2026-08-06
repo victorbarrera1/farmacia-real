@@ -32,7 +32,7 @@ before(async () => {
   dir = await mkdtemp(join(tmpdir(), 'fr-api-'));
   process.env.ALMACEN = 'archivo';
   process.env.ALMACEN_DIR = dir;
-  process.env.ADMIN_PASS_HASH = `scrypt$${N}$${r}$${p}$${sal.toString('hex')}$${hash.toString('hex')}`;
+  process.env.ADMIN_PASS_HASH = `scrypt:${N}:${r}:${p}:${sal.toString('hex')}:${hash.toString('hex')}`;
   process.env.ADMIN_SESSION_SECRET = randomBytes(32).toString('hex');
   delete process.env.VERCEL;
 

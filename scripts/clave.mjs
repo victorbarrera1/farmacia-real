@@ -44,7 +44,7 @@ console.log(`
 ════════════════════════════════════════════════════════════════
  1) BACKEND (Vercel → Settings → Environment Variables)
 ════════════════════════════════════════════════════════════════
-ADMIN_PASS_HASH=scrypt$${N}$${r}$${p}$${salScrypt.toString('hex')}$${hashScrypt.toString('hex')}
+ADMIN_PASS_HASH=scrypt:${N}:${r}:${p}:${salScrypt.toString('hex')}:${hashScrypt.toString('hex')}
 ADMIN_SESSION_SECRET=${randomBytes(32).toString('hex')}
 
 ════════════════════════════════════════════════════════════════
