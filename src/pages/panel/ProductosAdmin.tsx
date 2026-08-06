@@ -3,7 +3,7 @@ import { Pencil, Plus, RotateCcw, Search, Trash2 } from 'lucide-react';
 import type { Producto } from '../../types';
 import { CATEGORIAS } from '../../data/categorias';
 import {
-  eliminarProducto, guardarProducto, hayEdicionProductos, productoNuevo, restaurarProductos,
+  eliminarProducto, guardarProducto, productoNuevo, restaurarProductos,
 } from '../../data/repo';
 import { Ilu } from '../../components/icons/Icon';
 import { clp, sinTildes } from '../../lib/format';
@@ -64,7 +64,6 @@ export function ProductosAdmin() {
           <h3 className="text-[1rem] font-extrabold">Catálogo</h3>
           <p className="mt-0.5 text-[0.82rem] text-gris">
             {filas.length} de {productos.length} productos
-            {hayEdicionProductos() && ' · con ediciones guardadas en este navegador'}
           </p>
         </div>
 

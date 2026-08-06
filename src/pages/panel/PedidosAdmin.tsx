@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, Inbox, Trash2 } from 'lucide-react';
 import { clp } from '../../lib/format';
-import { borrarHistorial, eliminarPedido } from '../../lib/pedidosLog';
+import { borrarHistorial, eliminarPedido, hidratarPedidos } from '../../lib/pedidosLog';
 import { usePedidosRegistrados } from '../../hooks/useDatos';
 import { resumenPedidos } from './analytics';
 
@@ -10,11 +10,14 @@ const fmtFecha = (iso: string): string =>
     day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit',
   });
 
-/** Pestaña de pedidos: historial local de lo que se envió por WhatsApp. */
+/** Pestaña de pedidos: historial de reservas enviadas por WhatsApp. */
 export function PedidosAdmin() {
   const pedidos = usePedidosRegistrados();
   const [abierto, setAbierto] = useState<string | null>(null);
   const r = useMemo(() => resumenPedidos(pedidos), [pedidos]);
+
+  /* Con backend, el historial es el del servidor (todas las visitas). */
+  useEffect(() => { hidratarPedidos().catch(() => undefined); }, []);
 
   return (
     <div className="flex flex-col gap-3">
@@ -23,9 +26,10 @@ export function PedidosAdmin() {
           <div>
             <h3 className="text-[1rem] font-extrabold">Pedidos enviados</h3>
             <p className="mt-0.5 max-w-[70ch] text-[0.82rem] text-gris">
-              Los pedidos se cierran por WhatsApp, no hay checkout ni backend. Este historial registra lo que se armó
-              y envió <b className="font-bold">desde este navegador</b>, para tener rankings y montos reales. No
-              incluye lo que pidieron otros visitantes ni desde otros equipos.
+              Registro de lo que los visitantes armaron en la tienda y enviaron por WhatsApp: productos, cantidades,
+              total referencial y sucursal. Sin backend, solo se ve lo enviado desde este navegador; con backend, las
+              reservas de todas las visitas. No son ventas confirmadas —el cierre es en el mostrador— y no se guardan
+              datos personales.
             </p>
           </div>
           {pedidos.length > 0 && (

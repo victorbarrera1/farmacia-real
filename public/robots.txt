@@ -1,0 +1,8 @@
+# Farmacias Real — generado por scripts/generar-seo.mjs
+User-agent: *
+Allow: /
+# El panel de gestión no se indexa
+Disallow: /panel
+Disallow: /api/
+
+Sitemap: https://farmaciareal.vercel.app/sitemap.xml

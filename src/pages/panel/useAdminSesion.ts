@@ -1,24 +1,29 @@
-import { useCallback, useState } from 'react';
-import { ADMIN_PASS, ADMIN_SESION_HORAS, CLAVES } from '../../config';
+import { useCallback, useEffect, useState } from 'react';
+import { ADMIN_SESION_HORAS, CLAVES } from '../../config';
+import { ErrorApi, capacidades, pedir, reiniciarCapacidades } from '../../lib/api';
+import { claveLocalCorrecta, hayClaveLocal } from '../../lib/claveLocal';
 
 /* ================================================================
    SESIÓN DEL PANEL
    ----------------------------------------------------------------
-   Validación en el navegador contra ADMIN_PASS (src/config.ts) y sesión
-   con vencimiento guardada en localStorage.
-
-   ⚠️ No es seguridad real: sin backend, la clave está en el bundle.
-   TODO(api): POST /api/admin/login y guardar solo el token del servidor.
+   · Modo `api` (recomendado): la clave se valida en el servidor
+     (POST /api/sesion) y la sesión vive en una cookie HttpOnly firmada,
+     que el JavaScript de la página no puede leer.
+   · Modo `local` (sin backend): se compara un hash PBKDF2 en el navegador
+     y la sesión queda en localStorage. No es control de acceso real; el
+     panel lo advierte en pantalla.
    ================================================================ */
 
-interface Sesion {
+export type ModoSesion = 'api' | 'local' | 'sin-configurar';
+
+interface SesionLocal {
   /** Marca de tiempo (ms) en que expira la sesión. */
   exp: number;
 }
 
-function leerSesion(): boolean {
+function leerSesionLocal(): boolean {
   try {
-    const g = JSON.parse(localStorage.getItem(CLAVES.sesion) || 'null') as Sesion | null;
+    const g = JSON.parse(localStorage.getItem(CLAVES.sesion) || 'null') as SesionLocal | null;
     if (!g || typeof g.exp !== 'number') return false;
     if (Date.now() > g.exp) {
       localStorage.removeItem(CLAVES.sesion);
@@ -30,30 +35,91 @@ function leerSesion(): boolean {
   }
 }
 
-export function useAdminSesion() {
-  const [autorizado, setAutorizado] = useState<boolean>(leerSesion);
+function guardarSesionLocal(): void {
+  try {
+    const exp = Date.now() + ADMIN_SESION_HORAS * 3600_000;
+    localStorage.setItem(CLAVES.sesion, JSON.stringify({ exp } satisfies SesionLocal));
+  } catch {
+    /* modo privado: la sesión durará mientras viva la pestaña */
+  }
+}
 
-  /** Intenta iniciar sesión. Devuelve false si la clave no coincide. */
-  const entrar = useCallback((clave: string): boolean => {
-    if (clave !== ADMIN_PASS) return false;
-    try {
-      const exp = Date.now() + ADMIN_SESION_HORAS * 3600_000;
-      localStorage.setItem(CLAVES.sesion, JSON.stringify({ exp } satisfies Sesion));
-    } catch {
-      /* modo privado: la sesión durará solo mientras la pestaña viva */
-    }
-    setAutorizado(true);
-    return true;
+function borrarSesionLocal(): void {
+  try {
+    localStorage.removeItem(CLAVES.sesion);
+  } catch {
+    /* nada que hacer */
+  }
+}
+
+export interface EstadoSesion {
+  /** null mientras se consulta al servidor. */
+  autorizado: boolean | null;
+  modo: ModoSesion;
+  /** Intenta entrar. Devuelve un mensaje de error, o null si entró. */
+  entrar: (clave: string) => Promise<string | null>;
+  salir: () => void;
+}
+
+export function useAdminSesion(): EstadoSesion {
+  const [autorizado, setAutorizado] = useState<boolean | null>(null);
+  const [modo, setModo] = useState<ModoSesion>('sin-configurar');
+
+  /* Al montar: ¿hay backend? ¿hay sesión válida? */
+  useEffect(() => {
+    let vivo = true;
+    capacidades().then((caps) => {
+      if (!vivo) return;
+      if (caps.api && caps.auth) {
+        setModo('api');
+        setAutorizado(caps.sesion);
+        return;
+      }
+      setModo(hayClaveLocal() ? 'local' : 'sin-configurar');
+      setAutorizado(hayClaveLocal() ? leerSesionLocal() : false);
+    });
+    return () => { vivo = false; };
   }, []);
+
+  const entrar = useCallback(
+    async (clave: string): Promise<string | null> => {
+      if (!clave) return 'Escribe la clave.';
+
+      if (modo === 'api') {
+        try {
+          await pedir('/api/sesion', { metodo: 'POST', cuerpo: { clave }, silencioso: true });
+          reiniciarCapacidades();
+          setAutorizado(true);
+          return null;
+        } catch (e) {
+          const err = e instanceof ErrorApi ? e : null;
+          if (err?.estado === 401) return 'Clave incorrecta. Intenta de nuevo.';
+          if (err?.estado === 429) return 'Demasiados intentos. Espera unos minutos.';
+          return err?.mensajeHumano() ?? 'No se pudo validar la clave.';
+        }
+      }
+
+      if (modo === 'local') {
+        if (!(await claveLocalCorrecta(clave))) return 'Clave incorrecta. Intenta de nuevo.';
+        guardarSesionLocal();
+        setAutorizado(true);
+        return null;
+      }
+
+      return 'El acceso al panel no está configurado en este despliegue.';
+    },
+    [modo],
+  );
 
   const salir = useCallback(() => {
-    try {
-      localStorage.removeItem(CLAVES.sesion);
-    } catch {
-      /* nada que hacer */
-    }
+    borrarSesionLocal();
     setAutorizado(false);
-  }, []);
+    if (modo === 'api') {
+      pedir('/api/sesion', { metodo: 'DELETE', silencioso: true })
+        .catch(() => undefined)
+        .finally(() => reiniciarCapacidades());
+    }
+  }, [modo]);
 
-  return { autorizado, entrar, salir };
+  return { autorizado, modo, entrar, salir };
 }

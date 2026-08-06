@@ -1,5 +1,11 @@
-import type { Dia, Ilustracion, Producto, Sucursal, Tramo } from '../types';
+import type { Producto, Sucursal } from '../types';
 import { CLAVES } from '../config';
+import {
+  type Catalogo, ILUSTRACIONES, ajustarStockEn, alinearStock, fijarStockEn, idSucursalDesde,
+  nuevoIdProducto as nuevoId, quitarProducto, quitarSucursal, sanearCatalogo, upsertProducto,
+  upsertSucursal,
+} from '../lib/dominio';
+import { ErrorApi, capacidades, pedir } from '../lib/api';
 import { SUCURSALES as SUCURSALES_ORIGINAL } from './sucursales';
 import { PRODUCTOS as PRODUCTOS_ORIGINAL } from './productos';
 
@@ -7,118 +13,36 @@ import { PRODUCTOS as PRODUCTOS_ORIGINAL } from './productos';
    REPOSITORIO EN RUNTIME
    ----------------------------------------------------------------
    Fuente única de verdad de productos y sucursales para toda la app.
-   Arranca desde los archivos de `src/data/` y, si el panel guardó
-   ediciones en localStorage, esas ediciones ganan.
+   Es un "external store" (getSnapshot + suscribir) que la tienda y el
+   panel consumen con useSyncExternalStore.
 
-   Es un "external store" simple (getSnapshot + suscribir) para que la
-   tienda y el panel se enteren de los cambios sin prop-drilling.
+   Dos orígenes posibles, decididos en `hidratar()`:
 
-   INVARIANTE CENTRAL: `producto.st` es un array alineado por posición
-   con `getSucursales()`. Cualquier cambio en las sucursales redimensiona
-   los st[] de todos los productos (alta → 0; baja → se quita la posición).
+   · `api`   → los datos viven en el backend (ver api/). Las escrituras
+               son optimistas: se aplican al instante y se envían; si el
+               servidor falla, se revierte recargando del servidor.
+   · `local` → sin backend: los datos viven en localStorage, igual que
+               antes de que existiera la API.
 
-   TODO(api): sustituir funciones de lectura/escritura por fetch a la API real
-   (GET/POST/PUT/DELETE /api/productos y /api/sucursales) manteniendo
-   esta misma superficie pública.
+   INVARIANTE CENTRAL: `producto.st` está alineado por posición con
+   `getSucursales()`. Todo el CRUD pasa por `src/lib/dominio.ts`, que es
+   el mismo código que usa el servidor.
    ================================================================ */
 
-const ILUSTRACIONES: Ilustracion[] = [
-  'caja', 'frasco', 'tubo', 'bomba', 'tarro', 'paquete', 'aparato', 'inhalador', 'sobre',
-];
+export type Origen = 'local' | 'api';
 
-/* ------------------------- saneamiento ------------------------- */
+/* ----------------------- persistencia local -------------------- */
 
-const txt = (v: unknown, alt = ''): string => (typeof v === 'string' && v.trim() ? v.trim() : alt);
-const entero = (v: unknown, alt = 0): number => {
-  const n = typeof v === 'number' ? v : Number(v);
-  return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : alt;
-};
-const bool = (v: unknown): boolean => v === true;
-const HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
-
-function sanearTramo(v: unknown): Tramo | null {
-  if (!v || typeof v !== 'object') return null;
-  const o = v as Record<string, unknown>;
-  const d = Array.isArray(o.d)
-    ? (o.d.filter((x) => Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 6) as Dia[])
-    : [];
-  if (!d.length) return null;
-  const et = txt(o.et, 'Horario');
-  if (o.cerrado === true) return { d, et, cerrado: true };
-  const abre = txt(o.abre);
-  const cierra = txt(o.cierra);
-  if (!HORA.test(abre) || !HORA.test(cierra)) return null;
-  return { d, et, abre, cierra };
-}
-
-function sanearSucursal(v: unknown): Sucursal | null {
-  if (!v || typeof v !== 'object') return null;
-  const o = v as Record<string, unknown>;
-  const id = txt(o.id);
-  const nombre = txt(o.nombre);
-  if (!id || !nombre) return null;
-  const horario = Array.isArray(o.horario)
-    ? o.horario.map(sanearTramo).filter((t): t is Tramo => t !== null)
-    : [];
-  return {
-    id,
-    nombre,
-    corto: txt(o.corto, nombre),
-    comuna: txt(o.comuna, '—'),
-    direccion: txt(o.direccion, '—'),
-    telefono: txt(o.telefono),
-    /* wa.me solo acepta dígitos (código de país incluido). */
-    whatsapp: txt(o.whatsapp).replace(/\D/g, ''),
-    horario,
-    mapa: txt(o.mapa, txt(o.direccion, nombre)),
-  };
-}
-
-function sanearProducto(v: unknown): Producto | null {
-  if (!v || typeof v !== 'object') return null;
-  const o = v as Record<string, unknown>;
-  const id = txt(o.id);
-  const n = txt(o.n);
-  if (!id || !n) return null;
-  const il = txt(o.il) as Ilustracion;
-  return {
-    id,
-    n,
-    pres: txt(o.pres, '—'),
-    lab: txt(o.lab, '—'),
-    act: txt(o.act, '—'),
-    cat: txt(o.cat, 'medicamentos'),
-    il: ILUSTRACIONES.includes(il) ? il : 'caja',
-    p: entero(o.p),
-    ...(bool(o.be) ? { be: true } : {}),
-    ...(bool(o.rec) ? { rec: true } : {}),
-    ...(bool(o.frio) ? { frio: true } : {}),
-    ...(txt(o.desc) ? { desc: txt(o.desc) } : {}),
-    st: Array.isArray(o.st) ? o.st.map((u) => entero(u)) : [],
-  };
-}
-
-/** Alinea `st` con la cantidad de sucursales (rellena con 0, recorta el resto). */
-function alinear(productos: Producto[], nSuc: number): Producto[] {
-  return productos.map((p) => {
-    if (p.st.length === nSuc) return p;
-    const st = Array.from({ length: nSuc }, (_, i) => p.st[i] ?? 0);
-    return { ...p, st };
-  });
-}
-
-/* ----------------------- persistencia ------------------------- */
-
-function leer(clave: string): unknown {
+function leerLocal(clave: string): unknown {
   try {
-    const raw = localStorage.getItem(clave);
-    return raw ? JSON.parse(raw) : null;
+    const bruto = localStorage.getItem(clave);
+    return bruto ? JSON.parse(bruto) : null;
   } catch {
     return null; /* modo privado o JSON corrupto */
   }
 }
 
-function escribir(clave: string, valor: unknown): void {
+function escribirLocal(clave: string, valor: unknown): void {
   try {
     localStorage.setItem(clave, JSON.stringify(valor));
   } catch {
@@ -126,7 +50,7 @@ function escribir(clave: string, valor: unknown): void {
   }
 }
 
-function borrar(clave: string): void {
+function borrarLocal(clave: string): void {
   try {
     localStorage.removeItem(clave);
   } catch {
@@ -134,35 +58,75 @@ function borrar(clave: string): void {
   }
 }
 
-/* ------------------------- estado ----------------------------- */
+/* --------------------------- estado ---------------------------- */
 
-function cargarSucursales(): Sucursal[] {
-  const g = leer(CLAVES.sucursales);
-  if (!Array.isArray(g)) return SUCURSALES_ORIGINAL;
-  const lista = g.map(sanearSucursal).filter((s): s is Sucursal => s !== null);
-  return lista.length ? lista : SUCURSALES_ORIGINAL;
+const fabrica = (): Catalogo => ({
+  sucursales: SUCURSALES_ORIGINAL,
+  productos: alinearStock(PRODUCTOS_ORIGINAL, SUCURSALES_ORIGINAL.length),
+  version: 0,
+});
+
+/** Ediciones guardadas por el panel en modo local (compatibilidad). */
+export const hayEdicionProductos = (): boolean => leerLocal(CLAVES.productos) !== null;
+export const hayEdicionSucursales = (): boolean => leerLocal(CLAVES.sucursales) !== null;
+export const hayEdicionLocal = (): boolean => hayEdicionProductos() || hayEdicionSucursales();
+
+function inicial(): Catalogo {
+  const base = fabrica();
+  /* 1) Ediciones del panel en modo local. */
+  if (hayEdicionLocal()) {
+    return sanearCatalogo(
+      {
+        productos: leerLocal(CLAVES.productos) ?? base.productos,
+        sucursales: leerLocal(CLAVES.sucursales) ?? base.sucursales,
+      },
+      base,
+    );
+  }
+  /* 2) Copia del último catálogo servido por la API (pinta sin esperar el fetch). */
+  const cache = leerLocal(CLAVES.cache);
+  if (cache) return sanearCatalogo(cache, base);
+  /* 3) Datos de fábrica del repositorio. */
+  return base;
 }
 
-function cargarProductos(nSuc: number): Producto[] {
-  const g = leer(CLAVES.productos);
-  if (!Array.isArray(g)) return alinear(PRODUCTOS_ORIGINAL, nSuc);
-  const lista = g.map(sanearProducto).filter((p): p is Producto => p !== null);
-  return alinear(lista.length ? lista : PRODUCTOS_ORIGINAL, nSuc);
-}
-
-let sucursales: Sucursal[] = cargarSucursales();
-let productos: Producto[] = cargarProductos(sucursales.length);
+let cat: Catalogo = inicial();
+let origen: Origen = 'local';
+let pendientes = 0;
+let error: string | null = null;
 
 const oyentes = new Set<() => void>();
 const avisar = (): void => oyentes.forEach((f) => f());
 
-/* --------------------- lectura (snapshots) -------------------- */
+/* --------------------- lectura (snapshots) --------------------- */
 
-/** Sucursales vigentes. La referencia solo cambia cuando hay edición. */
-export const getSucursales = (): Sucursal[] => sucursales;
+export const getSucursales = (): Sucursal[] => cat.sucursales;
+export const getProductos = (): Producto[] => cat.productos;
+export const getOrigen = (): Origen => origen;
 
-/** Catálogo vigente. La referencia solo cambia cuando hay edición. */
-export const getProductos = (): Producto[] => productos;
+export interface Sincronizacion {
+  origen: Origen;
+  /** true mientras hay escrituras en vuelo hacia el servidor. */
+  guardando: boolean;
+  /** Último error de sincronización, ya en lenguaje humano. */
+  error: string | null;
+}
+
+let sinc: Sincronizacion = { origen, guardando: false, error: null };
+
+/** Snapshot estable del estado de sincronización (para useSyncExternalStore). */
+export const getSincronizacion = (): Sincronizacion => sinc;
+
+function refrescarSinc(): void {
+  const siguiente: Sincronizacion = { origen, guardando: pendientes > 0, error };
+  if (
+    siguiente.origen !== sinc.origen ||
+    siguiente.guardando !== sinc.guardando ||
+    siguiente.error !== sinc.error
+  ) {
+    sinc = siguiente;
+  }
+}
 
 /** Suscripción para `useSyncExternalStore`. */
 export function suscribir(fn: () => void): () => void {
@@ -170,146 +134,262 @@ export function suscribir(fn: () => void): () => void {
   return () => oyentes.delete(fn);
 }
 
-/** ¿El panel tiene ediciones guardadas (vs. los datos originales)? */
-export const hayEdicionProductos = (): boolean => leer(CLAVES.productos) !== null;
-export const hayEdicionSucursales = (): boolean => leer(CLAVES.sucursales) !== null;
+/* -------------------------- escritura -------------------------- */
 
-/* ------------------------- escritura -------------------------- */
-
-function fijarProductos(lista: Producto[], persistir = true): void {
-  productos = alinear(lista, sucursales.length);
-  if (persistir) escribir(CLAVES.productos, productos);
+function aplicar(siguiente: Catalogo, persistirLocal = true): void {
+  cat = siguiente;
+  if (origen === 'local' && persistirLocal) {
+    escribirLocal(CLAVES.productos, cat.productos);
+    escribirLocal(CLAVES.sucursales, cat.sucursales);
+  }
+  if (origen === 'api') escribirLocal(CLAVES.cache, cat);
+  refrescarSinc();
   avisar();
 }
 
 /**
- * Reemplaza las sucursales y **reindexa** el stock de todos los productos
- * para no romper la alineación de `st[]`: cada producto conserva sus
- * unidades por id de sucursal, las nuevas entran con 0 y las eliminadas
- * pierden su posición.
+ * Envía una escritura al servidor (solo en modo `api`). Es optimista: el
+ * cambio ya se aplicó localmente; si el servidor rechaza, se recarga su
+ * versión para no quedar con datos fantasma.
  */
-function fijarSucursales(lista: Sucursal[], persistir = true): void {
-  const antes = sucursales.map((s) => s.id);
-  const despues = lista.map((s) => s.id);
-  sucursales = lista;
+function enviar(hacer: () => Promise<{ productos?: Producto[]; sucursales?: Sucursal[]; version?: number }>): void {
+  if (origen !== 'api') return;
+  pendientes++;
+  error = null;
+  refrescarSinc();
+  avisar();
 
-  productos = productos.map((p) => ({
-    ...p,
-    st: despues.map((id) => {
-      const i = antes.indexOf(id);
-      return i >= 0 ? p.st[i] ?? 0 : 0;
-    }),
-  }));
+  hacer()
+    .then((r) => {
+      if (r.productos || r.sucursales) {
+        cat = sanearCatalogo(
+          {
+            productos: r.productos ?? cat.productos,
+            sucursales: r.sucursales ?? cat.sucursales,
+            version: r.version ?? Date.now(),
+          },
+          fabrica(),
+        );
+        escribirLocal(CLAVES.cache, cat);
+      }
+    })
+    .catch(async (e: unknown) => {
+      const mensaje = e instanceof ErrorApi ? e.mensajeHumano() : 'No se pudo guardar en el servidor';
+      error = mensaje;
+      /* Revertimos trayendo el estado real del servidor. */
+      try {
+        const r = await pedir<{ productos: Producto[]; sucursales: Sucursal[]; version: number }>('/api/catalogo');
+        cat = sanearCatalogo(r, fabrica());
+        escribirLocal(CLAVES.cache, cat);
+      } catch {
+        /* si tampoco se puede leer, dejamos lo que hay y el aviso visible */
+      }
+    })
+    .finally(() => {
+      pendientes--;
+      refrescarSinc();
+      avisar();
+    });
+}
 
-  if (persistir) {
-    escribir(CLAVES.sucursales, sucursales);
-    escribir(CLAVES.productos, productos);
+/* --------------------------- hidratar -------------------------- */
+
+/**
+ * Decide el origen de los datos y carga el catálogo del servidor si existe.
+ * Se llama una vez al arrancar la app (ver src/main.tsx).
+ */
+export async function hidratar(): Promise<Origen> {
+  const caps = await capacidades();
+  if (!caps.api || caps.almacen === 'sin-configurar') {
+    origen = 'local';
+    refrescarSinc();
+    avisar();
+    return origen;
   }
+
+  try {
+    const r = await pedir<{ productos: Producto[]; sucursales: Sucursal[]; version: number }>(
+      '/api/catalogo',
+      { silencioso: true },
+    );
+    origen = 'api';
+    cat = sanearCatalogo(r, fabrica());
+    escribirLocal(CLAVES.cache, cat);
+    error = null;
+  } catch {
+    origen = 'local';
+    error = null;
+  }
+  refrescarSinc();
+  avisar();
+  return origen;
+}
+
+/** Vuelve a leer el catálogo del servidor (botón "recargar" del panel). */
+export async function recargar(): Promise<void> {
+  if (origen !== 'api') return;
+  const r = await pedir<{ productos: Producto[]; sucursales: Sucursal[]; version: number }>('/api/catalogo');
+  cat = sanearCatalogo(r, fabrica());
+  escribirLocal(CLAVES.cache, cat);
+  error = null;
+  refrescarSinc();
   avisar();
 }
 
-/* --- Productos --- */
+/* --------------------------- productos ------------------------- */
 
 /** Crea o actualiza un producto (upsert por id). */
 export function guardarProducto(p: Producto): void {
-  const limpio = sanearProducto(p);
-  if (!limpio) return;
-  const i = productos.findIndex((x) => x.id === limpio.id);
-  const lista = [...productos];
-  if (i >= 0) lista[i] = limpio;
-  else lista.push(limpio);
-  fijarProductos(lista);
+  const siguiente = upsertProducto(cat, p);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  enviar(() => pedir('/api/productos', { metodo: 'PUT', cuerpo: p }));
 }
 
 export function eliminarProducto(id: string): void {
-  fijarProductos(productos.filter((p) => p.id !== id));
+  const siguiente = quitarProducto(cat, id);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  enviar(() => pedir(`/api/productos?id=${encodeURIComponent(id)}`, { metodo: 'DELETE' }));
 }
 
 /** Vuelve al catálogo de `src/data/productos.ts`. */
 export function restaurarProductos(): void {
-  borrar(CLAVES.productos);
-  productos = alinear(PRODUCTOS_ORIGINAL, sucursales.length);
-  avisar();
+  const base = fabrica();
+  borrarLocal(CLAVES.productos);
+  aplicar(
+    { ...cat, productos: alinearStock(base.productos, cat.sucursales.length), version: Date.now() },
+    false,
+  );
+  enviar(() => pedir('/api/catalogo?accion=restaurarProductos', { metodo: 'POST' }));
 }
+
+/* ----------------------------- stock --------------------------- */
 
 /** Fija las unidades de un producto en una sucursal (por índice). */
 export function fijarStock(id: string, idx: number, unidades: number): void {
-  fijarProductos(
-    productos.map((p) => {
-      if (p.id !== id) return p;
-      const st = [...p.st];
-      st[idx] = entero(unidades);
-      return { ...p, st };
-    }),
+  const siguiente = fijarStockEn(cat, id, idx, unidades);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  const sucursalId = cat.sucursales[idx]?.id;
+  enviar(() =>
+    pedir('/api/stock', { metodo: 'PATCH', cuerpo: { id, sucursalId, unidades: Math.max(0, Math.trunc(unidades) || 0) } }),
   );
 }
 
 /** Suma un delta (+1 / −1) al stock de un producto en una sucursal. */
 export function ajustarStock(id: string, idx: number, delta: number): void {
-  fijarProductos(
-    productos.map((p) => {
-      if (p.id !== id) return p;
-      const st = [...p.st];
-      st[idx] = Math.max(0, (st[idx] ?? 0) + delta);
-      return { ...p, st };
-    }),
-  );
+  const siguiente = ajustarStockEn(cat, id, idx, delta);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  const sucursalId = cat.sucursales[idx]?.id;
+  enviar(() => pedir('/api/stock', { metodo: 'PATCH', cuerpo: { id, sucursalId, delta } }));
 }
 
-/* --- Sucursales --- */
+/* --------------------------- sucursales ------------------------ */
 
 /** Crea o actualiza una sucursal (upsert por id). Reindexa el stock. */
 export function guardarSucursal(s: Sucursal): void {
-  const limpia = sanearSucursal(s);
-  if (!limpia) return;
-  const i = sucursales.findIndex((x) => x.id === limpia.id);
-  const lista = [...sucursales];
-  if (i >= 0) lista[i] = limpia;
-  else lista.push(limpia);
-  fijarSucursales(lista);
+  const siguiente = upsertSucursal(cat, s);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  enviar(() => pedir('/api/sucursales', { metodo: 'PUT', cuerpo: s }));
 }
 
 /**
  * Elimina una sucursal y su columna de stock en todos los productos.
- * Se niega a dejar el sistema sin sucursales (la tienda no funcionaría).
+ * Devuelve false si era la última (la tienda necesita al menos una).
  */
 export function eliminarSucursal(id: string): boolean {
-  if (sucursales.length <= 1) return false;
-  fijarSucursales(sucursales.filter((s) => s.id !== id));
+  const siguiente = quitarSucursal(cat, id);
+  if (!siguiente) return false;
+  aplicar(siguiente);
+  enviar(() => pedir(`/api/sucursales?id=${encodeURIComponent(id)}`, { metodo: 'DELETE' }));
   return true;
 }
 
 /** Vuelve a las sucursales de `src/data/sucursales.ts`. */
 export function restaurarSucursales(): void {
-  borrar(CLAVES.sucursales);
-  fijarSucursales(SUCURSALES_ORIGINAL, false);
-  escribir(CLAVES.productos, productos);
+  const base = fabrica();
+  borrarLocal(CLAVES.sucursales);
+  const productos = cat.productos.map((p) => ({
+    ...p,
+    st: base.sucursales.map((s) => {
+      const i = cat.sucursales.findIndex((x) => x.id === s.id);
+      return i >= 0 ? p.st[i] ?? 0 : 0;
+    }),
+  }));
+  aplicar({ sucursales: base.sucursales, productos, version: Date.now() }, false);
+  if (origen === 'local') {
+    escribirLocal(CLAVES.productos, cat.productos);
+  }
+  enviar(() => pedir('/api/catalogo?accion=restaurarSucursales', { metodo: 'POST' }));
+}
+
+/* ------------------ catálogo completo (CSV / respaldo) --------- */
+
+/**
+ * Reemplaza catálogo y sucursales de una vez. Lo usan la importación CSV y
+ * la restauración de un respaldo JSON.
+ */
+export function reemplazarCatalogo(productos: Producto[], sucursales?: Sucursal[]): void {
+  const siguiente = sanearCatalogo(
+    { productos, sucursales: sucursales ?? cat.sucursales, version: Date.now() },
+    fabrica(),
+  );
+  aplicar(siguiente);
+  enviar(() =>
+    pedir('/api/catalogo', {
+      metodo: 'PUT',
+      cuerpo: { productos: siguiente.productos, sucursales: siguiente.sucursales },
+    }),
+  );
+}
+
+/**
+ * Migración: sube al servidor las ediciones que quedaron en este navegador
+ * (del período sin backend) y limpia las claves locales.
+ */
+export async function subirLocalAlServidor(): Promise<void> {
+  if (origen !== 'api') throw new ErrorApi('El backend no está disponible', 0);
+  const local = sanearCatalogo(
+    {
+      productos: leerLocal(CLAVES.productos) ?? cat.productos,
+      sucursales: leerLocal(CLAVES.sucursales) ?? cat.sucursales,
+    },
+    fabrica(),
+  );
+  const r = await pedir<{ productos: Producto[]; sucursales: Sucursal[]; version: number }>(
+    '/api/catalogo',
+    { metodo: 'PUT', cuerpo: { productos: local.productos, sucursales: local.sucursales } },
+  );
+  borrarLocal(CLAVES.productos);
+  borrarLocal(CLAVES.sucursales);
+  cat = sanearCatalogo(r, fabrica());
+  escribirLocal(CLAVES.cache, cat);
+  error = null;
+  refrescarSinc();
+  avisar();
+}
+
+/** Descarta las ediciones locales sin subirlas (se queda con las del servidor). */
+export function descartarLocal(): void {
+  borrarLocal(CLAVES.productos);
+  borrarLocal(CLAVES.sucursales);
+  avisar();
 }
 
 /* ------------------------- utilidades ------------------------- */
 
-const azar = (): string => Math.random().toString(36).slice(2, 7);
-
-/** Id único para un producto nuevo (los originales usan `p0`…`pN`). */
-export const nuevoIdProducto = (): string => `pn-${Date.now().toString(36)}-${azar()}`;
+export const nuevoIdProducto = nuevoId;
 
 /** Id legible y único para una sucursal nueva, derivado del nombre. */
-export function nuevoIdSucursal(nombre: string): string {
-  const base =
-    nombre
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '')
-      .slice(0, 24) || 'sucursal';
-  if (!sucursales.some((s) => s.id === base)) return base;
-  return `${base}-${azar()}`;
-}
+export const nuevoIdSucursal = (nombre: string): string =>
+  idSucursalDesde(nombre, cat.sucursales.map((s) => s.id));
 
 /** Producto en blanco para el formulario de alta. */
 export const productoNuevo = (): Producto => ({
-  id: nuevoIdProducto(),
+  id: nuevoId(),
   n: '',
   pres: '',
   lab: '',
@@ -317,7 +397,7 @@ export const productoNuevo = (): Producto => ({
   cat: 'medicamentos',
   il: 'caja',
   p: 0,
-  st: sucursales.map(() => 0),
+  st: cat.sucursales.map(() => 0),
 });
 
 /** Sucursal en blanco para el formulario de alta (horario típico). */

@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "test:api": "node --test \"pruebas/*.test.mjs\"",
+    "clave": "node scripts/clave.mjs",
+    "seo": "node scripts/generar-seo.mjs",
+    "og": "node scripts/generar-og.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.27.0",
@@ -17,6 +21,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@types/node": "22.13.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^5.0.0",

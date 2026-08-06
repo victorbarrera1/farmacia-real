@@ -1,18 +1,22 @@
 import type { Sucursal } from '../types';
 import { CLAVES } from '../config';
+import { getOrigen } from '../data/repo';
+import { pedir } from './api';
 import type { ItemPedido } from './pedido';
 
 /* ================================================================
-   HISTORIAL LOCAL DE PEDIDOS
+   HISTORIAL DE RESERVAS
    ----------------------------------------------------------------
-   No hay backend: los pedidos se envían por WhatsApp. Esto registra,
-   solo en este navegador, lo que el visitante armó y envió, para que
-   el panel pueda mostrar un historial y rankings con datos reales.
+   Los pedidos se cierran por WhatsApp: esto registra lo que el visitante
+   armó y envió, para que el panel tenga rankings y montos reales.
 
-   Guardamos una copia de nombre/precio de cada línea: así el historial
+   · Con backend  → POST /api/pedidos (el dueño ve las reservas de todos
+                    los visitantes, desde cualquier dispositivo).
+   · Sin backend  → localStorage, solo de este navegador.
+
+   Guardamos una copia de nombre y precio de cada línea: así el historial
    no se deforma si después el panel edita o elimina el producto.
-
-   TODO(api): POST /api/pedidos al enviar y GET /api/pedidos en el panel.
+   No se guardan datos personales.
    ================================================================ */
 
 export interface LineaPedido {
@@ -20,7 +24,7 @@ export interface LineaPedido {
   n: string;
   pres: string;
   lab: string;
-  /** Precio unitario referencial al momento del pedido. */
+  /** Precio unitario referencial al momento de la reserva. */
   p: number;
   c: number;
 }
@@ -36,7 +40,7 @@ export interface PedidoRegistrado {
   items: LineaPedido[];
 }
 
-/** Máximo de pedidos guardados (evita inflar localStorage). */
+/** Máximo de pedidos guardados en el navegador. */
 const TOPE = 200;
 
 let cache: PedidoRegistrado[] | null = null;
@@ -75,7 +79,7 @@ function sanear(v: unknown): PedidoRegistrado | null {
   };
 }
 
-/** Historial completo, del más reciente al más antiguo. */
+/** Historial en memoria, del más reciente al más antiguo. */
 export function leerPedidos(): PedidoRegistrado[] {
   if (cache) return cache;
   try {
@@ -87,12 +91,14 @@ export function leerPedidos(): PedidoRegistrado[] {
   return cache;
 }
 
-function guardar(lista: PedidoRegistrado[]): void {
+function fijar(lista: PedidoRegistrado[], persistir = true): void {
   cache = lista;
-  try {
-    localStorage.setItem(CLAVES.pedidos, JSON.stringify(lista));
-  } catch {
-    /* modo privado: queda solo en memoria */
+  if (persistir) {
+    try {
+      localStorage.setItem(CLAVES.pedidos, JSON.stringify(lista.slice(0, TOPE)));
+    } catch {
+      /* modo privado: queda solo en memoria */
+    }
   }
   avisar();
 }
@@ -103,7 +109,14 @@ export function suscribirPedidos(fn: () => void): () => void {
   return () => oyentes.delete(fn);
 }
 
-/** Registra un pedido enviado por WhatsApp. */
+/** Trae el historial del servidor (lo llama el panel al abrir la pestaña). */
+export async function hidratarPedidos(): Promise<void> {
+  if (getOrigen() !== 'api') return;
+  const r = await pedir<{ pedidos: unknown[] }>('/api/pedidos');
+  fijar(r.pedidos.map(sanear).filter((p): p is PedidoRegistrado => p !== null), false);
+}
+
+/** Registra una reserva enviada por WhatsApp. */
 export function registrarPedido(items: ItemPedido[], suc: Sucursal): void {
   if (!items.length) return;
   const lineas: LineaPedido[] = items.map(({ p, c }) => ({
@@ -118,13 +131,33 @@ export function registrarPedido(items: ItemPedido[], suc: Sucursal): void {
     unidades: lineas.reduce((a, l) => a + l.c, 0),
     items: lineas,
   };
-  guardar([registro, ...leerPedidos()].slice(0, TOPE));
+
+  /* Optimista: se ve al instante en este navegador… */
+  fijar([registro, ...leerPedidos()].slice(0, TOPE), getOrigen() !== 'api');
+  /* …y se manda al servidor si existe. No bloquea el click a WhatsApp. */
+  if (getOrigen() === 'api') {
+    pedir('/api/pedidos', { metodo: 'POST', cuerpo: registro, silencioso: true }).catch(
+      () => undefined,
+    );
+  }
 }
 
 export function eliminarPedido(id: string): void {
-  guardar(leerPedidos().filter((p) => p.id !== id));
+  fijar(leerPedidos().filter((p) => p.id !== id), getOrigen() !== 'api');
+  if (getOrigen() === 'api') {
+    pedir(`/api/pedidos?id=${encodeURIComponent(id)}`, { metodo: 'DELETE' }).catch(() => undefined);
+  }
 }
 
 export function borrarHistorial(): void {
-  guardar([]);
+  fijar([], getOrigen() !== 'api');
+  if (getOrigen() === 'api') {
+    pedir('/api/pedidos?todos=1', { metodo: 'DELETE' }).catch(() => undefined);
+  } else {
+    try {
+      localStorage.setItem(CLAVES.pedidos, '[]');
+    } catch {
+      /* nada que hacer */
+    }
+  }
 }

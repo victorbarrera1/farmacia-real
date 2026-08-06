@@ -18,7 +18,7 @@ export function SalesTrend() {
         <div>
           <h3 className="text-[1rem] font-extrabold">Unidades pedidas por día</h3>
           <p className="mt-0.5 text-[0.82rem] text-gris">
-            Últimos 14 días · pedidos armados y enviados desde este navegador
+            Últimos 14 días · reservas enviadas por WhatsApp
           </p>
         </div>
         <div>

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  BarChart3, Boxes, MapPin, Package, ReceiptText, ShoppingCart, Store, type LucideIcon,
+  BarChart3, Boxes, Loader2, MapPin, Package, ReceiptText, ShoppingCart, Store, type LucideIcon,
 } from 'lucide-react';
 import { SvgSprite } from '../../components/icons/SvgSprite';
 import { PanelHeader } from './PanelHeader';
+import { PanelEstado } from './PanelEstado';
 import { Login } from './Login';
-import { useAdminSesion } from './useAdminSesion';
+import { useAdminSesion, type ModoSesion } from './useAdminSesion';
 import { ScopeFilter } from './ScopeFilter';
 import { KpiTiles } from './KpiTiles';
 import { CategoryBars } from './CategoryBars';
@@ -15,6 +16,7 @@ import { StockTable } from './StockTable';
 import { SalesTrend } from './SalesTrend';
 import { RankingBars } from './RankingBars';
 import { ProductosAdmin } from './ProductosAdmin';
+import { CatalogoIO } from './CatalogoIO';
 import { SucursalesAdmin } from './SucursalesAdmin';
 import { PedidosAdmin } from './PedidosAdmin';
 import { resumen, porCategoria, alertas, type Scope } from './metrics';
@@ -33,25 +35,35 @@ const PESTANAS: { id: Pestana; et: string; ico: LucideIcon }[] = [
 
 /** Panel de gestión: protegido por clave y dividido en pestañas. */
 export function Panel() {
-  const { autorizado, entrar, salir } = useAdminSesion();
+  const { autorizado, modo, entrar, salir } = useAdminSesion();
 
   useEffect(() => {
     document.title = 'Panel de gestión · Farmacias Real';
   }, []);
 
+  if (autorizado === null) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-fondo">
+        <p className="flex items-center gap-2.5 text-[0.95rem] font-semibold text-gris">
+          <Loader2 className="size-5 animate-spin" aria-hidden="true" /> Verificando acceso…
+        </p>
+      </div>
+    );
+  }
+
   if (!autorizado) {
     return (
       <>
         <SvgSprite />
-        <Login onEntrar={entrar} />
+        <Login modo={modo} onEntrar={entrar} />
       </>
     );
   }
 
-  return <PanelAdmin onSalir={salir} />;
+  return <PanelAdmin modo={modo} onSalir={salir} />;
 }
 
-function PanelAdmin({ onSalir }: { onSalir: () => void }) {
+function PanelAdmin({ modo, onSalir }: { modo: ModoSesion; onSalir: () => void }) {
   const [pestana, setPestana] = useState<Pestana>('resumen');
 
   return (
@@ -88,8 +100,15 @@ function PanelAdmin({ onSalir }: { onSalir: () => void }) {
       </div>
 
       <main className="env py-6" id={`panel-${pestana}`} role="tabpanel" aria-labelledby={`tab-${pestana}`}>
+        <PanelEstado modo={modo} />
+
         {pestana === 'resumen' && <Resumen />}
-        {pestana === 'productos' && <ProductosAdmin />}
+        {pestana === 'productos' && (
+          <div className="flex flex-col gap-3">
+            <ProductosAdmin />
+            <CatalogoIO />
+          </div>
+        )}
         {pestana === 'sucursales' && <SucursalesAdmin />}
         {pestana === 'stock' && (
           <>
@@ -143,7 +162,7 @@ function Resumen() {
     <>
       <Titulo
         titulo="Resumen de inventario"
-        bajada="Valor, unidades, stock bajo y quiebres calculados sobre el stock real del panel. La demanda solo tiene datos si se enviaron pedidos desde este navegador."
+        bajada="Valor, unidades, stock bajo y quiebres calculados sobre el stock real. La demanda sale del historial de reservas enviadas por WhatsApp; si no hay ninguna, se muestra «sin datos»."
       />
 
       <div className="mb-6">
