@@ -3,6 +3,13 @@ import { clp } from './format';
 import { stockDe, otrosLocalesCon } from './stock';
 import { itemsPedido, totalPedido } from './pedido';
 
+/* ================================================================
+   Mensajes de WhatsApp.
+   El sitio NO vende en línea: acá se arma una *reserva* de stock para
+   retiro presencial. Los textos lo dicen explícitamente para no inducir
+   a error (pago y entrega presenciales; receta validada en el local).
+   ================================================================ */
+
 /** Enlace wa.me con texto pre-cargado hacia el WhatsApp de la sucursal. */
 export const waLink = (texto: string, suc: Sucursal): string =>
   'https://wa.me/' + suc.whatsapp + '?text=' + encodeURIComponent(texto);
@@ -16,10 +23,14 @@ export function msgGeneral(suc: Sucursal): string {
 export function msgProducto(p: Producto, suc: Sucursal): string {
   const u = stockDe(p, suc.id);
   let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero consultar por:\n\n`;
-  t += `💊 *${p.n}* — ${p.pres}\n${p.lab} · ${clp(p.p)} referencial\n`;
-  if (p.rec) t += `📄 Sé que requiere receta médica.\n`;
+  t += `💊 *${p.n}* — ${p.pres}\n${p.lab}`;
+  /* Para productos con receta no reforzamos el precio: la información debe
+     ser neutral (publicidad de medicamentos con receta está restringida). */
+  if (!p.rec) t += ` · ${clp(p.p)} referencial`;
+  t += `\n`;
+  if (p.rec) t += `📄 Sé que requiere receta médica y la presento en el local.\n`;
   t += `\n📍 Sucursal: *${suc.nombre}* (${suc.direccion})\n`;
-  if (u > 0) return t + `\n¿Me lo pueden apartar?`;
+  if (u > 0) return t + `\n¿Me lo pueden reservar para retirarlo y pagarlo en el local?`;
 
   const disp = otrosLocalesCon(p, suc.id);
   t += disp.length
@@ -28,20 +39,21 @@ export function msgProducto(p: Producto, suc: Sucursal): string {
   return t;
 }
 
-/** Mensaje con el pedido completo. */
+/** Mensaje con la reserva completa (cotización para retiro en tienda). */
 export function msgPedido(pedido: Pedido, suc: Sucursal): string {
   const items = itemsPedido(pedido);
   if (!items.length) return msgGeneral(suc);
 
-  let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero hacer este pedido:\n\n`;
+  let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero *cotizar y reservar* estos productos para retirarlos en el local:\n\n`;
   items.forEach(({ p, c }) => {
-    t += `• *${p.n}* — ${p.pres}\n  ${c} ${c === 1 ? 'unidad' : 'unidades'} · ${clp(p.p * c)}`;
+    t += `• *${p.n}* — ${p.pres}\n  ${c} ${c === 1 ? 'unidad' : 'unidades'}`;
+    if (!p.rec) t += ` · ${clp(p.p * c)}`;
     if (p.rec) t += ` · 📄 requiere receta`;
     if (stockDe(p, suc.id) === 0) t += ` · ⚠️ aparece sin stock en la web`;
     t += `\n`;
   });
-  t += `\n💰 Total referencial: *${clp(totalPedido(pedido))}*\n`;
-  t += `📍 Retiro en sucursal *${suc.nombre}*\n${suc.direccion}\n`;
+  t += `\n💰 Total referencial: *${clp(totalPedido(pedido))}* (se confirma en caja)\n`;
+  t += `📍 Retiro y pago presencial en la sucursal *${suc.nombre}*\n${suc.direccion}\n`;
 
   /* Si algo falta acá pero sí está en otro local, lo proponemos derecho. */
   const enOtro = items
@@ -53,7 +65,9 @@ export function msgPedido(pedido: Pedido, suc: Sucursal): string {
     t += `¿Me lo apartan allá o lo traen a ${suc.corto}?\n`;
   }
 
-  if (items.some(({ p }) => p.rec)) t += `\n📄 Llevo la receta médica al retirar.`;
-  t += `\n\n¿Me confirman disponibilidad y valor final? ¡Gracias!`;
+  if (items.some(({ p }) => p.rec)) {
+    t += `\n📄 Llevo la receta médica vigente para que la revise el Químico Farmacéutico.`;
+  }
+  t += `\n\nEntiendo que no es una compra en línea: el pago y la entrega son en el local.\n¿Me confirman disponibilidad y valor final? ¡Gracias!`;
   return t;
 }

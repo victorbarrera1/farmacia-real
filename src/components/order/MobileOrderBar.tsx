@@ -10,7 +10,7 @@ export function MobileOrderBar() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-[75] border-t border-linea bg-white shadow-[0_-4px_18px_rgba(20,40,32,0.11)] transition-transform duration-300 [transition-timing-function:cubic-bezier(.32,.72,0,1)] min-[720px]:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-[75] border-t border-linea bg-white shadow-[0_-4px_18px_rgba(20,28,50,0.11)] transition-transform duration-300 [transition-timing-function:cubic-bezier(.32,.72,0,1)] min-[720px]:hidden ${
         visible ? 'translate-y-0' : 'translate-y-full'
       }`}
       style={{ padding: '10px 0 calc(10px + env(safe-area-inset-bottom))' }}

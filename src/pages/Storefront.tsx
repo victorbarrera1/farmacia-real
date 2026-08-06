@@ -8,6 +8,8 @@ import { CategoryNav } from '../components/layout/CategoryNav';
 import { Banner } from '../components/sections/Banner';
 import { Steps } from '../components/sections/Steps';
 import { Catalog } from '../components/catalog/Catalog';
+import { ProductModal } from '../components/catalog/ProductModal';
+import { PoliciesModal } from '../components/legal/Policies';
 import { Branches } from '../components/branches/Branches';
 import { Services } from '../components/sections/Services';
 import { Location } from '../components/sections/Location';
@@ -44,6 +46,8 @@ export function Storefront() {
       {/* Capas flotantes / superpuestas */}
       <OrderDrawer />
       <BranchDrawer />
+      <ProductModal />
+      <PoliciesModal />
       <FloatingWa />
       <MobileOrderBar />
 

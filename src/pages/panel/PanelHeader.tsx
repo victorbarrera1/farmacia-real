@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Store, RotateCcw } from 'lucide-react';
+import { LogOut, Store } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
 
 /** Cabecera del panel de gestión. */
-export function PanelHeader({ onRestablecer }: { onRestablecer: () => void }) {
+export function PanelHeader({ onSalir }: { onSalir: () => void }) {
   return (
     <header className="sticky top-0 z-40 border-b border-linea bg-white shadow-[0_1px_0_var(--color-linea)]">
       <div className="env flex h-[58px] items-center gap-3">
@@ -15,11 +15,11 @@ export function PanelHeader({ onRestablecer }: { onRestablecer: () => void }) {
         <div className="ml-auto flex items-center gap-2">
           <button
             type="button"
-            onClick={onRestablecer}
-            className="flex h-10 items-center gap-2 rounded-lg border border-linea bg-white px-3 text-[0.88rem] font-bold text-gris transition-colors hover:border-azul hover:text-azul"
+            onClick={onSalir}
+            className="flex h-10 items-center gap-2 rounded-lg border border-linea bg-white px-3 text-[0.88rem] font-bold text-gris transition-colors hover:border-rojo hover:text-rojo"
           >
-            <RotateCcw className="size-4" aria-hidden="true" />
-            <span className="hidden min-[420px]:inline">Restablecer</span>
+            <LogOut className="size-4" aria-hidden="true" />
+            <span className="hidden min-[420px]:inline">Salir</span>
           </button>
           <Link
             to="/"

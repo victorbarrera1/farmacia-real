@@ -40,21 +40,37 @@ export function ProductCard({ p }: { p: Producto }) {
   function cambiar(delta: number) {
     dispatch({ type: 'cambiar', id: p.id, delta });
   }
+  function verFicha() {
+    dispatch({ type: 'abrirDetalle', id: p.id });
+  }
 
   return (
     <article className="card flex h-full flex-col p-3 transition-[box-shadow,border-color] hover:border-azul-borde hover:shadow-hi">
       {/* Imagen — radio concéntrico con la tarjeta (20 − 12 = 8) */}
-      <div
-        className={`relative mb-[11px] grid aspect-square place-items-center overflow-hidden rounded-md bg-fondo ${
-          agotado ? 'opacity-50' : ''
-        }`}
-      >
-        <Ilu il={p.il} className="size-[74%]" />
+      <div className="relative mb-[11px]">
+        <button
+          type="button"
+          onClick={verFicha}
+          aria-label={`Ver ficha de ${p.n}`}
+          className={`grid aspect-square w-full place-items-center overflow-hidden rounded-md bg-fondo ${
+            agotado ? 'opacity-50' : ''
+          }`}
+        >
+          <Ilu il={p.il} className="size-[74%]" />
+        </button>
         <Sellos p={p} />
       </div>
 
       <span className="text-[0.7rem] font-bold uppercase tracking-[0.06em] text-gris-2">{p.lab}</span>
-      <h3 className="mt-[3px] line-clamp-2 text-[0.98rem] font-semibold leading-[1.32]">{p.n}</h3>
+      <h3 className="mt-[3px] text-[0.98rem] font-semibold leading-[1.32]">
+        <button
+          type="button"
+          onClick={verFicha}
+          className="line-clamp-2 text-left hover:text-azul hover:underline"
+        >
+          {p.n}
+        </button>
+      </h3>
       <p className="mt-[3px] text-[0.84rem] text-gris">{p.pres}</p>
 
       {/* Bloque inferior alineado al fondo */}
@@ -66,10 +82,26 @@ export function ProductCard({ p }: { p: Producto }) {
 
         <div className="mt-[9px]">
           <b className="num block text-[1.42rem] font-extrabold leading-[1.1] tracking-[-0.03em]">{clp(p.p)}</b>
-          <span className="text-[0.74rem] text-gris-2">precio referencial</span>
+          <span className="text-[0.74rem] text-gris-2">
+            {p.rec ? 'valor referencial informativo' : 'precio referencial'}
+          </span>
         </div>
 
-        <Accion agotado={agotado} enPedido={enPedido} onAgregar={agregar} onCambiar={cambiar} waHref={waLink(msgProducto(p, suc), suc)} nombre={p.n} />
+        <Accion
+          agotado={agotado}
+          receta={!!p.rec}
+          enPedido={enPedido}
+          onAgregar={agregar}
+          onCambiar={cambiar}
+          waHref={waLink(msgProducto(p, suc), suc)}
+          nombre={p.n}
+        />
+
+        {p.rec && (
+          <p className="mt-2 text-[0.74rem] leading-snug text-gris-2">
+            Venta bajo receta médica: se valida en el local con el Químico Farmacéutico.
+          </p>
+        )}
 
         {agotado && <OtrosLocales p={p} sucId={suc.id} onIr={(id, nombre) => { dispatch({ type: 'sucursal', id }); anunciar('Cambiaste a ' + nombre); }} />}
       </div>
@@ -78,9 +110,11 @@ export function ProductCard({ p }: { p: Producto }) {
 }
 
 function Accion({
-  agotado, enPedido, onAgregar, onCambiar, waHref, nombre,
+  agotado, receta, enPedido, onAgregar, onCambiar, waHref, nombre,
 }: {
   agotado: boolean;
+  /** Producto con venta bajo receta: acción neutral, sin énfasis promocional. */
+  receta: boolean;
   enPedido: number;
   onAgregar: () => void;
   onCambiar: (delta: number) => void;
@@ -105,26 +139,47 @@ function Accion({
       <div
         role="group"
         aria-label={`Cantidad de ${nombre}`}
-        className="mt-[11px] flex min-h-[46px] items-center justify-between overflow-hidden rounded-lg border-2 border-rojo bg-rojo-pale"
+        className={`mt-[11px] flex min-h-[46px] items-center justify-between overflow-hidden rounded-lg border-2 ${
+          receta ? 'border-azul bg-azul-pale' : 'border-rojo bg-rojo-pale'
+        }`}
       >
         <button
           type="button"
           aria-label={`Quitar una unidad de ${nombre}`}
           onClick={() => onCambiar(-1)}
-          className="grid w-[46px] self-stretch place-items-center text-[1.35rem] font-bold leading-none text-rojo-osc hover:bg-rojo-borde"
+          className={`grid w-[46px] self-stretch place-items-center text-[1.35rem] font-bold leading-none ${
+            receta ? 'text-azul-osc hover:bg-azul-borde' : 'text-rojo-osc hover:bg-rojo-borde'
+          }`}
         >
           −
         </button>
-        <span className="num text-[1rem] font-extrabold text-rojo-osc">{enPedido} en tu pedido</span>
+        <span className={`num text-[1rem] font-extrabold ${receta ? 'text-azul-osc' : 'text-rojo-osc'}`}>
+          {enPedido} en tu pedido
+        </span>
         <button
           type="button"
           aria-label={`Agregar otra unidad de ${nombre}`}
           onClick={() => onCambiar(1)}
-          className="grid w-[46px] self-stretch place-items-center text-[1.35rem] font-bold leading-none text-rojo-osc hover:bg-rojo-borde"
+          className={`grid w-[46px] self-stretch place-items-center text-[1.35rem] font-bold leading-none ${
+            receta ? 'text-azul-osc hover:bg-azul-borde' : 'text-rojo-osc hover:bg-rojo-borde'
+          }`}
         >
           +
         </button>
       </div>
+    );
+  }
+
+  /* Con receta: botón neutral (sin color promocional) y texto informativo. */
+  if (receta) {
+    return (
+      <button
+        type="button"
+        onClick={onAgregar}
+        className="mt-[11px] flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg border-2 border-azul bg-white text-[0.95rem] font-bold text-azul transition-colors hover:bg-azul-pale"
+      >
+        <Icon id="i-mas" className="size-[18px]" /> Reservar con receta
+      </button>
     );
   }
 

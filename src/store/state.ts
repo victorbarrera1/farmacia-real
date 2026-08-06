@@ -15,6 +15,8 @@ export interface AppState {
   cajon: Cajon;
   /** Id del producto con la ficha de detalle abierta. */
   detalle: string | null;
+  /** Modal de políticas de reserva y términos del servicio. */
+  legal: boolean;
 }
 
 export const estadoInicial: AppState = {
@@ -26,6 +28,7 @@ export const estadoInicial: AppState = {
   pedido: {},
   cajon: null,
   detalle: null,
+  legal: false,
 };
 
 /** Lee sucursal y pedido persistidos, validando contra los datos vigentes. */

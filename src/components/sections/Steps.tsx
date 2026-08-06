@@ -1,7 +1,7 @@
 const PASOS = [
   { n: 1, t: 'Elige tu sucursal', d: 'El catálogo muestra solo el stock disponible en ese local.' },
-  { n: 2, t: 'Arma tu pedido', d: 'Agrega los productos que necesitas. Sin pagos en línea.' },
-  { n: 3, t: 'Coordina el retiro', d: 'Te confirmamos disponibilidad por WhatsApp y dejamos tu pedido apartado.' },
+  { n: 2, t: 'Arma tu reserva', d: 'Agrega los productos que necesitas. No hay pago en línea ni despacho a domicilio.' },
+  { n: 3, t: 'Retira y paga en el local', d: 'Confirmamos disponibilidad por WhatsApp, dejamos tu reserva lista y pagas al retirar en caja.' },
 ] as const;
 
 /** Tres pasos: cómo funciona el sitio. */

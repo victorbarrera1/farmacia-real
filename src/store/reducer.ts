@@ -14,7 +14,9 @@ export type Action =
   | { type: 'abrirCajon'; cajon: Exclude<Cajon, null> }
   | { type: 'cerrarCajones' }
   | { type: 'abrirDetalle'; id: string }
-  | { type: 'cerrarDetalle' };
+  | { type: 'cerrarDetalle' }
+  | { type: 'abrirLegal' }
+  | { type: 'cerrarLegal' };
 
 export function reducer(estado: AppState, accion: Action): AppState {
   switch (accion.type) {
@@ -61,6 +63,12 @@ export function reducer(estado: AppState, accion: Action): AppState {
 
     case 'cerrarDetalle':
       return { ...estado, detalle: null };
+
+    case 'abrirLegal':
+      return { ...estado, legal: true };
+
+    case 'cerrarLegal':
+      return { ...estado, legal: false };
 
     default:
       return estado;

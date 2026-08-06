@@ -2,13 +2,16 @@ import { Icon } from '../icons/Icon';
 import { SectionHeader } from '../common/SectionHeader';
 import type { IconId } from '../../types';
 
+/* Servicios de la farmacia. Redacción neutral e informativa: no se
+   promocionan medicamentos ni se comparan precios de fármacos, y no se
+   ofrece despacho (el retiro y el pago son presenciales). */
 const SERVICIOS: { ico: IconId; t: string; d: string }[] = [
-  { ico: 'i-corazon', t: 'Consulta farmacéutica', d: 'Te orientamos sobre dosis, interacciones y qué bioequivalente te sirve por menos plata.' },
-  { ico: 'i-pulso', t: 'Control de presión', d: 'Pasa a tomarte la presión sin costo mientras te preparamos el pedido.' },
-  { ico: 'i-pastilla', t: 'Tratamientos crónicos', d: 'Te avisamos cuando llega tu remedio y te lo dejamos apartado hasta que puedas venir.' },
-  { ico: 'i-moto', t: 'Despacho por el sector', d: 'Coordinamos entrega en Independencia y alrededores. Consulta cobertura por WhatsApp.' },
-  { ico: 'i-escudo', t: 'Bioequivalentes certificados', d: 'El mismo principio activo, respaldado por el ISP, a una fracción del precio de marca.' },
-  { ico: 'i-bebe', t: 'Mamá y bebé', d: 'Fórmulas, pañales y cuidado infantil siempre disponibles en nuestros locales.' },
+  { ico: 'i-corazon', t: 'Consulta farmacéutica', d: 'El Químico Farmacéutico de turno te orienta sobre el uso correcto de tus medicamentos y resuelve dudas del tratamiento.' },
+  { ico: 'i-pulso', t: 'Control de presión', d: 'Pasa a tomarte la presión sin costo mientras preparamos tu reserva.' },
+  { ico: 'i-bolsa', t: 'Reserva y retiro en tienda', d: 'Reservas tu stock por WhatsApp y lo retiras en el local. El pago se realiza presencialmente en caja.' },
+  { ico: 'i-pastilla', t: 'Tratamientos crónicos', d: 'Te avisamos cuando llega tu medicamento y lo dejamos reservado hasta que puedas venir a retirarlo.' },
+  { ico: 'i-escudo', t: 'Recetas físicas y electrónicas', d: 'Revisamos y validamos tu receta en el local, como exige la normativa sanitaria, antes de la entrega.' },
+  { ico: 'i-bebe', t: 'Mamá y bebé', d: 'Fórmulas, pañales y cuidado infantil disponibles en nuestros locales.' },
 ];
 
 /** Grilla de servicios de la farmacia. */

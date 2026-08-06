@@ -57,6 +57,7 @@ export function MegaMenu() {
       <button
         ref={refBoton}
         type="button"
+        aria-label="Categorías"
         aria-expanded={abierto}
         aria-controls={panelId}
         onClick={() => setAbierto((v) => !v)}

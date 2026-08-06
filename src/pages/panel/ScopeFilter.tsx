@@ -1,11 +1,12 @@
-import { SUCURSALES } from '../../data/sucursales';
+import { useSucursales } from '../../hooks/useDatos';
 import type { Scope } from './metrics';
 
 /** Selector de ámbito: consolidado o una sucursal. */
 export function ScopeFilter({ scope, onChange }: { scope: Scope; onChange: (s: Scope) => void }) {
+  const sucursales = useSucursales();
   const opciones: { id: Scope; et: string }[] = [
     { id: 'todas', et: 'Todas las sucursales' },
-    ...SUCURSALES.map((s) => ({ id: s.id as Scope, et: s.corto })),
+    ...sucursales.map((s) => ({ id: s.id as Scope, et: s.corto })),
   ];
 
   return (

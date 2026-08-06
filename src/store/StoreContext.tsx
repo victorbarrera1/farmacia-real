@@ -39,10 +39,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [sucursales, estado.sucursal]);
 
-  /* Bloqueo de scroll del fondo cuando hay un cajón o una ficha abierta. */
+  /* Bloqueo de scroll del fondo cuando hay un cajón, ficha o modal abierto. */
   useEffect(() => {
-    document.body.classList.toggle('trabado', estado.cajon !== null || estado.detalle !== null);
-  }, [estado.cajon, estado.detalle]);
+    document.body.classList.toggle(
+      'trabado',
+      estado.cajon !== null || estado.detalle !== null || estado.legal,
+    );
+  }, [estado.cajon, estado.detalle, estado.legal]);
 
   return (
     <StoreContext.Provider value={{ estado, dispatch, anuncio, anunciar }}>

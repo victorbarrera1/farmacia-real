@@ -9,7 +9,7 @@ export interface FilaRanking {
 
 /** Ranking horizontal de productos por una métrica (una sola tonalidad). */
 export function RankingBars({
-  titulo, subtitulo, icon: Ico, filas, unidad, barra,
+  titulo, subtitulo, icon: Ico, filas, unidad, barra, vacio = 'Aún no hay pedidos registrados.',
 }: {
   titulo: string;
   subtitulo: string;
@@ -18,6 +18,8 @@ export function RankingBars({
   unidad: string;
   /** Clase de color de la barra (magnitud, una sola tonalidad). */
   barra: string;
+  /** Texto cuando no hay datos. */
+  vacio?: string;
 }) {
   const max = Math.max(1, ...filas.map((f) => f.valor));
 
@@ -54,6 +56,13 @@ export function RankingBars({
           </li>
         ))}
       </ol>
+
+      {!filas.length && (
+        <p className="rounded-xl border border-dashed border-linea bg-fondo px-4 py-8 text-center text-[0.88rem] text-gris">
+          <b className="block font-extrabold text-texto">Sin datos aún</b>
+          {vacio}
+        </p>
+      )}
     </section>
   );
 }

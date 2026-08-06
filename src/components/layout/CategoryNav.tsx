@@ -20,7 +20,7 @@ export function CategoryNav() {
           <div
             role="group"
             aria-label="Accesos rápidos por categoría"
-            className="flex flex-1 gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex flex-1 gap-1.5 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-32px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {CATEGORIAS.map((c) => {
               const activa = c.id === estado.categoria;

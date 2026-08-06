@@ -6,6 +6,8 @@ import { clp } from '../../lib/format';
 import { stockDe } from '../../lib/stock';
 import { itemsPedido, totalPedido, cantidadPedido } from '../../lib/pedido';
 import { waLink, msgPedido } from '../../lib/whatsapp';
+import { registrarPedido } from '../../lib/pedidosLog';
+import { PoliciesLink } from '../legal/Policies';
 
 /** Cajón del pedido: líneas, avisos de stock y envío por WhatsApp. */
 export function OrderDrawer() {
@@ -17,7 +19,7 @@ export function OrderDrawer() {
   const agotados = items.filter(({ p }) => stockDe(p, suc.id) === 0);
 
   const subtitulo = n
-    ? `${n} ${n === 1 ? 'producto' : 'productos'} · retiro en ${suc.nombre}`
+    ? `${n} ${n === 1 ? 'producto' : 'productos'} · reserva para retiro en ${suc.nombre}`
     : 'Aún no agregas productos';
 
   const footer = (
@@ -27,15 +29,35 @@ export function OrderDrawer() {
         <span className="num text-[1.7rem] font-extrabold tracking-[-0.03em]">{clp(totalPedido(estado.pedido))}</span>
       </div>
       <p className="mb-3 text-[0.8rem] leading-normal text-gris-2">
-        Esto no es una compra. Al enviar, te respondemos por WhatsApp confirmando disponibilidad y valor final.
+        Esto no es una compra ni un pago en línea: es una <b className="font-bold text-gris">reserva de stock</b>. El
+        pago y la entrega son presenciales en el local. Te respondemos por WhatsApp confirmando disponibilidad y valor
+        final.
       </p>
-      <a href={waLink(msgPedido(estado.pedido, suc), suc)} target="_blank" rel="noopener" className="btn btn-wa btn-ancho">
-        <Icon id="i-wa" /> Enviar pedido por WhatsApp
+      <a
+        href={waLink(msgPedido(estado.pedido, suc), suc)}
+        target="_blank"
+        rel="noopener"
+        onClick={() => registrarPedido(items, suc)}
+        className="btn btn-wa btn-ancho"
+      >
+        <Icon id="i-wa" /> Cotizar / Reservar por WhatsApp
       </a>
       <p className="mt-3 flex items-center justify-center gap-2 text-[0.85rem] text-gris">
-        <Icon id="i-pin" className="size-[15px] shrink-0 text-azul" /> Se envía a{' '}
+        <Icon id="i-pin" className="size-[15px] shrink-0 text-azul" /> Retiras en{' '}
         <b className="font-bold text-texto">{suc.nombre}</b>
       </p>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4">
+        <PoliciesLink className="min-h-11 px-2 text-[0.83rem] font-bold text-azul underline hover:text-azul-osc">
+          Políticas de reserva y términos
+        </PoliciesLink>
+        <button
+          type="button"
+          onClick={() => dispatch({ type: 'vaciarPedido' })}
+          className="min-h-11 px-2 text-[0.83rem] font-semibold text-gris hover:text-rojo hover:underline"
+        >
+          Vaciar reserva
+        </button>
+      </div>
     </>
   );
 
@@ -54,7 +76,8 @@ export function OrderDrawer() {
           <Icon id="i-bolsa" className="mx-auto mb-3.5 size-[52px] text-linea" />
           <b className="mb-[7px] block text-[1.1rem] font-extrabold text-texto">Tu pedido está vacío</b>
           <p className="mx-auto max-w-[34ch] text-[0.92rem]">
-            Agrega productos del catálogo y te los apartamos en el local que elijas. No pagas nada aquí.
+            Agrega productos del catálogo y te los reservamos en el local que elijas. No pagas nada aquí: el pago y la
+            entrega son presenciales.
           </p>
         </div>
       ) : (
@@ -68,6 +91,17 @@ export function OrderDrawer() {
                 </b>{' '}
                 con stock hoy en {suc.nombre}. Igual puedes enviar el pedido: lo buscamos en otro local o te avisamos
                 cuando llegue.
+              </div>
+            </div>
+          )}
+
+          {items.some(({ p }) => p.rec) && (
+            <div className="my-3.5 flex items-start gap-2.5 rounded-lg border border-rojo-borde bg-rojo-pale px-[15px] py-3 text-[0.86rem] leading-normal text-rojo-osc">
+              <Icon id="i-alerta" className="mt-px size-[18px] shrink-0" />
+              <div>
+                <b className="font-extrabold">Hay medicamentos con receta.</b> Se entregan solo contra receta médica
+                vigente (física o electrónica), validada presencialmente por el Químico Farmacéutico de turno en el
+                local.
               </div>
             </div>
           )}

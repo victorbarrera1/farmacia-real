@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Truck, Lock } from 'lucide-react';
+import { Banknote, Lock, Store } from 'lucide-react';
 import { Icon } from '../icons/Icon';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { waLink, msgGeneral } from '../../lib/whatsapp';
 
-/** Tira superior de beneficios + accesos rápidos (WhatsApp y panel). */
+/** Tira superior con el modelo de operación + accesos rápidos (WhatsApp y panel). */
 export function TopBar() {
   const suc = useSucursalActual();
 
@@ -15,13 +15,13 @@ export function TopBar() {
           <Icon id="i-pin" className="size-3.5 opacity-85" /> 4 sucursales · Independencia y Ñuñoa
         </span>
         <span className="hidden items-center gap-[7px] whitespace-nowrap text-white/90 min-[560px]:flex">
-          <Icon id="i-bolsa" className="size-3.5 opacity-85" /> Retiro en tienda sin pago en línea
+          <Store className="size-3.5 opacity-85" aria-hidden="true" /> Reserva por WhatsApp y retiro en el local
         </span>
-        <span className="hidden items-center gap-[7px] whitespace-nowrap text-white/90 min-[880px]:flex">
-          <ShieldCheck className="size-3.5 opacity-85" aria-hidden="true" /> Bioequivalentes certificados
+        <span className="hidden items-center gap-[7px] whitespace-nowrap text-white/90 min-[900px]:flex">
+          <Banknote className="size-3.5 opacity-85" aria-hidden="true" /> Pago presencial en caja
         </span>
-        <span className="hidden items-center gap-[7px] whitespace-nowrap text-white/90 min-[1120px]:flex">
-          <Truck className="size-3.5 opacity-85" aria-hidden="true" /> Despacho por el sector
+        <span className="hidden items-center gap-[7px] whitespace-nowrap text-white/90 min-[1500px]:flex">
+          <Icon id="i-escudo" className="size-3.5 opacity-85" /> Atención de Químico Farmacéutico
         </span>
 
         <div className="ml-auto flex items-center gap-2">
@@ -37,7 +37,7 @@ export function TopBar() {
             rel="noopener"
             className="flex items-center gap-[7px] whitespace-nowrap font-bold text-white no-underline hover:underline"
           >
-            <Icon id="i-wa" className="size-3.5" /> Pide por WhatsApp
+            <Icon id="i-wa" className="size-3.5" /> Consulta por WhatsApp
           </a>
         </div>
       </div>
