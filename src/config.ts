@@ -5,12 +5,14 @@
 /** URL pública del sitio (canonical, sitemap, JSON-LD, og:url). */
 export const SITIO_URL = 'https://farmaciareal.vercel.app';
 
-/* Variables de build. Se lee así (y no `import.meta.env.X` directo) para que
-   este archivo también se pueda importar desde Node en los scripts de
-   `scripts/` — ahí `import.meta.env` no existe. Vite igual las reemplaza en
-   tiempo de build. */
-const ENV: Record<string, string | undefined> =
-  (import.meta as unknown as { env?: Record<string, string | undefined> }).env ?? {};
+/* Variables de entorno. Se leen así (y no directo en cada componente) para
+   que este archivo también se pueda importar desde Node (scripts/ y las
+   rutas de Next): ahí `import.meta.env` no existe y `process.env` sí. En el
+   navegador, Next sustituye en build las variables `NEXT_PUBLIC_*`. */
+function leerEnv(clave: string): string | undefined {
+  if (typeof process === 'undefined') return undefined;
+  return (process.env as Record<string, string | undefined>)[clave];
+}
 
 /**
  * ACCESO AL PANEL (/panel)
@@ -21,17 +23,17 @@ const ENV: Record<string, string | undefined> =
  * HttpOnly firmada. Ni la clave ni su hash viajan en el bundle.
  *
  * El único fallback es para desarrollo sin backend: si se definen
- * `VITE_ADMIN_PASS_HASH` y `VITE_ADMIN_PASS_SALT` en un `.env` local (nunca
- * en producción), el panel compara un PBKDF2 en el navegador. Sin esas
- * variables y sin API, el panel no deja entrar.
+ * `NEXT_PUBLIC_ADMIN_PASS_HASH` y `NEXT_PUBLIC_ADMIN_PASS_SALT` en un `.env`
+ * local (nunca en producción), el panel compara un PBKDF2 en el navegador.
+ * Sin esas variables y sin API, el panel no deja entrar.
  *
  * Generar todos los valores:  npm run clave
  */
 export const CLAVE_LOCAL = {
   /** Hash PBKDF2-SHA256 (hex). Vacío = modo sin backend deshabilitado. */
-  hash: ENV.VITE_ADMIN_PASS_HASH ?? '',
+  hash: leerEnv('NEXT_PUBLIC_ADMIN_PASS_HASH') ?? '',
   /** Sal (hex) del hash anterior. */
-  sal: ENV.VITE_ADMIN_PASS_SALT ?? '',
+  sal: leerEnv('NEXT_PUBLIC_ADMIN_PASS_SALT') ?? '',
   iteraciones: 210000,
 } as const;
 

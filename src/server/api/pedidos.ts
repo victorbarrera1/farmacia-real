@@ -1,7 +1,7 @@
-import { almacen } from './_lib/almacen.ts';
-import { exigirAcceso, exigirAdmin } from './_lib/auth.ts';
-import { agregarPedido, borrarPedidos, eliminarPedido, leerPedidos } from './_lib/datos.ts';
-import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
+import { almacen } from '../_lib/almacen.ts';
+import { exigirAcceso, exigirAdmin } from '../_lib/auth.ts';
+import { agregarPedido, borrarPedidos, eliminarPedido, leerPedidos } from '../_lib/datos.ts';
+import { fallo, metodoNoPermitido, ok, type Handler} from '../_lib/http.ts';
 
 /* ================================================================
    /api/pedidos — historial de reservas enviadas por WhatsApp.
@@ -11,7 +11,7 @@ import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http
      DELETE → solo admin global: ?id=<id> o ?todos=1
    Sin datos personales: solo productos, cantidades, total y sucursal.
    ================================================================ */
-export default servir(async (p: Peticion) => {
+export const handler: Handler = async (p) => {
   const a = almacen();
 
   if (p.metodo === 'POST') {
@@ -48,4 +48,4 @@ export default servir(async (p: Peticion) => {
   if (!id) return fallo(400, 'Falta el parámetro id (o todos=1)');
   await eliminarPedido(a, id);
   return ok({ pedidos: await leerPedidos(a) });
-});
+};

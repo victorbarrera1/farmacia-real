@@ -1,8 +1,8 @@
 import {
   accesoDeClave, authConfigurada, cookieBorrada, cookieSesion, COOKIE, crearToken,
   permitirIntento, tokenValido,
-} from './_lib/auth.ts';
-import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
+} from '../_lib/auth.ts';
+import { fallo, metodoNoPermitido, ok, type Handler} from '../_lib/http.ts';
 
 /* ================================================================
    /api/sesion — autenticación del panel.
@@ -13,7 +13,7 @@ import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http
    `sucursalId` es opcional: en blanco se prueba la clave del admin global y
    las de todas las sucursales. La clave nunca se compara en el navegador.
    ================================================================ */
-export default servir(async (p: Peticion) => {
+export const handler: Handler = async (p) => {
   if (!authConfigurada()) {
     return fallo(503, 'Autenticación no configurada en el servidor', { configurar: true });
   }
@@ -53,4 +53,4 @@ export default servir(async (p: Peticion) => {
     { autorizado: true, exp, admin: acceso.admin, sucursalId: acceso.admin ? '' : acceso.sucursalId },
     { 'Set-Cookie': cookieSesion(p, token) },
   );
-});
+};

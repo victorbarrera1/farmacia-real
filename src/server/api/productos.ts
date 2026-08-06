@@ -1,8 +1,8 @@
-import { almacen } from './_lib/almacen.ts';
-import { exigirAcceso, exigirAdmin } from './_lib/auth.ts';
-import { escribirCatalogo, leerCatalogo } from './_lib/datos.ts';
-import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
-import { fusionarLocal, quitarProducto, upsertProducto } from '../src/lib/dominio.ts';
+import { almacen } from '../_lib/almacen.ts';
+import { exigirAcceso, exigirAdmin } from '../_lib/auth.ts';
+import { escribirCatalogo, leerCatalogo } from '../_lib/datos.ts';
+import { fallo, metodoNoPermitido, ok, type Handler} from '../_lib/http.ts';
+import { fusionarLocal, quitarProducto, upsertProducto } from '../../lib/dominio.ts';
 
 /* ================================================================
    /api/productos
@@ -12,7 +12,7 @@ import { fusionarLocal, quitarProducto, upsertProducto } from '../src/lib/domini
               de un producto que ya existe (no puede crear ni renombrar).
      DELETE → solo admin global (?id=<id>)
    ================================================================ */
-export default servir(async (p: Peticion) => {
+export const handler: Handler = async (p) => {
   const a = almacen();
 
   if (p.metodo === 'GET') {
@@ -57,4 +57,4 @@ export default servir(async (p: Peticion) => {
   if (siguiente === actual) return fallo(404, 'Producto no encontrado');
   const guardado = await escribirCatalogo(a, siguiente);
   return ok({ productos: guardado.productos, version: guardado.version });
-});
+};

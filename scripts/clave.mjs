@@ -120,8 +120,8 @@ ADMIN_SESSION_SECRET=${randomBytes(32).toString('hex')}
 ${linea}
  2) DESARROLLO SIN BACKEND (archivo .env local, nunca en producción)
 ${linea}
-VITE_ADMIN_PASS_HASH=${hashPbkdf2.toString('hex')}
-VITE_ADMIN_PASS_SALT=${salPbkdf2.toString('hex')}
+NEXT_PUBLIC_ADMIN_PASS_HASH=${hashPbkdf2.toString('hex')}
+NEXT_PUBLIC_ADMIN_PASS_SALT=${salPbkdf2.toString('hex')}
   (PBKDF2-SHA256, ${ITERACIONES_PBKDF2} iteraciones)
 
 Con el backend configurado, el modo sin backend no se usa.

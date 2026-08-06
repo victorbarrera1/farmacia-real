@@ -6,6 +6,11 @@ node_modules
 # build
 dist
 dist-ssr
+.next
+
+# generado por Next.js
+next-env.d.ts
+*.tsbuildinfo
 
 # logs
 *.log

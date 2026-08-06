@@ -1,8 +1,8 @@
-import { almacen } from './_lib/almacen.ts';
-import { exigirAcceso } from './_lib/auth.ts';
-import { escribirCatalogo, leerCatalogo } from './_lib/datos.ts';
-import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
-import { ajustarStockEn, fijarStockEn } from '../src/lib/dominio.ts';
+import { almacen } from '../_lib/almacen.ts';
+import { exigirAcceso } from '../_lib/auth.ts';
+import { escribirCatalogo, leerCatalogo } from '../_lib/datos.ts';
+import { fallo, metodoNoPermitido, ok, type Handler} from '../_lib/http.ts';
+import { ajustarStockEn, fijarStockEn } from '../../lib/dominio.ts';
 
 /* ================================================================
    PATCH /api/stock
@@ -12,7 +12,7 @@ import { ajustarStockEn, fijarStockEn } from '../src/lib/dominio.ts';
    Alcance: el admin global puede tocar cualquier sucursal; el encargado de
    un local, solo la suya (cualquier otra → 403).
    ================================================================ */
-export default servir(async (p: Peticion) => {
+export const handler: Handler = async (p) => {
   if (p.metodo !== 'PATCH') return metodoNoPermitido(['PATCH']);
 
   const guardia = exigirAcceso(p);
@@ -49,4 +49,4 @@ export default servir(async (p: Peticion) => {
   const guardado = await escribirCatalogo(a, siguiente);
   const producto = guardado.productos.find((x) => x.id === id);
   return ok({ producto, version: guardado.version });
-});
+};

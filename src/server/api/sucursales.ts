@@ -1,8 +1,8 @@
-import { almacen } from './_lib/almacen.ts';
-import { exigirAdmin } from './_lib/auth.ts';
-import { escribirCatalogo, leerCatalogo } from './_lib/datos.ts';
-import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
-import { idSucursalDesde, quitarSucursal, upsertSucursal, whatsappValido } from '../src/lib/dominio.ts';
+import { almacen } from '../_lib/almacen.ts';
+import { exigirAdmin } from '../_lib/auth.ts';
+import { escribirCatalogo, leerCatalogo } from '../_lib/datos.ts';
+import { fallo, metodoNoPermitido, ok, type Handler} from '../_lib/http.ts';
+import { idSucursalDesde, quitarSucursal, upsertSucursal, whatsappValido } from '../../lib/dominio.ts';
 
 /* ================================================================
    /api/sucursales
@@ -12,7 +12,7 @@ import { idSucursalDesde, quitarSucursal, upsertSucursal, whatsappValido } from 
               todos los productos (invariante de st[]).
      DELETE → admin: ?id=<id>
    ================================================================ */
-export default servir(async (p: Peticion) => {
+export const handler: Handler = async (p) => {
   const a = almacen();
 
   if (p.metodo === 'GET') {
@@ -67,4 +67,4 @@ export default servir(async (p: Peticion) => {
     productos: guardado.productos,
     version: guardado.version,
   });
-});
+};

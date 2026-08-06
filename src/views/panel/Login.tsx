@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Eye, EyeOff, Loader2, Lock, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
 import { Icon } from '../../components/icons/Icon';
@@ -124,7 +124,7 @@ export function Login({
           )}
 
           <Link
-            to="/"
+            href="/"
             className="mt-3 flex min-h-11 items-center justify-center gap-2 text-[0.88rem] font-semibold text-gris no-underline hover:text-azul hover:underline"
           >
             <Icon id="i-flecha" className="size-4 rotate-180" /> Volver a la tienda

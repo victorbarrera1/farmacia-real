@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Banknote, Lock, Store } from 'lucide-react';
 import { Icon } from '../icons/Icon';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
@@ -26,7 +26,7 @@ export function TopBar() {
 
         <div className="ml-auto flex items-center gap-2">
           <Link
-            to="/panel"
+            href="/panel"
             className="flex items-center gap-[6px] whitespace-nowrap rounded-full border border-white/25 px-3 py-[3px] font-bold text-white no-underline transition-colors hover:bg-white/10"
           >
             <Lock className="size-3.5" aria-hidden="true" /> Admin

@@ -1,11 +1,11 @@
-import { almacen } from './_lib/almacen.ts';
-import { exigirAdmin } from './_lib/auth.ts';
+import { almacen } from '../_lib/almacen.ts';
+import { exigirAdmin } from '../_lib/auth.ts';
 import {
   escribirCatalogo, leerCatalogo, restaurarProductos, restaurarSucursales, restaurarTodo,
-} from './_lib/datos.ts';
-import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
-import { sanearCatalogo } from '../src/lib/dominio.ts';
-import { catalogoDeFabrica } from './_lib/datos.ts';
+} from '../_lib/datos.ts';
+import { fallo, metodoNoPermitido, ok, type Handler} from '../_lib/http.ts';
+import { sanearCatalogo } from '../../lib/dominio.ts';
+import { catalogoDeFabrica } from '../_lib/datos.ts';
 
 /* ================================================================
    /api/catalogo
@@ -14,7 +14,7 @@ import { catalogoDeFabrica } from './_lib/datos.ts';
             de un respaldo). Cuerpo: { productos, sucursales }
      POST → admin: ?accion=restaurar | restaurarProductos | restaurarSucursales
    ================================================================ */
-export default servir(async (p: Peticion) => {
+export const handler: Handler = async (p) => {
   const a = almacen();
 
   if (p.metodo === 'GET') {
@@ -59,4 +59,4 @@ export default servir(async (p: Peticion) => {
           : null;
   if (!c) return fallo(400, 'Acción no reconocida');
   return ok({ productos: c.productos, sucursales: c.sucursales, version: c.version });
-});
+};

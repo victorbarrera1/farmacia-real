@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { LogOut, MapPin, ShieldCheck, Store } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
 import { useSucursales } from '../../hooks/useDatos';
@@ -39,7 +39,7 @@ export function PanelHeader({ alcance, onSalir }: { alcance: Alcance; onSalir: (
             <span className="hidden min-[420px]:inline">Salir</span>
           </button>
           <Link
-            to="/"
+            href="/"
             className="flex h-10 items-center gap-2 rounded-lg bg-azul px-3.5 text-[0.88rem] font-bold text-white transition-colors hover:bg-azul-osc"
           >
             <Store className="size-4" aria-hidden="true" />

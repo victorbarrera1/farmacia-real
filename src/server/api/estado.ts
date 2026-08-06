@@ -1,11 +1,11 @@
-import { almacen } from './_lib/almacen.ts';
-import { authConfigurada, COOKIE, sucursalesConClave, tokenValido } from './_lib/auth.ts';
-import { metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
+import { almacen } from '../_lib/almacen.ts';
+import { authConfigurada, COOKIE, sucursalesConClave, tokenValido } from '../_lib/auth.ts';
+import { metodoNoPermitido, ok, type Handler, type Peticion } from '../_lib/http.ts';
 
 /* GET /api/estado — qué sabe hacer este backend y con qué alcance entró quien
    pregunta. El cliente lo consulta una vez para decidir si trabaja contra la
    API o cae al modo local. Nunca revela secretos ni hashes. */
-export default servir((p: Peticion) => {
+export const handler: Handler = (p: Peticion) => {
   if (p.metodo !== 'GET') return metodoNoPermitido(['GET']);
 
   const a = almacen();
@@ -22,4 +22,4 @@ export default servir((p: Peticion) => {
     /** Sucursales con clave propia, para el selector del login. */
     sucursalesConClave: authConfigurada() ? sucursalesConClave() : [],
   });
-});
+};

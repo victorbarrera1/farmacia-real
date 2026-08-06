@@ -1,9 +1,11 @@
 /* ================================================================
    Pruebas de la API (node --test).
    ----------------------------------------------------------------
-   Levantan las mismas funciones de `api/` en un servidor http local,
-   con el driver de archivos, y ejercen el contrato completo: auth,
-   CRUD, invariante de st[], pedidos y saneamiento de entrada.
+   Levantan las mismas funciones de `src/server/api/` en un servidor http
+   local (adaptadas con `servir`, el driver Node), con el driver de
+   archivos, y ejercen el contrato completo: auth, CRUD, invariante de
+   st[], pedidos y saneamiento de entrada. En producción Next monta las
+   mismas funciones puras con el adaptador `servirNext`.
 
    Ejecutar:  npm run test:api
    ================================================================ */
@@ -14,6 +16,7 @@ import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { scryptSync, randomBytes } from 'node:crypto';
+import { servir } from '../src/server/_lib/http.ts';
 
 const CLAVE = 'clave-de-prueba-2026';
 const CLAVE_SEVILLA = 'clave-sevilla-2026';
@@ -44,7 +47,8 @@ before(async () => {
 
   const handlers = {};
   for (const ruta of RUTAS) {
-    handlers[ruta] = (await import(new URL(`../api/${ruta}.ts`, import.meta.url))).default;
+    const mod = await import(new URL(`../src/server/api/${ruta}.ts`, import.meta.url));
+    handlers[ruta] = servir(mod.handler);
   }
 
   servidor = createServer((req, res) => {

@@ -1,9 +1,9 @@
-import type { Producto, Sucursal } from '../../src/types.ts';
+import type { Producto, Sucursal } from '../../types.ts';
 import {
   type Catalogo, alinearStock, sanearCatalogo, sanearProductos, sanearSucursales,
-} from '../../src/lib/dominio.ts';
-import { PRODUCTOS } from '../../src/data/productos.ts';
-import { SUCURSALES } from '../../src/data/sucursales.ts';
+} from '../../lib/dominio.ts';
+import { PRODUCTOS } from '../../data/productos.ts';
+import { SUCURSALES } from '../../data/sucursales.ts';
 import type { Almacen } from './almacen.ts';
 
 /* ================================================================
