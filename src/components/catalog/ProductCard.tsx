@@ -2,7 +2,7 @@ import { Icon, Ilu } from '../icons/Icon';
 import { Sellos } from '../common/Sello';
 import type { Producto } from '../../types';
 import { clp } from '../../lib/format';
-import { nivelDe, etStock, stockDe, otrosLocalesCon } from '../../lib/stock';
+import { conDescuento, etStock, nivelDe, otrosLocalesCon, precioDe, stockDe } from '../../lib/stock';
 import { waLink, msgProducto } from '../../lib/whatsapp';
 import { useStore } from '../../store/StoreContext';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
@@ -29,6 +29,8 @@ export function ProductCard({ p }: { p: Producto }) {
   const suc = useSucursalActual();
 
   const u = stockDe(p, suc.id);
+  const precio = precioDe(p, suc.id);
+  const especial = conDescuento(p, suc.id);
   const agotado = u === 0;
   const nivel = nivelDe(u);
   const enPedido = estado.pedido[p.id] || 0;
@@ -81,10 +83,20 @@ export function ProductCard({ p }: { p: Producto }) {
         </span>
 
         <div className="mt-[9px]">
-          <b className="num block text-[1.42rem] font-extrabold leading-[1.1] tracking-[-0.03em]">{clp(p.p)}</b>
-          <span className="text-[0.74rem] text-gris-2">
-            {p.rec ? 'valor referencial informativo' : 'precio referencial'}
-          </span>
+          <b className="num block text-[1.42rem] font-extrabold leading-[1.1] tracking-[-0.03em]">
+            {clp(precio)}
+          </b>
+          {/* Precio propio del local: se muestra junto al de lista para que se
+              entienda de dónde sale, sin lenguaje promocional. */}
+          {especial ? (
+            <span className="text-[0.74rem] text-gris-2">
+              precio en {suc.corto} · lista <s className="num">{clp(p.p)}</s>
+            </span>
+          ) : (
+            <span className="text-[0.74rem] text-gris-2">
+              {p.rec ? 'valor referencial informativo' : 'precio referencial'}
+            </span>
+          )}
         </div>
 
         <Accion

@@ -1,10 +1,12 @@
 import { useStore } from '../../store/StoreContext';
 import { clp } from '../../lib/format';
 import { totalPedido, cantidadPedido } from '../../lib/pedido';
+import { useSucursalActual } from '../../hooks/useSucursalActual';
 
 /** Barra de pedido fija en la parte inferior (solo móvil). */
 export function MobileOrderBar() {
   const { estado, dispatch } = useStore();
+  const suc = useSucursalActual();
   const n = cantidadPedido(estado.pedido);
   const visible = n > 0;
 
@@ -25,7 +27,7 @@ export function MobileOrderBar() {
             {n}
           </span>
           <span className="mr-auto">Ver mi pedido</span>
-          <span className="num">{clp(totalPedido(estado.pedido))}</span>
+          <span className="num">{clp(totalPedido(estado.pedido, suc.id))}</span>
         </button>
       </div>
     </div>

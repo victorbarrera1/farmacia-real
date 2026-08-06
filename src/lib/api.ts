@@ -21,8 +21,14 @@ export interface Capacidades {
   almacen: TipoAlmacen;
   /** ¿Puede el servidor validar la clave del panel? */
   auth: boolean;
-  /** ¿Hay una sesión de admin válida ahora mismo? */
+  /** ¿Hay una sesión válida ahora mismo? */
   sesion: boolean;
+  /** ¿Esa sesión es del administrador general? */
+  admin: boolean;
+  /** Sucursal de la sesión (vacío = admin global). */
+  sucursalId: string;
+  /** Sucursales con clave propia, para el selector del login. */
+  sucursalesConClave: string[];
 }
 
 export const SIN_API: Capacidades = {
@@ -30,6 +36,9 @@ export const SIN_API: Capacidades = {
   almacen: 'sin-configurar',
   auth: false,
   sesion: false,
+  admin: false,
+  sucursalId: '',
+  sucursalesConClave: [],
 };
 
 /** Error de la API con el código HTTP, para distinguir 401 de 503. */
@@ -103,7 +112,15 @@ let sondeo: Promise<Capacidades> | null = null;
 export function capacidades(): Promise<Capacidades> {
   if (!sondeo) {
     sondeo = pedir<Capacidades & { ok: true }>('/api/estado', { silencioso: true })
-      .then((r) => ({ api: true, almacen: r.almacen, auth: r.auth, sesion: r.sesion }))
+      .then((r) => ({
+        api: true,
+        almacen: r.almacen,
+        auth: r.auth,
+        sesion: r.sesion,
+        admin: r.admin ?? false,
+        sucursalId: r.sucursalId ?? '',
+        sucursalesConClave: r.sucursalesConClave ?? [],
+      }))
       .catch(() => SIN_API);
   }
   return sondeo;

@@ -5,6 +5,7 @@ import { ajustarStock, fijarStock } from '../../data/repo';
 import { sinTildes } from '../../lib/format';
 import { nivelDe } from '../../lib/stock';
 import { useProductos, useSucursales } from '../../hooks/useDatos';
+import type { Alcance } from './useAdminSesion';
 
 const TINTE_CELDA = {
   alto: '',
@@ -23,9 +24,11 @@ const TEXTO_CELDA = {
  * Escribe directo en el repositorio, así que lo que se ajusta acá es lo que
  * la tienda muestra (misma fuente de datos, persistida en localStorage).
  */
-export function StockTable() {
+export function StockTable({ alcance }: { alcance: Alcance }) {
   const productos = useProductos();
-  const sucursales = useSucursales();
+  const todas = useSucursales();
+  /* Un encargado de local solo ve (y puede tocar) la columna de su sucursal. */
+  const sucursales = alcance.admin ? todas : todas.filter((s) => s.id === alcance.sucursalId);
   const [busqueda, setBusqueda] = useState('');
   const [categoria, setCategoria] = useState('todos');
   const [soloAlerta, setSoloAlerta] = useState(false);
@@ -104,14 +107,17 @@ export function StockTable() {
           </thead>
           <tbody>
             {filas.map((p) => {
-              const total = p.st.reduce((a, b) => a + b, 0);
+              const total = alcance.admin
+                ? p.st.reduce((a, b) => a + b, 0)
+                : p.st[todas.findIndex((x) => x.id === alcance.sucursalId)] ?? 0;
               return (
                 <tr key={p.id} className="border-b border-linea-2 last:border-b-0 hover:bg-fondo/60">
                   <td className="sticky left-0 z-10 bg-white px-5 py-3">
                     <div className="text-[0.9rem] font-bold leading-tight text-texto">{p.n}</div>
                     <div className="mt-0.5 text-[0.78rem] text-gris-2">{p.lab} · {p.pres}</div>
                   </td>
-                  {sucursales.map((s, idx) => {
+                  {sucursales.map((s) => {
+                    const idx = todas.findIndex((x) => x.id === s.id);
                     const u = p.st[idx] ?? 0;
                     const nivel = nivelDe(u);
                     return (

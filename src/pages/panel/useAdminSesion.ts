@@ -16,6 +16,13 @@ import { claveLocalCorrecta, hayClaveLocal } from '../../lib/claveLocal';
 
 export type ModoSesion = 'api' | 'local' | 'sin-configurar';
 
+/** Alcance de la sesión: admin global o encargado de una sucursal. */
+export interface Alcance {
+  admin: boolean;
+  /** Vacío cuando es admin global. */
+  sucursalId: string;
+}
+
 interface SesionLocal {
   /** Marca de tiempo (ms) en que expira la sesión. */
   exp: number;
@@ -56,40 +63,59 @@ export interface EstadoSesion {
   /** null mientras se consulta al servidor. */
   autorizado: boolean | null;
   modo: ModoSesion;
+  /** Con qué permisos entró (null si aún no entra). */
+  alcance: Alcance | null;
+  /** Sucursales que tienen clave propia, para el selector del login. */
+  sucursalesConClave: string[];
   /** Intenta entrar. Devuelve un mensaje de error, o null si entró. */
-  entrar: (clave: string) => Promise<string | null>;
+  entrar: (clave: string, sucursalId?: string) => Promise<string | null>;
   salir: () => void;
 }
+
+const ADMIN_LOCAL: Alcance = { admin: true, sucursalId: '' };
 
 export function useAdminSesion(): EstadoSesion {
   const [autorizado, setAutorizado] = useState<boolean | null>(null);
   const [modo, setModo] = useState<ModoSesion>('sin-configurar');
+  const [alcance, setAlcance] = useState<Alcance | null>(null);
+  const [sucursalesConClave, setSucursalesConClave] = useState<string[]>([]);
 
-  /* Al montar: ¿hay backend? ¿hay sesión válida? */
+  /* Al montar: ¿hay backend? ¿hay sesión válida? ¿con qué alcance? */
   useEffect(() => {
     let vivo = true;
     capacidades().then((caps) => {
       if (!vivo) return;
       if (caps.api && caps.auth) {
         setModo('api');
+        setSucursalesConClave(caps.sucursalesConClave ?? []);
         setAutorizado(caps.sesion);
+        setAlcance(caps.sesion ? { admin: caps.admin, sucursalId: caps.sucursalId } : null);
         return;
       }
-      setModo(hayClaveLocal() ? 'local' : 'sin-configurar');
-      setAutorizado(hayClaveLocal() ? leerSesionLocal() : false);
+      /* Sin backend: el modo local es solo para desarrollo y siempre es admin. */
+      const local = hayClaveLocal();
+      setModo(local ? 'local' : 'sin-configurar');
+      const entrada = local && leerSesionLocal();
+      setAutorizado(entrada);
+      setAlcance(entrada ? ADMIN_LOCAL : null);
     });
     return () => { vivo = false; };
   }, []);
 
   const entrar = useCallback(
-    async (clave: string): Promise<string | null> => {
+    async (clave: string, sucursalId?: string): Promise<string | null> => {
       if (!clave) return 'Escribe la clave.';
 
       if (modo === 'api') {
         try {
-          await pedir('/api/sesion', { metodo: 'POST', cuerpo: { clave }, silencioso: true });
+          const r = await pedir<{ admin: boolean; sucursalId: string }>('/api/sesion', {
+            metodo: 'POST',
+            cuerpo: { clave, sucursalId },
+            silencioso: true,
+          });
           reiniciarCapacidades();
           setAutorizado(true);
+          setAlcance({ admin: r.admin, sucursalId: r.sucursalId });
           return null;
         } catch (e) {
           const err = e instanceof ErrorApi ? e : null;
@@ -103,6 +129,7 @@ export function useAdminSesion(): EstadoSesion {
         if (!(await claveLocalCorrecta(clave))) return 'Clave incorrecta. Intenta de nuevo.';
         guardarSesionLocal();
         setAutorizado(true);
+        setAlcance(ADMIN_LOCAL);
         return null;
       }
 
@@ -114,6 +141,7 @@ export function useAdminSesion(): EstadoSesion {
   const salir = useCallback(() => {
     borrarSesionLocal();
     setAutorizado(false);
+    setAlcance(null);
     if (modo === 'api') {
       pedir('/api/sesion', { metodo: 'DELETE', silencioso: true })
         .catch(() => undefined)
@@ -121,5 +149,5 @@ export function useAdminSesion(): EstadoSesion {
     }
   }, [modo]);
 
-  return { autorizado, modo, entrar, salir };
+  return { autorizado, modo, alcance, sucursalesConClave, entrar, salir };
 }

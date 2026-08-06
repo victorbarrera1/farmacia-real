@@ -5,7 +5,7 @@ import {
 import { descartarLocal, hayEdicionLocal, recargar, subirLocalAlServidor } from '../../data/repo';
 import { whatsappRepetidos, whatsappValido } from '../../lib/dominio';
 import { useSincronizacion, useSucursales } from '../../hooks/useDatos';
-import type { ModoSesion } from './useAdminSesion';
+import type { Alcance, ModoSesion } from './useAdminSesion';
 
 /* Avisos de estado del panel: de dónde salen los datos, si se guardaron,
    qué falta configurar y qué datos del cliente siguen pendientes. */
@@ -32,7 +32,7 @@ function Aviso({
   );
 }
 
-export function PanelEstado({ modo }: { modo: ModoSesion }) {
+export function PanelEstado({ modo, alcance }: { modo: ModoSesion; alcance: Alcance }) {
   const { origen, guardando, error } = useSincronizacion();
   const sucursales = useSucursales();
   const [migrando, setMigrando] = useState(false);
@@ -88,7 +88,7 @@ export function PanelEstado({ modo }: { modo: ModoSesion }) {
       )}
 
       {/* Migración de las ediciones que quedaron en el navegador */}
-      {origen === 'api' && hayLocal && (
+      {origen === 'api' && hayLocal && alcance.admin && (
         <Aviso tono="ambar" Ico={Upload}>
           <b className="font-extrabold">Tienes ediciones guardadas solo en este navegador.</b> Súbelas al servidor
           para que queden disponibles en todos los dispositivos, o descártalas y quédate con las del servidor.
@@ -124,7 +124,7 @@ export function PanelEstado({ modo }: { modo: ModoSesion }) {
       )}
 
       {/* Datos que faltan del cliente */}
-      {(repetidos.length > 0 || invalidos.length > 0) && (
+      {alcance.admin && (repetidos.length > 0 || invalidos.length > 0) && (
         <Aviso tono="ambar" Ico={TriangleAlert}>
           <b className="font-extrabold">Revisar los WhatsApp de las sucursales.</b>{' '}
           {repetidos.length > 0 && (

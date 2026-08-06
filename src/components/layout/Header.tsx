@@ -5,6 +5,7 @@ import { SearchBox } from './SearchBox';
 import { BranchPicker } from './BranchPicker';
 import { useStore } from '../../store/StoreContext';
 import { useStickyOffset } from '../../hooks/useStickyOffset';
+import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { usePrefiereMenosMov } from '../../hooks/useMediaQuery';
 import { cantidadPedido, totalPedido } from '../../lib/pedido';
 import { clp } from '../../lib/format';
@@ -14,6 +15,7 @@ export function Header() {
   const { estado, dispatch } = useStore();
   const refCab = useRef<HTMLElement>(null);
   const menosMov = usePrefiereMenosMov();
+  const suc = useSucursalActual();
   const n = cantidadPedido(estado.pedido);
 
   /* La barra de categorías se pega justo bajo la cabecera: medimos su alto. */
@@ -62,7 +64,7 @@ export function Header() {
                     {n}
                   </span>
                   <span className="num hidden border-l border-white/30 pl-[9px] text-[0.9rem] min-[1100px]:inline">
-                    {clp(totalPedido(estado.pedido))}
+                    {clp(totalPedido(estado.pedido, suc.id))}
                   </span>
                 </>
               )}

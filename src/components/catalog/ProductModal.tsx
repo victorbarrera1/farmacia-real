@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Icon, Ilu } from '../icons/Icon';
 import { Sellos } from '../common/Sello';
 import { clp } from '../../lib/format';
-import { etStock, nivelDe, stockDe } from '../../lib/stock';
+import { conDescuento, etStock, nivelDe, precioDe, stockDe } from '../../lib/stock';
 import { msgProducto, waLink } from '../../lib/whatsapp';
 import { useStore } from '../../store/StoreContext';
 import { useProductos, useSucursales } from '../../hooks/useDatos';
@@ -46,6 +46,8 @@ export function ProductModal() {
   if (!p) return null;
 
   const u = stockDe(p, suc.id, sucursales);
+  const precio = precioDe(p, suc.id, sucursales);
+  const especial = conDescuento(p, suc.id, sucursales);
   const agotado = u === 0;
   const enPedido = estado.pedido[p.id] || 0;
   const cerrar = () => dispatch({ type: 'cerrarDetalle' });
@@ -112,8 +114,11 @@ export function ProductModal() {
 
             <div className="mt-4 flex flex-wrap items-end justify-between gap-3 border-t border-linea pt-4">
               <div>
-                <b className="num block text-[1.9rem] font-extrabold leading-none tracking-[-0.03em]">{clp(p.p)}</b>
+                <b className="num block text-[1.9rem] font-extrabold leading-none tracking-[-0.03em]">
+                  {clp(precio)}
+                </b>
                 <span className="text-[0.78rem] text-gris-2">
+                  {especial && `precio en ${suc.corto} · lista ${clp(p.p)} · `}
                   {p.rec ? 'valor referencial informativo · se confirma en caja' : 'precio referencial'}
                 </span>
               </div>
@@ -203,6 +208,7 @@ export function ProductModal() {
                 {sucursales.map((s, i) => {
                   const un = p.st[i] ?? 0;
                   const actual = s.id === suc.id;
+                  const px = p.px[i];
                   return (
                     <li
                       key={s.id}
@@ -212,13 +218,18 @@ export function ProductModal() {
                       <span className="min-w-0 flex-1 truncate">
                         {s.corto}
                         {actual && <span className="ml-1.5 font-bold text-azul">· elegida</span>}
+                        {px !== null && px !== p.p && (
+                          <span className="num ml-1.5 text-gris-2">{clp(px)}</span>
+                        )}
                       </span>
                       <span
-                        className={`shrink-0 rounded-full px-2.5 py-1 text-[0.78rem] font-bold ${TONO[nivelDe(un)]}`}
+                        className={`shrink-0 rounded-full px-2.5 py-1 text-[0.78rem] font-bold ${
+                          p.vis[i] === false ? 'bg-fondo text-gris-2' : TONO[nivelDe(un)]
+                        }`}
                       >
-                        {etStock(un)}
+                        {p.vis[i] === false ? 'No lo maneja' : etStock(un)}
                       </span>
-                      {!actual && un > 0 && (
+                      {!actual && un > 0 && p.vis[i] !== false && (
                         <button
                           type="button"
                           onClick={() => {

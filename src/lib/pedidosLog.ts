@@ -119,8 +119,8 @@ export async function hidratarPedidos(): Promise<void> {
 /** Registra una reserva enviada por WhatsApp. */
 export function registrarPedido(items: ItemPedido[], suc: Sucursal): void {
   if (!items.length) return;
-  const lineas: LineaPedido[] = items.map(({ p, c }) => ({
-    id: p.id, n: p.n, pres: p.pres, lab: p.lab, p: p.p, c,
+  const lineas: LineaPedido[] = items.map(({ p, c, precio }) => ({
+    id: p.id, n: p.n, pres: p.pres, lab: p.lab, p: precio, c,
   }));
   const registro: PedidoRegistrado = {
     id: `o-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,

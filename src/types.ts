@@ -55,6 +55,16 @@ export interface Producto {
   desc?: string;
   /** Unidades por sucursal, en el mismo orden que SUCURSALES. */
   st: number[];
+  /**
+   * Visible en la tienda para esa sucursal, mismo orden que SUCURSALES.
+   * Permite que un local saque productos de su catálogo sin borrarlos.
+   */
+  vis: boolean[];
+  /**
+   * Precio especial por sucursal (CLP). `null` = usa el precio global `p`.
+   * Mismo orden que SUCURSALES.
+   */
+  px: (number | null)[];
 }
 
 /** Pedido: id de producto → cantidad. */

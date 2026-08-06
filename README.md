@@ -3,9 +3,10 @@
 Catálogo digital informativo con **reserva de stock por WhatsApp** y retiro en tienda
 para Farmacias Real (4 sucursales en Independencia y Ñuñoa).
 
-Migrado de un `index.html` monolítico a **React 19 + TypeScript + Vite 7 + Tailwind CSS v4**,
-con arquitectura modular pensada para crecer (catálogo real vía API, backend, etc.).
-Íconos con **lucide-react**; ruteo con **react-router-dom v7**.
+**React 19 + TypeScript + Vite 7 + Tailwind CSS v4 + react-router-dom v7**, íconos con
+lucide-react, y un **backend mínimo en Vercel Serverless Functions** (`api/`) con
+almacenamiento en Redis/KV. Sin backend configurado, el sitio funciona igual en modo
+local (localStorage).
 
 ## Modelo de operación (restricciones del proyecto)
 
@@ -20,16 +21,15 @@ DS 466/1984, ISP / MINSAL):
 - **Flujo carrito → WhatsApp.** El CTA del resumen es *"Cotizar / Reservar por WhatsApp"*
   y abre `wa.me/<whatsapp de la sucursal>` con productos, cantidades, total referencial,
   sucursal, dirección y el aviso de que el pago y la entrega son presenciales.
-- **Publicidad de fármacos (Art. 100).** Los productos de venta directa muestran precio e
-  información básica. Los que requieren receta se presentan de forma neutral e
-  informativa: sin promociones ni ofertas, CTA sin color promocional
-  (*"Reservar con receta"*), aviso de validación presencial por el Químico Farmacéutico,
-  y el hero no promociona la categoría de medicamentos.
+- **Publicidad de fármacos (Art. 100).** Los productos de venta directa muestran precio.
+  Los que requieren receta se presentan de forma neutral: sin promociones, CTA sin color
+  promocional (*"Reservar con receta"*), **sin precio en el mensaje de WhatsApp**, aviso
+  de validación presencial por el Químico Farmacéutico, y el hero no promociona la
+  categoría de medicamentos.
 
-La sección **"Retiro en tienda y condiciones"** (`src/components/legal/Policies.tsx`) es un
-modal accesible desde el pie de página, el aviso del catálogo, la ficha de producto y el
-resumen de la reserva. Cubre: naturaleza de la plataforma, lugar de pago y entrega,
-validación de recetas y disponibilidad de stock.
+La sección **"Retiro en tienda y condiciones"** (`src/components/legal/Policies.tsx`) es
+un modal accesible desde el pie, el aviso del catálogo, la ficha de producto y el resumen
+de la reserva.
 
 ## Rutas
 
@@ -37,110 +37,200 @@ validación de recetas y disponibilidad de stock.
 |------|--------|
 | `/` | Tienda pública (catálogo + reserva por WhatsApp) |
 | `/panel` | Panel de gestión (requiere clave) |
+| `/api/*` | Backend (ver [`docs/API.md`](docs/API.md)) |
+
+## Los dos modos de funcionamiento
+
+| | Con backend (recomendado) | Sin backend (solo desarrollo) |
+|---|---|---|
+| Datos | Redis/KV vía `api/` — compartidos entre dispositivos | localStorage del navegador que edita |
+| Clave del panel | Validada en el servidor (scrypt) + cookie `HttpOnly` firmada | Hash PBKDF2 en el navegador, solo si defines `VITE_ADMIN_PASS_HASH`/`_SALT` (**no es control de acceso real**) |
+| Roles | Admin general + una clave por sucursal | Solo admin |
+| Reservas | `POST /api/pedidos`: el dueño ve las de todas las visitas | Solo las de ese navegador |
+
+El cliente detecta el modo con `GET /api/estado` (`src/lib/api.ts`) y el panel lo dice en
+pantalla. **Nunca queda a medias:** si falta configurar el backend, todo sigue andando en
+modo local.
+
+### Activar el backend (5 minutos)
+
+```bash
+# 1. Crear el almacén: Vercel → Storage → KV / Upstash Redis (plan gratis).
+#    Inyecta KV_REST_API_URL y KV_REST_API_TOKEN solas.
+
+# 2. Generar la clave del dueño y el secreto de sesión:
+npm run clave -- "UnaClaveLargaYPropia"
+#    → pegar ADMIN_PASS_HASH y ADMIN_SESSION_SECRET en
+#      Vercel → Settings → Environment Variables
+
+# 3. Generar una clave por sucursal (para los encargados):
+npm run clave -- --sucursales
+#    → pegar SUCURSAL_PASS_HASHES (JSON en una línea) y entregar a cada
+#      encargado la clave que imprime en pantalla.
+
+# 4. Redeploy. El panel dirá "Datos en el servidor".
+```
+
+La clave en texto plano no existe en el repositorio: solo su hash, y solo en
+las variables de entorno del servidor.
+
+La primera vez, el panel ofrece **subir al servidor** las ediciones que quedaron en
+localStorage (o descartarlas).
+
+Para desarrollo local: copiar `.env.example` a `.env` (con `ALMACEN=archivo` los datos
+quedan en `.data/`). `npm run dev` monta las funciones de `api/` en el dev server
+(`scripts/vite-api-dev.ts`), así que no se necesita `vercel dev`.
+
+> El hash del `ADMIN_PASS_HASH` usa `:` como separador (no `$`) porque los cargadores de
+> `.env` interpretan `$algo` como interpolación de variables.
 
 ## Panel de gestión (`/panel`)
 
-Acceso desde el botón **Admin** de la barra superior. Protegido con la clave
-`ADMIN_PASS` de `src/config.ts` (por defecto `real2025`) y sesión de 12 h en
-localStorage.
+Acceso desde el botón **Admin** de la barra superior. En el login se elige la
+cuenta: *administración general* o *sucursal* (las que tengan clave propia).
 
-> ⚠️ La validación es en el navegador, así que la clave viaja en el bundle: sirve para
-> evitar entradas accidentales, **no** como control de acceso real. Los puntos de
-> integración están marcados con `// TODO(api)` para mover la autenticación al backend.
+| Pestaña | Admin general | Encargado de local |
+|---------|---------------|--------------------|
+| **Resumen** | KPIs de inventario de todas las sucursales + demanda del historial de reservas | Lo mismo, acotado a su sucursal |
+| **Productos** | CRUD completo + exportar/importar CSV, plantilla y respaldo JSON | Solo consulta |
+| **Precios y visibilidad** | Cualquier sucursal (selector) | Su local: precio propio, unidades y mostrar/ocultar |
+| **Stock** | Matriz producto × sucursal completa | Solo su columna |
+| **Sucursales** | CRUD con editor de horarios, valida el WhatsApp | No la ve |
+| **Pedidos** | Todas las reservas | Solo las de su sucursal |
 
-Pestañas:
+El servidor vuelve a validar cada permiso (`api/_lib/auth.ts`): ocultar un botón
+no es la protección, es solo la interfaz.
 
-| Pestaña | Qué hace |
-|---------|----------|
-| **Resumen** | KPIs reales sobre el stock del panel (valor, unidades, stock bajo, quiebres), inventario por categoría, estado del stock, alertas de reposición y demanda desde el historial local (con estado "sin datos"). Filtro consolidado / por sucursal. |
-| **Productos** | CRUD completo: `n`, `pres`, `lab`, `act`, `cat` (6 categorías), `il` (selector de ilustración), `p`, `desc`, switches `be`/`rec`/`frio` y stock por sucursal. Incluye "Restaurar catálogo". |
-| **Sucursales** | CRUD completo: nombre, corto, comuna, dirección, teléfono, WhatsApp, editor de horarios por tramos y consulta de mapa. Incluye "Restaurar sucursales". |
-| **Stock** | Matriz editable producto × sucursal. Escribe en la misma fuente que consume la tienda. |
-| **Pedidos** | Historial local de reservas enviadas por WhatsApp (productos, cantidades, total, sucursal, fecha) con KPIs y borrado. |
+### Precio y visibilidad por sucursal
 
-**Todo es cliente-side**: las ediciones del panel se ven de inmediato en la tienda y se
-persisten en localStorage. Sin backend todavía; los enganches de API están marcados con
-`// TODO(api)`.
+Cada producto tiene tres arrays alineados con las sucursales:
 
-### Alineación de `st[]` (invariante central)
+| Campo | Qué es | Defecto |
+|---|---|---|
+| `st[]` | unidades en ese local | `0` |
+| `vis[]` | si se muestra en la tienda de ese local | `true` |
+| `px[]` | precio propio del local; `null` = usa el precio de lista `p` | `null` |
 
-`producto.st` es un array alineado **por posición** con las sucursales
-(`st[0]` = primera sucursal, etc.). `src/data/repo.ts` mantiene el invariante:
+El **precio efectivo** (`px[idx] ?? p`) se calcula en un solo lugar
+(`precioEnPos` en `src/lib/dominio.ts`, con los envoltorios `precioDe` /
+`visibleEn` en `src/lib/stock.ts`), así que tienda, panel, resumen del pedido y
+mensaje de WhatsApp muestran siempre lo mismo. Un producto oculto en una
+sucursal no aparece en su catálogo ni se ofrece en los chips "Sí hay en:".
 
-- Crear una sucursal → agrega una posición con `0` en todos los productos.
-- Eliminar una sucursal → quita esa posición en todos los productos.
-- No se permite quedar sin sucursales.
+### Alineación de `st[]`, `vis[]` y `px[]` (invariante central)
 
-### Claves de localStorage
+Los tres arrays están alineados **por posición** con las sucursales. El
+invariante se mantiene en `src/lib/dominio.ts` —el **mismo módulo que usa el
+servidor**—:
 
-| Clave | Contenido |
-|-------|-----------|
-| `fr_estado` | Sucursal elegida + reserva en curso (tienda) |
-| `fr_admin_productos` | Catálogo editado en el panel |
-| `fr_admin_sucursales` | Sucursales editadas en el panel |
-| `fr_admin_pedidos` | Historial local de reservas enviadas |
-| `fr_admin_sesion` | Sesión del panel (con vencimiento) |
+- Crear una sucursal → agrega una posición (`0` unidades, visible, sin precio propio).
+- Eliminar una sucursal → quita esa posición conservando el resto **por id**.
+- No se permite quedar sin sucursales (`409` en la API).
+
+### Cargar el catálogo real
+
+1. **Panel → Productos → Descargar plantilla** (o *Exportar CSV* para partir del
+   catálogo actual). Separador `;` y BOM UTF-8: abre directo en Excel.
+2. Editar en Excel/Sheets. Columnas: `nombre, presentacion, laboratorio,
+   principio_activo` (o `activo`), `categoria, precio, bioequivalente, receta,
+   frio, descripcion, ilustracion, id` y, por cada sucursal,
+   `stock_<idSucursal>`, `precio_<idSucursal>` (vacío = precio de lista) y
+   `visible_<idSucursal>` (`si`/`no`). Solo `nombre` es obligatorio; el `id` se
+   genera desde el nombre si va vacío. La plantilla lista las categorías válidas.
+3. **Importar CSV**: muestra qué leyó y qué problemas encontró (filas sin nombre,
+   categorías inexistentes, precios ilegibles); reemplaza solo al confirmar, y el
+   servidor sanea todo otra vez.
+4. **Respaldo:** *Descargar respaldo JSON* antes de cualquier carga masiva (guarda
+   productos, sucursales, stock, precios y visibilidad tal cual).
+   *Restaurar respaldo* lo devuelve.
+
+Si el panel del dueño es la única fuente, el respaldo JSON es la copia de seguridad:
+conviene bajarlo periódicamente y guardarlo fuera del navegador.
 
 ## Scripts
 
 ```bash
-npm install      # instalar dependencias
-npm run dev      # servidor de desarrollo (http://localhost:5173)
-npm run build    # typecheck + build de producción (dist/)
-npm run preview  # previsualizar el build
+npm install
+npm run dev        # tienda + panel + API local (http://localhost:5173)
+npm run build      # typecheck + build de producción (dist/)
 npm run typecheck
+npm run test:api   # 40 pruebas de la API (auth, alcance por sucursal, CRUD,
+                   # invariantes de st/vis/px, pedidos, importación, límites)
+npm run clave      # claves: admin, --sucursales (todas) o --sucursal <id>
+npm run seo        # regenera JSON-LD + sitemap.xml + robots.txt desde src/data/
+npm run og         # regenera public/og-farmacias-real.png (requiere Playwright)
 ```
+
+## SEO
+
+El JSON-LD (`schema.org` `Organization` + `WebSite` + 4 × `Pharmacy` con horarios) es
+**estático en `index.html`**: en una SPA lo inyectado por JavaScript puede no indexarse.
+Lo genera `npm run seo` desde `src/data/sucursales.ts`, así que no se desincroniza;
+`StructuredData.tsx` solo reemplaza el bloque si el panel editó las sucursales.
+
+También hay `canonical`, `og:*` con imagen 1200×630, `twitter:card`, `public/robots.txt`
+(bloquea `/panel` y `/api/`) y `public/sitemap.xml`.
+
+> El rewrite de `vercel.json` es `/((?!api/)[^.]*)`: solo reescribe rutas **sin
+> extensión**, para no tapar `robots.txt`, `sitemap.xml`, `og-*.png`, `/assets/*` ni las
+> funciones de `/api/`.
+
+**Ojo con el dominio:** `SITIO_URL` (en `src/config.ts`) es la URL canónica y hoy apunta
+a `https://farmaciareal.vercel.app`. `farmacia-real.vercel.app` responde con un deploy
+antiguo: conviene dejar un solo dominio (idealmente uno propio, tipo `farmaciasreal.cl`)
+y redirigir el otro. Al cambiarlo: editar `SITIO_URL` y correr `npm run seo`.
 
 ## Estructura
 
 ```
+api/                        Funciones serverless (Vercel)
+├─ _lib/http.ts             Firma común + adaptador Node, cookies, errores
+├─ _lib/almacen.ts          Driver Redis REST (KV/Upstash) o archivos (.data/)
+├─ _lib/auth.ts             scrypt + cookie HMAC HttpOnly + límite de intentos
+├─ _lib/datos.ts            Lectura/escritura del catálogo y de las reservas
+├─ estado.ts · sesion.ts    Capacidades · login/logout/estado de sesión
+├─ catalogo.ts              GET público · PUT completo · POST restaurar
+├─ productos.ts · sucursales.ts · stock.ts · pedidos.ts
 src/
-├─ config.ts              ADMIN_PASS, claves de localStorage, umbral de stock bajo
-├─ types.ts               Tipos del dominio (contrato único)
+├─ config.ts                SITIO_URL, hash local, claves de localStorage, umbrales
+├─ types.ts                 Tipos del dominio (contrato único)
 ├─ data/
-│  ├─ sucursales.ts       Datos originales de los 4 locales
-│  ├─ categorias.ts       Categorías del catálogo
-│  ├─ productos.ts        Catálogo original (30 productos)
-│  └─ repo.ts             Fuente en runtime: datos originales + ediciones del panel,
-│                         CRUD, reindexado de st[] y suscripción para React
-├─ lib/                   Lógica pura, sin React
-│  ├─ format.ts           clp(), sinTildes()
-│  ├─ horarios.ts         estaAbierto(), textoHoy()
-│  ├─ stock.ts            stockDe(), nivelDe(), etStock(), otrosLocalesCon()
-│  ├─ pedido.ts           itemsPedido(), totalPedido(), cantidadPedido()
-│  ├─ whatsapp.ts         waLink() y armado de mensajes de reserva
-│  └─ pedidosLog.ts       Historial local de reservas enviadas
-├─ store/                 Estado global (useReducer + Context + localStorage)
-├─ hooks/                 useDatos (useProductos/useSucursales/usePedidosRegistrados),
-│                         useCatalogo, useSucursalActual, useMediaQuery,
-│                         useDragToClose, useStickyOffset
+│  ├─ sucursales.ts         Los 4 locales (con los WhatsApp pendientes marcados)
+│  ├─ categorias.ts · productos.ts
+│  └─ repo.ts               External store: hidrata de la API o de localStorage,
+│                           escrituras optimistas y suscripción para React
+├─ lib/
+│  ├─ dominio.ts            Saneamiento + CRUD puro + invariantes st/vis/px y
+│  │                        precio efectivo (mismo módulo en cliente y API)
+│  ├─ api.ts                Cliente fetch + detección de capacidades
+│  ├─ csv.ts                Exportar/importar catálogo y respaldos
+│  ├─ claveLocal.ts         PBKDF2 en el navegador (modo sin backend)
+│  ├─ stock.ts · pedido.ts · whatsapp.ts · pedidosLog.ts · format.ts · horarios.ts
+├─ store/                   Estado de la tienda (useReducer + Context + localStorage)
+├─ hooks/                   useDatos (productos/sucursales/sincronización/pedidos),
+│                           useCatalogo, useSucursalActual, useMediaQuery, …
 ├─ pages/
-│  ├─ Storefront.tsx      Página pública
-│  └─ panel/              Panel de gestión
-│     ├─ Panel.tsx        Login + pestañas + resumen
-│     ├─ Login.tsx · useAdminSesion.ts
-│     ├─ ProductosAdmin.tsx · ProductoForm.tsx
-│     ├─ SucursalesAdmin.tsx · SucursalForm.tsx
-│     ├─ StockTable.tsx · PedidosAdmin.tsx
-│     ├─ metrics.ts       KPIs sobre el stock real (puro)
-│     ├─ analytics.ts     Series y rankings desde el historial local
-│     ├─ KpiTiles · StockStatus · CategoryBars · AlertsPanel
-│     ├─ SalesTrend · RankingBars · ScopeFilter · PanelHeader
-│     └─ charts/AreaChart.tsx
-├─ components/
-│  ├─ icons/              <Icon> (lucide) + <Ilu> (sprite) + SvgSprite
-│  ├─ common/             Logo, Sello, SectionHeader, LiveAnnouncer
-│  ├─ layout/             TopBar, Header, SearchBox, BranchPicker, BranchBar,
-│  │                      CategoryNav, MegaMenu, Footer
-│  ├─ sections/           Banner (hero + accesos), Steps, Services, Location
-│  ├─ catalog/            Catalog, FiltersRow, ProductCard, ProductModal, EmptyState
-│  ├─ branches/           Branches, BranchCard
-│  ├─ order/              Drawer, OrderDrawer, BranchDrawer, FloatingWa, MobileOrderBar
-│  ├─ legal/              Policies (modal de políticas + PoliciesLink)
-│  └─ seo/                StructuredData (JSON-LD @type: Pharmacy)
-├─ index.css              Sistema de diseño (tokens Tailwind v4 @theme)
-├─ App.tsx · main.tsx
+│  ├─ Storefront.tsx
+│  └─ panel/                Panel (login con alcance, pestañas, CRUD, CSV,
+│                           AjustesLocal = precios y visibilidad, métricas)
+├─ components/              icons · common · layout · sections · catalog ·
+│                           branches · order · legal · seo
+pruebas/api.test.mjs        Pruebas de la API (node --test)
+scripts/                    clave · generar-seo · generar-og · vite-api-dev
+docs/API.md                 Endpoints y contratos JSON
 ```
+
+## Datos pendientes del cliente
+
+- **WhatsApp de Santa María 1789 y Simón Bolívar 3751.** Hoy usan el número de
+  Independencia 1443 (`WHATSAPP_PENDIENTE` en `src/data/sucursales.ts`), así que las
+  reservas de esos locales llegan al teléfono equivocado. El panel lo avisa en pantalla y
+  `npm run seo` lo reporta. Se corrige en `src/data/sucursales.ts` o desde
+  **/panel → Sucursales**.
+- **Catálogo real.** Los 30 productos son de demostración: cargar el real por CSV.
+- **Clave del panel.** La provisional es débil; cambiarla con `npm run clave`.
+- **Emblema del logo.** Es una aproximación SVG (`SvgSprite.tsx`, id `i-emblema`):
+  reemplazar por el archivo original cuando el dueño lo entregue.
 
 ## Stock por sucursal (requisito central)
 
@@ -157,26 +247,13 @@ marca; el verde solo se usa para WhatsApp y el estado "disponible").
 
 **Escala de radios (regla concéntrica `r_interno = r_externo − padding`):**
 
-| Elemento                     | Radio            |
-|------------------------------|------------------|
-| Tarjeta (externo)            | `rounded-2xl` 20px |
-| Media anidada (inset 12px)   | `rounded-md` 8px (20−12) |
-| Cajas de ícono / botones     | `rounded-lg` 12px |
-| Sellos flotantes             | `rounded-sm` 6px  |
-| Chips / pills                | `rounded-full`    |
-
-## Cómo actualizar el contenido
-
-Lo habitual es hacerlo desde **/panel** (queda en el navegador). Para cambiar los datos
-de fábrica del repositorio:
-
-- **Sucursales / horarios / WhatsApp:** `src/data/sucursales.ts`
-- **Productos y stock:** `src/data/productos.ts` (`st` = unidades por sucursal, en el
-  mismo orden que `SUCURSALES`)
-- **Categorías:** `src/data/categorias.ts`
-
-El emblema del logo es una aproximación en SVG (`src/components/icons/SvgSprite.tsx`,
-id `i-emblema`); reemplazar por el archivo original cuando el dueño lo entregue.
+| Elemento | Radio |
+|---|---|
+| Tarjeta (externo) | `rounded-2xl` 20px |
+| Media anidada (inset 12px) | `rounded-md` 8px (20−12) |
+| Cajas de ícono / botones | `rounded-lg` 12px |
+| Sellos flotantes | `rounded-sm` 6px |
+| Chips / pills | `rounded-full` |
 
 ## Accesibilidad
 

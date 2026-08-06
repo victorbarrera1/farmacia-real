@@ -14,7 +14,7 @@ export function OrderDrawer() {
   const { estado, dispatch } = useStore();
   const suc = useSucursalActual();
 
-  const items = itemsPedido(estado.pedido);
+  const items = itemsPedido(estado.pedido, suc.id);
   const n = cantidadPedido(estado.pedido);
   const agotados = items.filter(({ p }) => stockDe(p, suc.id) === 0);
 
@@ -26,7 +26,7 @@ export function OrderDrawer() {
     <>
       <div className="mb-[5px] flex items-baseline justify-between">
         <span className="text-[0.92rem] font-semibold text-gris">Total referencial</span>
-        <span className="num text-[1.7rem] font-extrabold tracking-[-0.03em]">{clp(totalPedido(estado.pedido))}</span>
+        <span className="num text-[1.7rem] font-extrabold tracking-[-0.03em]">{clp(totalPedido(estado.pedido, suc.id))}</span>
       </div>
       <p className="mb-3 text-[0.8rem] leading-normal text-gris-2">
         Esto no es una compra ni un pago en línea: es una <b className="font-bold text-gris">reserva de stock</b>. El
@@ -106,7 +106,7 @@ export function OrderDrawer() {
             </div>
           )}
 
-          {items.map(({ p, c }) => (
+          {items.map(({ p, c, precio }) => (
             <div key={p.id} className="flex items-start gap-3 border-b border-linea-2 py-3.5 last:border-b-0">
               <span className="grid size-[52px] shrink-0 place-items-center rounded-md bg-fondo">
                 <Ilu il={p.il} className="size-[74%]" />
@@ -120,7 +120,7 @@ export function OrderDrawer() {
                     <span className="font-bold text-ambar"> · sin stock acá</span>
                   )}
                 </div>
-                <div className="num mt-[5px] text-[1rem] font-extrabold">{clp(p.p * c)}</div>
+                <div className="num mt-[5px] text-[1rem] font-extrabold">{clp(precio * c)}</div>
               </div>
               <div className="flex shrink-0 items-center overflow-hidden rounded-full border-2 border-linea">
                 <button

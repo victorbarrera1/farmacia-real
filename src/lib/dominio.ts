@@ -142,7 +142,19 @@ export function sanearProducto(v: unknown): Producto | null {
     ...(bool(o.frio) ? { frio: true } : {}),
     ...(txt(o.desc, '', MAX_DESC) ? { desc: txt(o.desc, '', MAX_DESC) } : {}),
     st: Array.isArray(o.st) ? o.st.map((u) => entero(u)) : [],
+    /* Visible salvo que se diga explícitamente lo contrario. */
+    vis: Array.isArray(o.vis) ? o.vis.map((x) => x !== false) : [],
+    /* null = sin precio especial: la sucursal usa el precio global. */
+    px: Array.isArray(o.px) ? o.px.map(precioEspecial) : [],
   };
+}
+
+/** Un precio por sucursal válido, o null si no hay precio especial. */
+export function precioEspecial(v: unknown): number | null {
+  if (v === null || v === undefined || v === '') return null;
+  const n = typeof v === 'number' ? v : Number(v);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  return Math.min(MAX_PRECIO, Math.trunc(n));
 }
 
 /** Sanea una lista descartando lo inválido y los ids repetidos. */
@@ -168,20 +180,27 @@ export const sanearSucursales = (v: unknown): Sucursal[] => sanearLista(v, sanea
 /* ---------------------- invariante de st[] --------------------- */
 
 /**
- * INVARIANTE CENTRAL: `producto.st` está alineado por posición con la lista
- * de sucursales. Acá se rellena con 0 o se recorta lo que sobre.
+ * INVARIANTE CENTRAL: `st`, `vis` y `px` están alineados por posición con la
+ * lista de sucursales. Acá se rellena lo que falte (0 unidades, visible, sin
+ * precio especial) y se recorta lo que sobre.
  */
 export function alinearStock(productos: Producto[], nSuc: number): Producto[] {
   return productos.map((p) => {
-    if (p.st.length === nSuc) return p;
-    return { ...p, st: Array.from({ length: nSuc }, (_, i) => p.st[i] ?? 0) };
+    if (p.st.length === nSuc && p.vis.length === nSuc && p.px.length === nSuc) return p;
+    return {
+      ...p,
+      st: Array.from({ length: nSuc }, (_, i) => p.st[i] ?? 0),
+      vis: Array.from({ length: nSuc }, (_, i) => p.vis[i] !== false),
+      px: Array.from({ length: nSuc }, (_, i) => p.px[i] ?? null),
+    };
   });
 }
 
 /**
- * Reindexa el stock cuando cambia la lista de sucursales: cada producto
- * conserva sus unidades por *id* de sucursal, las nuevas entran con 0 y las
- * eliminadas pierden su posición.
+ * Reindexa stock, visibilidad y precios cuando cambia la lista de sucursales:
+ * cada producto conserva sus valores por *id* de sucursal, las nuevas entran
+ * con 0 unidades / visible / sin precio especial, y las eliminadas pierden su
+ * posición.
  */
 export function reindexarStock(
   productos: Producto[],
@@ -191,14 +210,32 @@ export function reindexarStock(
   if (idsAntes.length === idsDespues.length && idsAntes.every((id, i) => id === idsDespues[i])) {
     return alinearStock(productos, idsDespues.length);
   }
-  return productos.map((p) => ({
-    ...p,
-    st: idsDespues.map((id) => {
-      const i = idsAntes.indexOf(id);
-      return i >= 0 ? p.st[i] ?? 0 : 0;
-    }),
-  }));
+  return productos.map((p) => {
+    const posiciones = idsDespues.map((id) => idsAntes.indexOf(id));
+    return {
+      ...p,
+      st: posiciones.map((i) => (i >= 0 ? p.st[i] ?? 0 : 0)),
+      vis: posiciones.map((i) => (i >= 0 ? p.vis[i] !== false : true)),
+      px: posiciones.map((i) => (i >= 0 ? p.px[i] ?? null : null)),
+    };
+  });
 }
+
+/* ------------------ precio y visibilidad por sucursal ---------- */
+
+/**
+ * PRECIO EFECTIVO de un producto en una posición de sucursal: el precio
+ * especial del local si existe, o el precio global. Único punto de cálculo,
+ * para que tienda, panel y mensajes de WhatsApp muestren siempre lo mismo.
+ */
+export const precioEnPos = (p: Producto, idx: number): number => p.px[idx] ?? p.p;
+
+/** ¿Se muestra el producto en la tienda de esa sucursal? */
+export const visibleEnPos = (p: Producto, idx: number): boolean => p.vis[idx] !== false;
+
+/** ¿Tiene precio especial (distinto del global) en esa sucursal? */
+export const tienePrecioEspecial = (p: Producto, idx: number): boolean =>
+  p.px[idx] !== null && p.px[idx] !== undefined && p.px[idx] !== p.p;
 
 /* --------------------- controles de calidad -------------------- */
 
@@ -340,5 +377,76 @@ export function ajustarStockEn(c: Catalogo, id: string, idx: number, delta: numb
       st[idx] = entero((st[idx] ?? 0) + d);
       return { ...p, st };
     }),
+  });
+}
+
+/** Muestra u oculta un producto en la tienda de una sucursal. */
+export function fijarVisibilidadEn(
+  c: Catalogo,
+  id: string,
+  idx: number,
+  visible: boolean,
+): Catalogo {
+  if (idx < 0 || idx >= c.sucursales.length) return c;
+  const limpio = sanearId(id, 48);
+  return conVersion({
+    ...c,
+    productos: c.productos.map((p) => {
+      if (p.id !== limpio) return p;
+      const vis = [...p.vis];
+      vis[idx] = visible;
+      return { ...p, vis };
+    }),
+  });
+}
+
+/** Fija (o quita, con null) el precio especial de un producto en una sucursal. */
+export function fijarPrecioEn(
+  c: Catalogo,
+  id: string,
+  idx: number,
+  precio: number | null,
+): Catalogo {
+  if (idx < 0 || idx >= c.sucursales.length) return c;
+  const limpio = sanearId(id, 48);
+  return conVersion({
+    ...c,
+    productos: c.productos.map((p) => {
+      if (p.id !== limpio) return p;
+      const px = [...p.px];
+      px[idx] = precioEspecial(precio);
+      return { ...p, px };
+    }),
+  });
+}
+
+/**
+ * Aplica los cambios que SÍ puede hacer un encargado de sucursal: solo su
+ * posición de `st`, `vis` y `px`. Todo lo demás del producto (nombre, precio
+ * global, categoría…) se ignora, aunque venga en la petición.
+ */
+export function fusionarLocal(c: Catalogo, entrada: unknown, idx: number): Catalogo {
+  if (idx < 0 || idx >= c.sucursales.length) return c;
+  const o = (entrada ?? {}) as Record<string, unknown>;
+  const id = sanearId(o.id, 48);
+  const actual = c.productos.find((p) => p.id === id);
+  if (!actual) return c;
+
+  const st = Array.isArray(o.st) ? entero(o.st[idx]) : actual.st[idx] ?? 0;
+  const vis = Array.isArray(o.vis) ? o.vis[idx] !== false : actual.vis[idx] !== false;
+  const px = Array.isArray(o.px) ? precioEspecial(o.px[idx]) : actual.px[idx] ?? null;
+
+  return conVersion({
+    ...c,
+    productos: c.productos.map((p) =>
+      p.id === id
+        ? {
+            ...p,
+            st: p.st.map((v, i) => (i === idx ? st : v)),
+            vis: p.vis.map((v, i) => (i === idx ? vis : v)),
+            px: p.px.map((v, i) => (i === idx ? px : v)),
+          }
+        : p,
+    ),
   });
 }

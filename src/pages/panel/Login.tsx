@@ -3,27 +3,36 @@ import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Loader2, Lock, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
 import { Icon } from '../../components/icons/Icon';
+import { useSucursales } from '../../hooks/useDatos';
 import type { ModoSesion } from './useAdminSesion';
 
 /** Pantalla de acceso al panel de gestión. */
 export function Login({
   modo,
+  sucursalesConClave,
   onEntrar,
 }: {
   modo: ModoSesion;
+  /** Ids de sucursal con clave propia; vacío = solo admin general. */
+  sucursalesConClave: string[];
   /** Devuelve el mensaje de error, o null si la clave era correcta. */
-  onEntrar: (clave: string) => Promise<string | null>;
+  onEntrar: (clave: string, sucursalId?: string) => Promise<string | null>;
 }) {
+  const sucursales = useSucursales();
   const [clave, setClave] = useState('');
+  const [sucursalId, setSucursalId] = useState('');
   const [ver, setVer] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+
+  /* Solo ofrecemos las sucursales que tienen clave configurada. */
+  const conClave = sucursales.filter((s) => sucursalesConClave.includes(s.id));
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     if (enviando) return;
     setEnviando(true);
-    const fallo = await onEntrar(clave);
+    const fallo = await onEntrar(clave, sucursalId || undefined);
     setError(fallo);
     if (fallo) setClave('');
     setEnviando(false);
@@ -54,7 +63,29 @@ export function Login({
             </div>
           ) : (
             <>
-              <label htmlFor="clave" className="mt-5 block text-[0.86rem] font-bold text-texto">
+              {conClave.length > 0 && (
+                <>
+                  <label htmlFor="alcance" className="mt-5 block text-[0.86rem] font-bold text-texto">
+                    ¿Con qué cuenta entras?
+                  </label>
+                  <select
+                    id="alcance"
+                    value={sucursalId}
+                    onChange={(e) => { setSucursalId(e.target.value); setError(null); }}
+                    className="mt-1.5 h-11 w-full rounded-lg border border-linea bg-white px-3 text-[0.92rem] focus:border-azul focus:outline-none"
+                  >
+                    <option value="">Administración general (todas las sucursales)</option>
+                    {conClave.map((s) => (
+                      <option key={s.id} value={s.id}>Sucursal {s.corto}</option>
+                    ))}
+                  </select>
+                  <span className="mt-1 block text-[0.76rem] text-gris-2">
+                    Cada local edita solo su stock, sus precios y su visibilidad.
+                  </span>
+                </>
+              )}
+
+              <label htmlFor="clave" className="mt-4 block text-[0.86rem] font-bold text-texto">
                 Clave de acceso
               </label>
               <div className="relative mt-1.5 flex items-center">

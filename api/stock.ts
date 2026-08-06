@@ -1,20 +1,23 @@
 import { almacen } from './_lib/almacen.ts';
-import { exigirAdmin } from './_lib/auth.ts';
+import { exigirAcceso } from './_lib/auth.ts';
 import { escribirCatalogo, leerCatalogo } from './_lib/datos.ts';
 import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
 import { ajustarStockEn, fijarStockEn } from '../src/lib/dominio.ts';
 
 /* ================================================================
-   PATCH /api/stock — admin.
+   PATCH /api/stock
    Cuerpo: { id, sucursalId | idx, unidades } → fija el valor
            { id, sucursalId | idx, delta }    → suma/resta
-   Se acepta `sucursalId` (recomendado) o el índice posicional `idx`.
+
+   Alcance: el admin global puede tocar cualquier sucursal; el encargado de
+   un local, solo la suya (cualquier otra → 403).
    ================================================================ */
 export default servir(async (p: Peticion) => {
   if (p.metodo !== 'PATCH') return metodoNoPermitido(['PATCH']);
 
-  const noAutorizado = exigirAdmin(p);
-  if (noAutorizado) return noAutorizado;
+  const guardia = exigirAcceso(p);
+  if (!guardia.ok) return guardia.respuesta;
+  const { acceso } = guardia;
 
   const a = almacen();
   if (!a) return fallo(503, 'Almacén no configurado', { configurar: true });
@@ -31,6 +34,10 @@ export default servir(async (p: Peticion) => {
       : Number(cuerpo.idx);
   if (!Number.isInteger(idx) || idx < 0 || idx >= actual.sucursales.length) {
     return fallo(400, 'Sucursal no encontrada (usa sucursalId o un idx válido)');
+  }
+
+  if (!acceso.admin && actual.sucursales[idx].id !== acceso.sucursalId) {
+    return fallo(403, 'Solo puedes modificar el stock de tu sucursal');
   }
   if (!actual.productos.some((x) => x.id === id)) return fallo(404, 'Producto no encontrado');
 

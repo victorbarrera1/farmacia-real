@@ -10,11 +10,12 @@ import { clp, sinTildes } from '../../lib/format';
 import { nivelDe } from '../../lib/stock';
 import { useProductos, useSucursales } from '../../hooks/useDatos';
 import { ProductoForm } from './ProductoForm';
+import type { Alcance } from './useAdminSesion';
 
 const ET_CAT = (id: string) => CATEGORIAS.find((c) => c.id === id)?.et ?? id;
 
 /** Pestaña de administración del catálogo: crear, editar y eliminar productos. */
-export function ProductosAdmin() {
+export function ProductosAdmin({ alcance }: { alcance: Alcance }) {
   const productos = useProductos();
   const sucursales = useSucursales();
   const [busqueda, setBusqueda] = useState('');
@@ -62,8 +63,9 @@ export function ProductosAdmin() {
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-linea p-5">
         <div>
           <h3 className="text-[1rem] font-extrabold">Catálogo</h3>
-          <p className="mt-0.5 text-[0.82rem] text-gris">
+          <p className="mt-0.5 max-w-[70ch] text-[0.82rem] text-gris">
             {filas.length} de {productos.length} productos
+            {!alcance.admin && ' · vista de consulta: el catálogo, los nombres y el precio de lista los define la administración general'}
           </p>
         </div>
 
@@ -89,18 +91,22 @@ export function ProductosAdmin() {
               <option key={c.id} value={c.id}>{c.et}</option>
             ))}
           </select>
-          <button
-            type="button"
-            onClick={() => {
-              if (confirm('¿Restaurar el catálogo original y descartar todas las ediciones?')) restaurarProductos();
-            }}
-            className="flex h-11 items-center gap-2 rounded-lg border border-linea bg-white px-3.5 text-[0.88rem] font-bold text-gris transition-colors hover:border-azul hover:text-azul"
-          >
-            <RotateCcw className="size-4" aria-hidden="true" /> Restaurar catálogo
-          </button>
-          <button type="button" onClick={nuevo} className="flex h-11 items-center gap-2 rounded-lg bg-azul px-4 text-[0.9rem] font-bold text-white transition-colors hover:bg-azul-osc">
-            <Plus className="size-[18px]" aria-hidden="true" /> Nuevo producto
-          </button>
+          {alcance.admin && (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm('¿Restaurar el catálogo original y descartar todas las ediciones?')) restaurarProductos();
+                }}
+                className="flex h-11 items-center gap-2 rounded-lg border border-linea bg-white px-3.5 text-[0.88rem] font-bold text-gris transition-colors hover:border-azul hover:text-azul"
+              >
+                <RotateCcw className="size-4" aria-hidden="true" /> Restaurar catálogo
+              </button>
+              <button type="button" onClick={nuevo} className="flex h-11 items-center gap-2 rounded-lg bg-azul px-4 text-[0.9rem] font-bold text-white transition-colors hover:bg-azul-osc">
+                <Plus className="size-[18px]" aria-hidden="true" /> Nuevo producto
+              </button>
+            </>
+          )}
         </div>
       </header>
 
@@ -158,7 +164,12 @@ export function ProductosAdmin() {
                     </span>
                   </td>
                   <td className="px-5 py-3">
-                    {porBorrar === p.id ? (
+                    {!alcance.admin ? (
+                      <span className="block text-right text-[0.8rem] text-gris-2">
+                        Edita precio, stock y visibilidad de tu local en{' '}
+                        <b className="font-bold text-gris">Precios y visibilidad</b>
+                      </span>
+                    ) : porBorrar === p.id ? (
                       <div className="flex items-center justify-end gap-2">
                         <span className="text-[0.8rem] font-semibold text-gris">¿Eliminar?</span>
                         <button

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  BarChart3, Boxes, Loader2, MapPin, Package, ReceiptText, ShoppingCart, Store, type LucideIcon,
+  BarChart3, Boxes, Loader2, MapPin, Package, ReceiptText, ShoppingCart, Store, Tags,
+  type LucideIcon,
 } from 'lucide-react';
 import { SvgSprite } from '../../components/icons/SvgSprite';
 import { PanelHeader } from './PanelHeader';
 import { PanelEstado } from './PanelEstado';
 import { Login } from './Login';
-import { useAdminSesion, type ModoSesion } from './useAdminSesion';
+import { useAdminSesion, type Alcance, type ModoSesion } from './useAdminSesion';
 import { ScopeFilter } from './ScopeFilter';
 import { KpiTiles } from './KpiTiles';
 import { CategoryBars } from './CategoryBars';
@@ -19,23 +20,27 @@ import { ProductosAdmin } from './ProductosAdmin';
 import { CatalogoIO } from './CatalogoIO';
 import { SucursalesAdmin } from './SucursalesAdmin';
 import { PedidosAdmin } from './PedidosAdmin';
+import { AjustesLocal } from './AjustesLocal';
 import { resumen, porCategoria, alertas, type Scope } from './metrics';
 import { porSucursal, topPedidos } from './analytics';
 import { usePedidosRegistrados, useProductos, useSucursales } from '../../hooks/useDatos';
+import { hidratarPedidos } from '../../lib/pedidosLog';
 
-type Pestana = 'resumen' | 'productos' | 'sucursales' | 'stock' | 'pedidos';
+type Pestana = 'resumen' | 'productos' | 'local' | 'sucursales' | 'stock' | 'pedidos';
 
-const PESTANAS: { id: Pestana; et: string; ico: LucideIcon }[] = [
+/** `soloAdmin` marca las secciones que un encargado de local no puede abrir. */
+const PESTANAS: { id: Pestana; et: string; ico: LucideIcon; soloAdmin?: boolean }[] = [
   { id: 'resumen', et: 'Resumen', ico: BarChart3 },
   { id: 'productos', et: 'Productos', ico: Package },
-  { id: 'sucursales', et: 'Sucursales', ico: MapPin },
+  { id: 'local', et: 'Precios y visibilidad', ico: Tags },
   { id: 'stock', et: 'Stock', ico: Boxes },
+  { id: 'sucursales', et: 'Sucursales', ico: MapPin, soloAdmin: true },
   { id: 'pedidos', et: 'Pedidos', ico: ReceiptText },
 ];
 
 /** Panel de gestión: protegido por clave y dividido en pestañas. */
 export function Panel() {
-  const { autorizado, modo, entrar, salir } = useAdminSesion();
+  const { autorizado, modo, alcance, sucursalesConClave, entrar, salir } = useAdminSesion();
 
   useEffect(() => {
     document.title = 'Panel de gestión · Farmacias Real';
@@ -55,26 +60,37 @@ export function Panel() {
     return (
       <>
         <SvgSprite />
-        <Login modo={modo} onEntrar={entrar} />
+        <Login modo={modo} sucursalesConClave={sucursalesConClave} onEntrar={entrar} />
       </>
     );
   }
 
-  return <PanelAdmin modo={modo} onSalir={salir} />;
+  return <PanelAdmin modo={modo} alcance={alcance ?? { admin: true, sucursalId: '' }} onSalir={salir} />;
 }
 
-function PanelAdmin({ modo, onSalir }: { modo: ModoSesion; onSalir: () => void }) {
+function PanelAdmin({
+  modo, alcance, onSalir,
+}: {
+  modo: ModoSesion;
+  alcance: Alcance;
+  onSalir: () => void;
+}) {
   const [pestana, setPestana] = useState<Pestana>('resumen');
+  const pestanas = PESTANAS.filter((t) => alcance.admin || !t.soloAdmin);
+
+  /* El historial de reservas alimenta el Resumen y la pestaña Pedidos. Con
+     backend viene de GET /api/pedidos, ya filtrado por alcance en el servidor. */
+  useEffect(() => { hidratarPedidos().catch(() => undefined); }, []);
 
   return (
     <div className="min-h-screen bg-fondo pb-16">
       <SvgSprite />
-      <PanelHeader onSalir={onSalir} />
+      <PanelHeader alcance={alcance} onSalir={onSalir} />
 
       <div className="border-b border-linea bg-white">
         <div className="env">
           <div role="tablist" aria-label="Secciones del panel" className="flex gap-1 overflow-x-auto">
-            {PESTANAS.map(({ id, et, ico: Ico }) => {
+            {pestanas.map(({ id, et, ico: Ico }) => {
               const activa = id === pestana;
               return (
                 <button
@@ -100,23 +116,28 @@ function PanelAdmin({ modo, onSalir }: { modo: ModoSesion; onSalir: () => void }
       </div>
 
       <main className="env py-6" id={`panel-${pestana}`} role="tabpanel" aria-labelledby={`tab-${pestana}`}>
-        <PanelEstado modo={modo} />
+        <PanelEstado modo={modo} alcance={alcance} />
 
-        {pestana === 'resumen' && <Resumen />}
+        {pestana === 'resumen' && <Resumen alcance={alcance} />}
         {pestana === 'productos' && (
           <div className="flex flex-col gap-3">
-            <ProductosAdmin />
-            <CatalogoIO />
+            <ProductosAdmin alcance={alcance} />
+            {alcance.admin && <CatalogoIO />}
           </div>
         )}
-        {pestana === 'sucursales' && <SucursalesAdmin />}
+        {pestana === 'local' && <AjustesLocal alcance={alcance} />}
+        {pestana === 'sucursales' && alcance.admin && <SucursalesAdmin />}
         {pestana === 'stock' && (
           <>
             <Titulo
               titulo="Control de stock"
-              bajada="Matriz producto × sucursal. Lo que ajustes acá es exactamente lo que ve la tienda."
+              bajada={
+                alcance.admin
+                  ? 'Matriz producto × sucursal. Lo que ajustes acá es exactamente lo que ve la tienda.'
+                  : 'Unidades de tu local. Lo que ajustes acá es lo que ve la tienda de tu sucursal.'
+              }
             />
-            <StockTable />
+            <StockTable alcance={alcance} />
           </>
         )}
         {pestana === 'pedidos' && (
@@ -143,11 +164,12 @@ function Titulo({ titulo, bajada }: { titulo: string; bajada: string }) {
 }
 
 /** Pestaña de métricas, calculadas sobre el catálogo y el stock reales. */
-function Resumen() {
+function Resumen({ alcance }: { alcance: Alcance }) {
   const productos = useProductos();
   const sucursales = useSucursales();
   const pedidos = usePedidosRegistrados();
-  const [scope, setScope] = useState<Scope>('todas');
+  /* El encargado de un local siempre ve su propio ámbito. */
+  const [scope, setScope] = useState<Scope>(alcance.admin ? 'todas' : alcance.sucursalId);
 
   const ambito =
     scope === 'todas' ? 'Todas las sucursales' : sucursales.find((s) => s.id === scope)?.corto ?? '';
@@ -165,9 +187,11 @@ function Resumen() {
         bajada="Valor, unidades, stock bajo y quiebres calculados sobre el stock real. La demanda sale del historial de reservas enviadas por WhatsApp; si no hay ninguna, se muestra «sin datos»."
       />
 
-      <div className="mb-6">
-        <ScopeFilter scope={scope} onChange={setScope} />
-      </div>
+      {alcance.admin && (
+        <div className="mb-6">
+          <ScopeFilter scope={scope} onChange={setScope} />
+        </div>
+      )}
 
       <div className="flex flex-col gap-3">
         <KpiTiles r={r} ambito={ambito} />

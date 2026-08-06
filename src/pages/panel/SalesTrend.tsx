@@ -18,7 +18,7 @@ export function SalesTrend() {
         <div>
           <h3 className="text-[1rem] font-extrabold">Unidades pedidas por día</h3>
           <p className="mt-0.5 text-[0.82rem] text-gris">
-            Últimos 14 días · reservas enviadas por WhatsApp
+            Últimos 14 días · reservas enviadas por WhatsApp (GET /api/pedidos)
           </p>
         </div>
         <div>
@@ -32,8 +32,7 @@ export function SalesTrend() {
       {total === 0 ? (
         <p className="rounded-xl border border-dashed border-linea bg-fondo px-4 py-10 text-center text-[0.9rem] text-gris">
           <b className="block font-extrabold text-texto">Sin datos aún</b>
-          Cuando se envíen pedidos por WhatsApp desde la tienda, la tendencia aparecerá acá.
-          {/* TODO(api): alimentar con ventas reales del backend. */}
+          Cuando se envíen reservas por WhatsApp desde la tienda, la tendencia aparecerá acá.
         </p>
       ) : (
         <AreaChart serie={serie} formato={(n) => `${n.toLocaleString('es-CL')} u.`} />

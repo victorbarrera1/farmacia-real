@@ -23,6 +23,10 @@ const COLUMNAS_BASE = [
 
 /** Encabezado de stock por sucursal: `stock_<id>`. */
 const columnaStock = (s: Sucursal): string => `stock_${s.id}`;
+/** Precio propio de la sucursal (vacío = usa el precio de lista). */
+const columnaPrecio = (s: Sucursal): string => `precio_${s.id}`;
+/** Visibilidad en la tienda de esa sucursal (`si` / `no`). */
+const columnaVisible = (s: Sucursal): string => `visible_${s.id}`;
 
 const escapar = (v: string | number | undefined): string => {
   const t = String(v ?? '');
@@ -34,12 +38,19 @@ const si = (v: boolean | undefined): string => (v ? 'si' : '');
 /* ---------------------------- exportar ------------------------- */
 
 export function aCsv(productos: Producto[], sucursales: Sucursal[]): string {
-  const cabecera = [...COLUMNAS_BASE, ...sucursales.map(columnaStock)];
+  const cabecera = [
+    ...COLUMNAS_BASE,
+    ...sucursales.flatMap((s) => [columnaStock(s), columnaPrecio(s), columnaVisible(s)]),
+  ];
   const filas = productos.map((p) =>
     [
       p.id, p.n, p.pres, p.lab, p.act, p.cat, p.il, p.p,
       si(p.be), si(p.rec), si(p.frio), p.desc ?? '',
-      ...sucursales.map((_, i) => p.st[i] ?? 0),
+      ...sucursales.flatMap((_, i) => [
+        p.st[i] ?? 0,
+        p.px[i] ?? '',
+        p.vis[i] === false ? 'no' : 'si',
+      ]),
     ]
       .map(escapar)
       .join(';'),
@@ -76,6 +87,20 @@ const detectarSeparador = (cabecera: string): string => {
   candidatos[0]);
 };
 
+/**
+ * Normaliza un encabezado conservando los guiones bajos: `Stock Sevilla` y
+ * `stock_sevilla` deben apuntar a la misma columna. No sirve `sanearId`, que
+ * convierte `_` en `-` (es para ids, no para nombres de columna).
+ */
+const normalizarCabecera = (c: string): string =>
+  c
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]/g, '');
+
 const verdadero = (v: string): boolean =>
   ['si', 'sí', 'x', '1', 'true', 'verdadero'].includes(v.trim().toLowerCase());
 
@@ -105,8 +130,17 @@ export function desdeCsv(texto: string, sucursales: Sucursal[]): ResultadoCsv {
   if (lineas.length < 2) return { productos: [], errores: ['El archivo está vacío.'], avisos };
 
   const sep = detectarSeparador(lineas[0]);
-  const cabecera = partir(lineas[0], sep).map((c) => sanearId(c.replace(/\s+/g, '_'), 60));
+  const cabecera = partir(lineas[0], sep).map(normalizarCabecera);
   const col = (nombre: string): number => cabecera.indexOf(nombre);
+
+  /* `activo` es el alias corto de `principio_activo` (así lo pide la plantilla). */
+  const colAlias = (...nombres: string[]): number => {
+    for (const n of nombres) {
+      const i = col(n);
+      if (i >= 0) return i;
+    }
+    return -1;
+  };
 
   const iNombre = col('nombre');
   if (iNombre < 0) {
@@ -118,11 +152,16 @@ export function desdeCsv(texto: string, sucursales: Sucursal[]): ResultadoCsv {
   }
 
   /* Mapa columna→posición de sucursal, por id y también por nombre corto. */
-  const columnasStock = sucursales.map((s, i) => {
-    let indice = col(columnaStock(s));
-    if (indice < 0) indice = col(sanearId(`stock_${s.corto.replace(/\s+/g, '_')}`, 60));
-    if (indice < 0) avisos.push(`Sin columna de stock para ${s.corto}: queda en 0.`);
-    return { indice, posicion: i };
+  const porSucursal = sucursales.map((s, i) => {
+    let stock = col(columnaStock(s));
+    if (stock < 0) stock = col(normalizarCabecera(`stock ${s.corto}`));
+    if (stock < 0) avisos.push(`Sin columna de stock para ${s.corto}: queda en 0.`);
+    return {
+      posicion: i,
+      stock,
+      precio: col(columnaPrecio(s)),
+      visible: col(columnaVisible(s)),
+    };
   });
 
   const vistos = new Set<string>();
@@ -155,8 +194,18 @@ export function desdeCsv(texto: string, sucursales: Sucursal[]): ResultadoCsv {
     if (!precio) avisos.push(`Fila ${fila}: precio 0 o ilegible en "${nombre}".`);
 
     const st = sucursales.map(() => 0);
-    columnasStock.forEach(({ indice, posicion }) => {
-      if (indice >= 0) st[posicion] = numero(celdas[indice] ?? '');
+    const px: (number | null)[] = sucursales.map(() => null);
+    const vis = sucursales.map(() => true);
+    porSucursal.forEach(({ posicion, stock, precio, visible }) => {
+      if (stock >= 0) st[posicion] = numero(celdas[stock] ?? '');
+      if (precio >= 0) {
+        const bruto = (celdas[precio] ?? '').trim();
+        px[posicion] = bruto ? numero(bruto) || null : null;
+      }
+      if (visible >= 0) {
+        const bruto = (celdas[visible] ?? '').trim();
+        if (bruto) vis[posicion] = verdadero(bruto);
+      }
     });
 
     const limpio = sanearProducto({
@@ -164,7 +213,9 @@ export function desdeCsv(texto: string, sucursales: Sucursal[]): ResultadoCsv {
       n: nombre,
       pres: col('presentacion') >= 0 ? celdas[col('presentacion')] : '',
       lab: col('laboratorio') >= 0 ? celdas[col('laboratorio')] : '',
-      act: col('principio_activo') >= 0 ? celdas[col('principio_activo')] : '',
+      act: colAlias('principio_activo', 'activo') >= 0
+        ? celdas[colAlias('principio_activo', 'activo')]
+        : '',
       cat,
       il,
       p: precio,
@@ -173,6 +224,8 @@ export function desdeCsv(texto: string, sucursales: Sucursal[]): ResultadoCsv {
       frio: col('frio') >= 0 && verdadero(celdas[col('frio')] ?? ''),
       desc: col('descripcion') >= 0 ? celdas[col('descripcion')] : '',
       st,
+      px,
+      vis,
     });
 
     if (limpio) productos.push(limpio);
@@ -181,6 +234,40 @@ export function desdeCsv(texto: string, sucursales: Sucursal[]): ResultadoCsv {
 
   if (!productos.length) errores.push('No se pudo leer ningún producto válido.');
   return { productos, errores, avisos };
+}
+
+/* --------------------------- plantilla ------------------------- */
+
+/**
+ * Plantilla vacía para cargar el catálogo desde Excel: cabecera con las
+ * columnas exactas, dos filas de ejemplo y las categorías válidas al pie
+ * (como comentario, para que el dueño no tenga que adivinarlas).
+ */
+export function plantillaCsv(sucursales: Sucursal[]): string {
+  const cabecera = [
+    ...COLUMNAS_BASE,
+    ...sucursales.flatMap((s) => [columnaStock(s), columnaPrecio(s), columnaVisible(s)]),
+  ];
+  const ejemplo = (n: string, pres: string, lab: string, act: string, cat: string, precio: number, rec: string) =>
+    [
+      '', n, pres, lab, act, cat, 'caja', precio, '', rec, '', '',
+      ...sucursales.flatMap(() => ['0', '', 'si']),
+    ]
+      .map(escapar)
+      .join(';');
+
+  return [
+    `\uFEFF${cabecera.join(';')}`,
+    ejemplo('Paracetamol 500 mg', '20 comprimidos', 'Laboratorio Chile', 'Paracetamol', 'medicamentos', 1290, ''),
+    ejemplo('Amoxicilina 500 mg', '21 cápsulas', 'Saval', 'Amoxicilina', 'medicamentos', 5490, 'si'),
+    '',
+    `# categorias validas: ${CATEGORIAS_VALIDAS.join(' | ')}`,
+    `# ilustraciones: ${ILUSTRACIONES.join(' | ')}`,
+    '# bioequivalente / receta / frio: escribe "si" o dejalo en blanco',
+    '# precio_<sucursal> en blanco = usa el precio de lista; visible_<sucursal>: si / no',
+    '# la columna id puede ir vacia: se genera desde el nombre',
+    '',
+  ].join('\n');
 }
 
 /* --------------------------- respaldo -------------------------- */

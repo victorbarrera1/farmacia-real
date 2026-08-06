@@ -1,5 +1,5 @@
 import { almacen } from './_lib/almacen.ts';
-import { exigirAdmin } from './_lib/auth.ts';
+import { exigirAcceso, exigirAdmin } from './_lib/auth.ts';
 import { agregarPedido, borrarPedidos, eliminarPedido, leerPedidos } from './_lib/datos.ts';
 import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http.ts';
 
@@ -7,8 +7,8 @@ import { fallo, metodoNoPermitido, ok, servir, type Peticion } from './_lib/http
    /api/pedidos — historial de reservas enviadas por WhatsApp.
      POST   → público: la tienda registra la reserva que el visitante envió.
               No es una venta ni un pago: es el registro de la cotización.
-     GET    → admin: historial completo.
-     DELETE → admin: ?id=<id> o ?todos=1
+     GET    → admin global: todas. Encargado de local: solo las de su sucursal.
+     DELETE → solo admin global: ?id=<id> o ?todos=1
    Sin datos personales: solo productos, cantidades, total y sucursal.
    ================================================================ */
 export default servir(async (p: Peticion) => {
@@ -21,15 +21,24 @@ export default servir(async (p: Peticion) => {
     return { estado: 201, datos: { ok: true, pedido } };
   }
 
-  if (p.metodo !== 'GET' && p.metodo !== 'DELETE') {
-    return metodoNoPermitido(['GET', 'POST', 'DELETE']);
+  if (p.metodo === 'GET') {
+    const guardia = exigirAcceso(p);
+    if (!guardia.ok) return guardia.respuesta;
+    if (!a) return fallo(503, 'Almacén no configurado', { configurar: true });
+
+    const todos = await leerPedidos(a);
+    const { admin, sucursalId } = guardia.acceso;
+    return ok({
+      pedidos: admin ? todos : todos.filter((o) => o.sucursalId === sucursalId),
+      alcance: admin ? 'global' : sucursalId,
+    });
   }
+
+  if (p.metodo !== 'DELETE') return metodoNoPermitido(['GET', 'POST', 'DELETE']);
 
   const noAutorizado = exigirAdmin(p);
   if (noAutorizado) return noAutorizado;
   if (!a) return fallo(503, 'Almacén no configurado', { configurar: true });
-
-  if (p.metodo === 'GET') return ok({ pedidos: await leerPedidos(a) });
 
   if (p.parametros.get('todos') === '1') {
     await borrarPedidos(a);

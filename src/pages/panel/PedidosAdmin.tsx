@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ChevronDown, Inbox, Trash2 } from 'lucide-react';
 import { clp } from '../../lib/format';
-import { borrarHistorial, eliminarPedido, hidratarPedidos } from '../../lib/pedidosLog';
+import { borrarHistorial, eliminarPedido } from '../../lib/pedidosLog';
 import { usePedidosRegistrados } from '../../hooks/useDatos';
 import { resumenPedidos } from './analytics';
 
@@ -15,9 +15,6 @@ export function PedidosAdmin() {
   const pedidos = usePedidosRegistrados();
   const [abierto, setAbierto] = useState<string | null>(null);
   const r = useMemo(() => resumenPedidos(pedidos), [pedidos]);
-
-  /* Con backend, el historial es el del servidor (todas las visitas). */
-  useEffect(() => { hidratarPedidos().catch(() => undefined); }, []);
 
   return (
     <div className="flex flex-col gap-3">

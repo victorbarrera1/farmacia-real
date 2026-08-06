@@ -27,8 +27,9 @@ proyecto que la tienda. Sin frameworks ni SDKs: solo `fetch` y `node:crypto`.
 |---|---|---|
 | `KV_REST_API_URL` | Redis REST | Vercel → Storage → crear KV/Upstash (las inyecta solas) |
 | `KV_REST_API_TOKEN` | Redis REST | idem |
-| `ADMIN_PASS_HASH` | hash scrypt de la clave del panel | `npm run clave` |
+| `ADMIN_PASS_HASH` | hash scrypt del admin general | `npm run clave -- "Clave"` |
 | `ADMIN_SESSION_SECRET` | firma HMAC de la cookie de sesión | `npm run clave` |
+| `SUCURSAL_PASS_HASHES` | JSON `{ "<sucursalId>": "scrypt:…" }` con la clave de cada local | `npm run clave -- --sucursales` |
 | `ALMACEN=archivo` | (opcional, local) fuerza el driver de archivos en `.data/` | — |
 
 También se aceptan `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`.
@@ -54,23 +55,25 @@ Capacidades del backend. Lo usa el cliente para decidir si trabaja contra la
 API o en modo local. No revela secretos.
 
 ```json
-{ "ok": true, "api": true, "version": 1,
+{ "ok": true, "api": true, "version": 2,
   "almacen": "kv" | "archivo" | "sin-configurar",
-  "auth": true, "sesion": false }
+  "auth": true, "sesion": false, "admin": false, "sucursalId": "",
+  "sucursalesConClave": ["sevilla"] }
 ```
 
 ### `GET /api/sesion` · `POST /api/sesion` · `DELETE /api/sesion`
 
 ```http
 POST /api/sesion
-{ "clave": "…" }
-→ 200 { "ok": true, "autorizado": true, "exp": 1767312000000 }  + Set-Cookie
+{ "clave": "…", "sucursalId": "sevilla" }   // sucursalId opcional
+→ 200 { "ok": true, "autorizado": true, "exp": 1767312000000,
+        "admin": false, "sucursalId": "sevilla" }  + Set-Cookie
 → 401 { "ok": false, "error": "Clave incorrecta" }
 → 429 { "ok": false, "error": "Demasiados intentos…" }
 → 503 { "ok": false, "error": "Autenticación no configurada…", "configurar": true }
 ```
 
-`GET` → `{ ok, autorizado, exp }` · `DELETE` → borra la cookie.
+`GET` → `{ ok, autorizado, exp, admin, sucursalId }` · `DELETE` → borra la cookie.
 
 ### `GET /api/catalogo` — público
 Lo que lee la tienda en una sola llamada.
@@ -89,18 +92,23 @@ lista o si quedaría sin sucursales.
 `restaurar` | `restaurarProductos` | `restaurarSucursales` → vuelve a los datos
 de fábrica de `src/data/`.
 
-### `GET /api/productos` — público · `PUT` / `DELETE` — admin
+### `GET /api/productos` — público · `PUT` — admin o local · `DELETE` — solo admin
 
 ```http
 PUT /api/productos
 { "id": "p0", "n": "Paracetamol 500 mg", "pres": "20 comprimidos",
   "lab": "Laboratorio Chile", "act": "Paracetamol", "cat": "medicamentos",
-  "il": "caja", "p": 1290, "be": true, "st": [38, 24, 31, 19] }
+  "il": "caja", "p": 1290, "be": true,
+  "st":  [38, 24, 31, 19],          // unidades por sucursal
+  "vis": [true, false, true, true], // visible en la tienda de esa sucursal
+  "px":  [null, 990, null, null] }  // precio propio; null = usa `p`
 → 200 { "ok": true, "productos": [...], "version": … }
-
-DELETE /api/productos?id=p0
-→ 200 { "ok": true, "productos": [...] } · 404 si no existe
 ```
+
+Un **encargado de local** puede llamar este `PUT`, pero el servidor solo toma
+`st`, `vis` y `px` **de su posición** (ver `fusionarLocal` en `dominio.ts`):
+nombre, precio de lista y categoría se ignoran, y si el producto no existe
+responde `404` (no puede crear). `DELETE` es solo del admin general (`403`).
 
 ### `GET /api/sucursales` — público · `PUT` / `DELETE` — admin
 
@@ -114,21 +122,22 @@ DELETE /api/sucursales?id=nunoa
 → 409 si es la última sucursal
 ```
 
-### `PATCH /api/stock` — admin
+### `PATCH /api/stock` — admin o local
 
 ```json
 { "id": "p0", "sucursalId": "nunoa", "unidades": 42 }
 { "id": "p0", "sucursalId": "nunoa", "delta": -1 }
 ```
 → `{ ok, producto, version }`. También acepta `idx` (índice posicional).
+Un encargado solo puede tocar su propia sucursal: otra → `403`.
 
 ### `/api/pedidos`
 
 | Método | Acceso | Qué hace |
 |---|---|---|
 | `POST` | **público** | La tienda registra la reserva enviada por WhatsApp. `201 { ok, pedido }`. Idempotente por `id`. |
-| `GET` | admin | `{ ok, pedidos: [PedidoRegistrado] }` |
-| `DELETE ?id=…` / `?todos=1` | admin | Borra uno o todo el historial |
+| `GET` | admin / local | `{ ok, pedidos: [...], alcance }`. El local solo ve los de su sucursal |
+| `DELETE ?id=…` / `?todos=1` | solo admin | Borra uno o todo el historial (`403` para un local) |
 
 ```json
 { "id": "o-abc123", "fecha": "2026-08-05T22:10:00.000Z",
@@ -144,8 +153,9 @@ y `unidades` se recalculan en el servidor si no cuadran.
 
 ## Reglas de negocio que hace cumplir el servidor
 
-1. **`producto.st` alineado por posición con `sucursales`.** Alta → nueva
-   posición en `0`; baja → se quita esa posición conservando el resto por id.
+1. **`st`, `vis` y `px` alineados por posición con `sucursales`.** Alta → nueva
+   posición (`0` unidades, visible, sin precio propio); baja → se quita esa
+   posición conservando el resto por id.
 2. **Nunca cero sucursales** (`409`): la tienda no funcionaría.
 3. **Saneamiento de toda la entrada** (`src/lib/dominio.ts`, el mismo módulo
    que usa el navegador): ids a slug, textos con tope de largo, enteros no
@@ -156,14 +166,17 @@ y `unidades` se recalculan en el servidor si no cuadran.
 ## Cómo se prueba
 
 ```bash
-npm run test:api      # 25 pruebas: auth, CRUD, invariante de st[], pedidos, límites
+npm run test:api      # 40 pruebas: auth, alcance por sucursal, CRUD, invariantes
+                      # de st/vis/px, pedidos, saneamiento de importación, límites
 npm run dev           # monta api/ en el dev server (scripts/vite-api-dev.ts)
 curl -s localhost:5173/api/estado | jq
 ```
 
 ## Pendientes conocidos
 
-- Un solo rol de admin. Si el equipo crece, conviene pasar a Postgres +
-  usuarios con roles (y ahí sí evaluar Supabase).
+- Las claves de sucursal viven en una variable de entorno (JSON). Para más
+  usuarios por local, o rotación individual sin redeploy, toca pasar a una
+  tabla de usuarios (Postgres/Neon o Supabase Auth + RLS): la interfaz
+  `Almacen` ya aísla la persistencia.
 - El historial de reservas no distingue visitantes; es un registro de
   cotizaciones, no un CRM.

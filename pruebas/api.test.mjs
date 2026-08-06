@@ -10,15 +10,18 @@
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { scryptSync, randomBytes } from 'node:crypto';
 
 const CLAVE = 'clave-de-prueba-2026';
+const CLAVE_SEVILLA = 'clave-sevilla-2026';
 const N = 16384, r = 8, p = 1;
 const sal = randomBytes(16);
 const hash = scryptSync(CLAVE, sal, 32, { N, r, p });
+const salSuc = randomBytes(16);
+const hashSuc = scryptSync(CLAVE_SEVILLA, salSuc, 32, { N, r, p });
 
 let dir;
 let servidor;
@@ -34,6 +37,9 @@ before(async () => {
   process.env.ALMACEN_DIR = dir;
   process.env.ADMIN_PASS_HASH = `scrypt:${N}:${r}:${p}:${sal.toString('hex')}:${hash.toString('hex')}`;
   process.env.ADMIN_SESSION_SECRET = randomBytes(32).toString('hex');
+  process.env.SUCURSAL_PASS_HASHES = JSON.stringify({
+    sevilla: `scrypt:${N}:${r}:${p}:${salSuc.toString('hex')}:${hashSuc.toString('hex')}`,
+  });
   delete process.env.VERCEL;
 
   const handlers = {};
@@ -60,12 +66,13 @@ after(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-async function llamar(ruta, { metodo = 'GET', cuerpo, conCookie = true } = {}) {
+async function llamar(ruta, { metodo = 'GET', cuerpo, conCookie = true, cookieExplicita } = {}) {
+  const galleta = cookieExplicita ?? (conCookie ? cookie : '');
   const res = await fetch(`${base}${ruta}`, {
     method: metodo,
     headers: {
       ...(cuerpo !== undefined ? { 'Content-Type': 'application/json' } : {}),
-      ...(conCookie && cookie ? { Cookie: cookie } : {}),
+      ...(galleta ? { Cookie: galleta } : {}),
     },
     body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
   });
@@ -343,5 +350,261 @@ describe('cierre de sesión y límite de intentos', () => {
     const { estado, cabeceras } = await llamar('/api/estado', { metodo: 'POST', cuerpo: {} });
     assert.equal(estado, 405);
     assert.equal(cabeceras.get('allow'), 'GET');
+  });
+});
+
+/* --------------------- alcance por sucursal -------------------- */
+
+describe('login por sucursal y alcance de permisos', () => {
+  let cookieSuc = '';
+
+  /* El caso de fuerza bruta deja la IP con el cupo agotado: lo reiniciamos. */
+  before(async () => {
+    for (const archivo of await readdir(dir)) {
+      if (archivo.startsWith('intentos')) await rm(join(dir, archivo), { force: true });
+    }
+  });
+
+  it('el encargado entra con la clave de su local y el token lleva el alcance', async () => {
+    const { estado, datos, cabeceras } = await llamar('/api/sesion', {
+      metodo: 'POST',
+      conCookie: false,
+      cuerpo: { clave: CLAVE_SEVILLA, sucursalId: 'sevilla' },
+    });
+    assert.equal(estado, 200);
+    assert.equal(datos.admin, false);
+    assert.equal(datos.sucursalId, 'sevilla');
+    cookieSuc = cabeceras.get('set-cookie').split(';')[0];
+
+    const sesion = await llamar('/api/sesion', { cookieExplicita: cookieSuc });
+    assert.equal(sesion.datos.autorizado, true);
+    assert.equal(sesion.datos.admin, false);
+    assert.equal(sesion.datos.sucursalId, 'sevilla');
+  });
+
+  it('la clave de una sucursal no sirve para otra', async () => {
+    const { estado } = await llamar('/api/sesion', {
+      metodo: 'POST',
+      conCookie: false,
+      cuerpo: { clave: CLAVE_SEVILLA, sucursalId: 'nunoa' },
+    });
+    assert.equal(estado, 401);
+  });
+
+  it('/api/estado informa el alcance sin filtrar hashes', async () => {
+    const { datos } = await llamar('/api/estado', { cookieExplicita: cookieSuc });
+    assert.equal(datos.admin, false);
+    assert.equal(datos.sucursalId, 'sevilla');
+    assert.deepEqual(datos.sucursalesConClave, ['sevilla']);
+    assert.equal(JSON.stringify(datos).includes('scrypt'), false);
+  });
+
+  it('puede ajustar el stock de su sucursal', async () => {
+    const { estado, datos } = await llamar('/api/stock', {
+      metodo: 'PATCH',
+      cookieExplicita: cookieSuc,
+      cuerpo: { id: 'p0', sucursalId: 'sevilla', unidades: 17 },
+    });
+    assert.equal(estado, 200);
+    assert.equal(datos.producto.st[1], 17);
+  });
+
+  it('no puede tocar el stock de otra sucursal (403)', async () => {
+    const { estado, datos } = await llamar('/api/stock', {
+      metodo: 'PATCH',
+      cookieExplicita: cookieSuc,
+      cuerpo: { id: 'p0', sucursalId: 'nunoa', unidades: 999 },
+    });
+    assert.equal(estado, 403);
+    assert.match(datos.error, /tu sucursal/i);
+  });
+
+  it('al editar un producto solo cambia st/vis/px de su posición', async () => {
+    const antes = (await llamar('/api/catalogo')).datos.productos.find((x) => x.id === 'p0');
+    const { estado, datos } = await llamar('/api/productos', {
+      metodo: 'PUT',
+      cookieExplicita: cookieSuc,
+      cuerpo: {
+        id: 'p0',
+        n: 'NOMBRE PIRATA',                    // debe ignorarse
+        p: 99999,                              // precio global: debe ignorarse
+        st: [111, 5, 111, 111],                // solo la posición 1 aplica
+        vis: [false, false, false, false],     // solo la posición 1 aplica
+        px: [1, 990, 1, 1],                    // solo la posición 1 aplica
+      },
+    });
+    assert.equal(estado, 200);
+    assert.equal(datos.alcance, 'sucursal');
+    const p0 = datos.productos.find((x) => x.id === 'p0');
+    assert.equal(p0.n, antes.n);
+    assert.equal(p0.p, antes.p);
+    assert.equal(p0.st[1], 5);
+    assert.equal(p0.st[0], antes.st[0]);
+    assert.equal(p0.vis[1], false);
+    assert.equal(p0.vis[0], true);
+    assert.equal(p0.px[1], 990);
+    assert.equal(p0.px[0], null);
+  });
+
+  it('no puede crear productos nuevos (404)', async () => {
+    const { estado } = await llamar('/api/productos', {
+      metodo: 'PUT',
+      cookieExplicita: cookieSuc,
+      cuerpo: { id: 'inventado-qa', n: 'Inventado', st: [1, 1, 1, 1] },
+    });
+    assert.equal(estado, 404);
+  });
+
+  it('no puede borrar productos ni sucursales ni restaurar (403)', async () => {
+    const borrarProducto = await llamar('/api/productos?id=p1', { metodo: 'DELETE', cookieExplicita: cookieSuc });
+    assert.equal(borrarProducto.estado, 403);
+
+    const borrarSucursal = await llamar('/api/sucursales?id=nunoa', { metodo: 'DELETE', cookieExplicita: cookieSuc });
+    assert.equal(borrarSucursal.estado, 403);
+
+    const editarSucursal = await llamar('/api/sucursales', {
+      metodo: 'PUT',
+      cookieExplicita: cookieSuc,
+      cuerpo: { nombre: 'Pirata', direccion: 'x', whatsapp: '56900000000' },
+    });
+    assert.equal(editarSucursal.estado, 403);
+
+    const restaurar = await llamar('/api/catalogo?accion=restaurar', { metodo: 'POST', cookieExplicita: cookieSuc });
+    assert.equal(restaurar.estado, 403);
+
+    const reemplazar = await llamar('/api/catalogo', {
+      metodo: 'PUT',
+      cookieExplicita: cookieSuc,
+      cuerpo: { productos: [], sucursales: [] },
+    });
+    assert.equal(reemplazar.estado, 403);
+  });
+
+  it('solo ve los pedidos de su sucursal', async () => {
+    for (const [id, sucursalId, nombre] of [
+      ['o-sevilla-1', 'sevilla', 'Sevilla 1201'],
+      ['o-nunoa-1', 'nunoa', 'Simón Bolívar 3751'],
+    ]) {
+      await llamar('/api/pedidos', {
+        metodo: 'POST',
+        conCookie: false,
+        cuerpo: { id, sucursalId, sucursalNombre: nombre, items: [{ n: 'X', p: 1000, c: 1 }] },
+      });
+    }
+
+    const suyos = await llamar('/api/pedidos', { cookieExplicita: cookieSuc });
+    assert.equal(suyos.estado, 200);
+    assert.equal(suyos.datos.alcance, 'sevilla');
+    assert.deepEqual(suyos.datos.pedidos.map((o) => o.id), ['o-sevilla-1']);
+
+    const todos = await llamar('/api/pedidos');
+    assert.equal(todos.datos.alcance, 'global');
+    assert.equal(todos.datos.pedidos.length >= 2, true);
+  });
+
+  it('no puede borrar el historial (403)', async () => {
+    const { estado } = await llamar('/api/pedidos?todos=1', { metodo: 'DELETE', cookieExplicita: cookieSuc });
+    assert.equal(estado, 403);
+    await llamar('/api/pedidos?todos=1', { metodo: 'DELETE' });
+  });
+});
+
+/* ------------- invariante de vis/px con las sucursales ---------- */
+
+describe('invariante de vis[] y px[]', () => {
+  it('el catálogo de fábrica trae vis y px alineados', async () => {
+    await llamar('/api/catalogo?accion=restaurar', { metodo: 'POST' });
+    const { datos } = await llamar('/api/catalogo');
+    for (const p of datos.productos) {
+      assert.equal(p.vis.length, 4);
+      assert.equal(p.px.length, 4);
+      assert.deepEqual(p.vis, [true, true, true, true]);
+      assert.deepEqual(p.px, [null, null, null, null]);
+    }
+  });
+
+  it('crear una sucursal agrega posición visible y sin precio especial', async () => {
+    /* Dejamos huella en la sucursal del medio para verificar el reindexado. */
+    await llamar('/api/productos', {
+      metodo: 'PUT',
+      cuerpo: (() => {
+        const base = { id: 'p0', n: 'Paracetamol 500 mg', pres: '20 comprimidos', lab: 'Laboratorio Chile', act: 'Paracetamol', cat: 'medicamentos', il: 'caja', p: 1290 };
+        return { ...base, st: [1, 2, 3, 4], vis: [true, false, true, true], px: [null, 990, null, null] };
+      })(),
+    });
+
+    const { datos } = await llamar('/api/sucursales', {
+      metodo: 'PUT',
+      cuerpo: {
+        nombre: 'Sucursal Vis QA', corto: 'Vis QA', comuna: 'Recoleta',
+        direccion: 'Calle Vis 1', telefono: '+56 9 0000 0000', whatsapp: '56900001111',
+        horario: [{ d: [1], et: 'Lunes', abre: '09:00', cierra: '18:00' }],
+      },
+    });
+    assert.equal(datos.sucursales.length, 5);
+    for (const p of datos.productos) {
+      assert.equal(p.vis.length, 5);
+      assert.equal(p.px.length, 5);
+      assert.equal(p.vis[4], true);
+      assert.equal(p.px[4], null);
+    }
+    const p0 = datos.productos.find((x) => x.id === 'p0');
+    assert.deepEqual(p0.vis.slice(0, 4), [true, false, true, true]);
+    assert.deepEqual(p0.px.slice(0, 4), [null, 990, null, null]);
+  });
+
+  it('eliminar una sucursal conserva vis y px por id', async () => {
+    const { datos } = await llamar('/api/sucursales?id=sevilla', { metodo: 'DELETE' });
+    assert.equal(datos.sucursales.length, 4);
+    const p0 = datos.productos.find((x) => x.id === 'p0');
+    /* Se fue Sevilla (posición 1): las banderas y precios de las otras se mantienen. */
+    assert.deepEqual(p0.vis, [true, true, true, true]);
+    assert.deepEqual(p0.px, [null, null, null, null]);
+    assert.deepEqual(p0.st, [1, 3, 4, 0]);
+    for (const p of datos.productos) {
+      assert.equal(p.vis.length, 4);
+      assert.equal(p.px.length, 4);
+    }
+  });
+});
+
+/* ------------------- saneamiento de importación ----------------- */
+
+describe('PUT /api/catalogo (importación) sanea las filas sucias', () => {
+  it('corrige precios, categorías, visibilidad y precios por sucursal', async () => {
+    await llamar('/api/catalogo?accion=restaurar', { metodo: 'POST' });
+    const { estado, datos } = await llamar('/api/catalogo', {
+      metodo: 'PUT',
+      cuerpo: {
+        sucursales: (await llamar('/api/catalogo')).datos.sucursales,
+        productos: [
+          {
+            id: 'Fila SUCIA #1', n: '  Ibuprofeno  400 mg ', pres: '20 comprimidos',
+            lab: 'Mintlab', act: 'Ibuprofeno', cat: 'no-existe', il: 'ovni',
+            p: -5000, st: ['12', -3, 4.9, null], vis: [false, 'sí', 1, undefined],
+            px: [-100, '990', 0, 'nada'],
+          },
+          { n: 'Sin id ni nada' },      // sin id → se descarta
+          { id: 'vacio', n: '' },       // sin nombre → se descarta
+        ],
+      },
+    });
+
+    assert.equal(estado, 200);
+    assert.equal(datos.productos.length, 1);
+    const p = datos.productos[0];
+    assert.equal(p.id, 'fila-sucia-1');
+    assert.equal(p.n, 'Ibuprofeno 400 mg');
+    assert.equal(p.cat, 'medicamentos');
+    assert.equal(p.il, 'caja');
+    assert.equal(p.p, 0);
+    assert.deepEqual(p.st, [12, 0, 4, 0]);
+    assert.deepEqual(p.vis, [false, true, true, true]);
+    assert.deepEqual(p.px, [null, 990, null, null]);
+  });
+
+  it('deja el catálogo de fábrica listo para las siguientes pruebas', async () => {
+    const { datos } = await llamar('/api/catalogo?accion=restaurar', { metodo: 'POST' });
+    assert.equal(datos.productos.length, 30);
   });
 });

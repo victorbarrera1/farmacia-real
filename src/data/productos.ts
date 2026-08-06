@@ -5,9 +5,10 @@ import type { Producto } from '../types';
    il = ilustración: caja | frasco | tubo | bomba | tarro | paquete |
         aparato | inhalador | sobre
    st = unidades por sucursal → [independencia, sevilla, santamaria, nunoa]
+   vis / px (visibilidad y precio por local) se alinean solos: ver dominio.ts
    El `id` se asigna en runtime (ver useCatalogo / PRODUCTOS_CON_ID).
    ================================================================ */
-const RAW: Omit<Producto, 'id'>[] = [
+const RAW: Omit<Producto, 'id' | 'vis' | 'px'>[] = [
   { n: 'Paracetamol 500 mg', pres: '20 comprimidos', lab: 'Laboratorio Chile', act: 'Paracetamol', cat: 'medicamentos', il: 'caja', p: 1290, be: true, st: [38, 24, 31, 19] },
   { n: 'Ibuprofeno 400 mg', pres: '20 comprimidos', lab: 'Mintlab', act: 'Ibuprofeno', cat: 'medicamentos', il: 'caja', p: 2390, be: true, st: [26, 0, 18, 12] },
   { n: 'Loratadina 10 mg', pres: '10 comprimidos', lab: 'Laboratorio Chile', act: 'Loratadina', cat: 'medicamentos', il: 'caja', p: 1790, be: true, st: [41, 15, 6, 22] },
@@ -45,5 +46,10 @@ const RAW: Omit<Producto, 'id'>[] = [
   { n: 'Cintas para glicemia', pres: 'Caja 50 un.', lab: 'Accu-Chek', act: 'Glicemia', cat: 'equipos', il: 'sobre', p: 23990, frio: true, st: [5, 0, 7, 3] },
 ];
 
-/** Catálogo con id estable asignado por índice (`p0`, `p1`, …). */
-export const PRODUCTOS: Producto[] = RAW.map((p, i) => ({ ...p, id: `p${i}` }));
+/**
+ * Catálogo con id estable asignado por índice (`p0`, `p1`, …).
+ * `vis` y `px` (visibilidad y precio por sucursal) los rellena
+ * `alinearStock` de src/lib/dominio.ts según la cantidad de sucursales:
+ * visible en todas y sin precio especial.
+ */
+export const PRODUCTOS: Producto[] = RAW.map((p, i) => ({ ...p, id: `p${i}`, vis: [], px: [] }));

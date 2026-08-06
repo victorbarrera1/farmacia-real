@@ -1,6 +1,6 @@
 import type { Pedido, Producto, Sucursal } from '../types';
 import { clp } from './format';
-import { stockDe, otrosLocalesCon } from './stock';
+import { stockDe, otrosLocalesCon, precioDe } from './stock';
 import { itemsPedido, totalPedido } from './pedido';
 
 /* ================================================================
@@ -26,7 +26,7 @@ export function msgProducto(p: Producto, suc: Sucursal): string {
   t += `💊 *${p.n}* — ${p.pres}\n${p.lab}`;
   /* Para productos con receta no reforzamos el precio: la información debe
      ser neutral (publicidad de medicamentos con receta está restringida). */
-  if (!p.rec) t += ` · ${clp(p.p)} referencial`;
+  if (!p.rec) t += ` · ${clp(precioDe(p, suc.id))} referencial`;
   t += `\n`;
   if (p.rec) t += `📄 Sé que requiere receta médica y la presento en el local.\n`;
   t += `\n📍 Sucursal: *${suc.nombre}* (${suc.direccion})\n`;
@@ -41,18 +41,18 @@ export function msgProducto(p: Producto, suc: Sucursal): string {
 
 /** Mensaje con la reserva completa (cotización para retiro en tienda). */
 export function msgPedido(pedido: Pedido, suc: Sucursal): string {
-  const items = itemsPedido(pedido);
+  const items = itemsPedido(pedido, suc.id);
   if (!items.length) return msgGeneral(suc);
 
   let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero *cotizar y reservar* estos productos para retirarlos en el local:\n\n`;
-  items.forEach(({ p, c }) => {
+  items.forEach(({ p, c, precio }) => {
     t += `• *${p.n}* — ${p.pres}\n  ${c} ${c === 1 ? 'unidad' : 'unidades'}`;
-    if (!p.rec) t += ` · ${clp(p.p * c)}`;
+    if (!p.rec) t += ` · ${clp(precio * c)}`;
     if (p.rec) t += ` · 📄 requiere receta`;
     if (stockDe(p, suc.id) === 0) t += ` · ⚠️ aparece sin stock en la web`;
     t += `\n`;
   });
-  t += `\n💰 Total referencial: *${clp(totalPedido(pedido))}* (se confirma en caja)\n`;
+  t += `\n💰 Total referencial: *${clp(totalPedido(pedido, suc.id))}* (se confirma en caja)\n`;
   t += `📍 Retiro y pago presencial en la sucursal *${suc.nombre}*\n${suc.direccion}\n`;
 
   /* Si algo falta acá pero sí está en otro local, lo proponemos derecho. */

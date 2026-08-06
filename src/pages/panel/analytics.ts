@@ -1,15 +1,15 @@
 import type { PedidoRegistrado } from '../../lib/pedidosLog';
 
 /* ================================================================
-   ANALÍTICA DE PEDIDOS — sobre el historial local real.
+   ANALÍTICA DE RESERVAS — sobre datos reales.
    ----------------------------------------------------------------
-   Antes esto era demanda inventada. Ahora se calcula sobre los pedidos
-   que se armaron y enviaron por WhatsApp desde este navegador
-   (src/lib/pedidosLog.ts). Si no hay pedidos, los componentes muestran
-   "sin datos" en lugar de números falsos.
+   La fuente es `GET /api/pedidos` (o el historial de este navegador si no
+   hay backend), que el panel hidrata al abrir: nada inventado. El servidor
+   ya filtra por alcance, así que un encargado de local ve la demanda de su
+   sucursal y el admin general la de todas.
 
-   TODO(api): reemplazar por eventos reales del backend (ventas, vistas)
-   cuando exista: GET /api/metricas/ventas?desde=…
+   Si no hay reservas registradas, los componentes muestran "sin datos" en
+   lugar de una curva falsa.
    ================================================================ */
 
 export interface PuntoSerie {

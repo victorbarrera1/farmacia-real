@@ -1,9 +1,9 @@
 import type { Producto, Sucursal } from '../types';
 import { CLAVES } from '../config';
 import {
-  type Catalogo, ILUSTRACIONES, ajustarStockEn, alinearStock, fijarStockEn, idSucursalDesde,
-  nuevoIdProducto as nuevoId, quitarProducto, quitarSucursal, sanearCatalogo, upsertProducto,
-  upsertSucursal,
+  type Catalogo, ILUSTRACIONES, ajustarStockEn, alinearStock, fijarPrecioEn, fijarStockEn,
+  fijarVisibilidadEn, idSucursalDesde, nuevoIdProducto as nuevoId, quitarProducto, quitarSucursal,
+  sanearCatalogo, upsertProducto, upsertSucursal,
 } from '../lib/dominio';
 import { ErrorApi, capacidades, pedir } from '../lib/api';
 import { SUCURSALES as SUCURSALES_ORIGINAL } from './sucursales';
@@ -286,8 +286,31 @@ export function ajustarStock(id: string, idx: number, delta: number): void {
   enviar(() => pedir('/api/stock', { metodo: 'PATCH', cuerpo: { id, sucursalId, delta } }));
 }
 
-/* --------------------------- sucursales ------------------------ */
+/* ------------------ visibilidad y precio por local ------------- */
 
+/**
+ * Muestra u oculta un producto en la tienda de una sucursal.
+ * El encargado del local puede hacerlo sobre su propia posición: el servidor
+ * lo valida (ver api/productos.ts) y solo acepta su `vis`.
+ */
+export function fijarVisibilidad(id: string, idx: number, visible: boolean): void {
+  const siguiente = fijarVisibilidadEn(cat, id, idx, visible);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  const producto = siguiente.productos.find((p) => p.id === id);
+  if (producto) enviar(() => pedir('/api/productos', { metodo: 'PUT', cuerpo: producto }));
+}
+
+/** Fija (o quita, con null) el precio especial de un producto en una sucursal. */
+export function fijarPrecioSucursal(id: string, idx: number, precio: number | null): void {
+  const siguiente = fijarPrecioEn(cat, id, idx, precio);
+  if (siguiente === cat) return;
+  aplicar(siguiente);
+  const producto = siguiente.productos.find((p) => p.id === id);
+  if (producto) enviar(() => pedir('/api/productos', { metodo: 'PUT', cuerpo: producto }));
+}
+
+/* --------------------------- sucursales ------------------------ */
 /** Crea o actualiza una sucursal (upsert por id). Reindexa el stock. */
 export function guardarSucursal(s: Sucursal): void {
   const siguiente = upsertSucursal(cat, s);
@@ -398,6 +421,8 @@ export const productoNuevo = (): Producto => ({
   il: 'caja',
   p: 0,
   st: cat.sucursales.map(() => 0),
+  vis: cat.sucursales.map(() => true),
+  px: cat.sucursales.map(() => null),
 });
 
 /** Sucursal en blanco para el formulario de alta (horario típico). */

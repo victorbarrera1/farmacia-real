@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
-import { Database, Download, FileSpreadsheet, Upload } from 'lucide-react';
+import { Database, Download, FileSpreadsheet, Sheet, Upload } from 'lucide-react';
 import { reemplazarCatalogo } from '../../data/repo';
-import { aCsv, armarRespaldo, desdeCsv, leerRespaldo, type ResultadoCsv } from '../../lib/csv';
+import { aCsv, armarRespaldo, desdeCsv, leerRespaldo, plantillaCsv, type ResultadoCsv } from '../../lib/csv';
 import { sanearSucursales } from '../../lib/dominio';
 import { useProductos, useSucursales } from '../../hooks/useDatos';
 
@@ -85,6 +85,14 @@ export function CatalogoIO() {
 
         <button
           type="button"
+          onClick={() => bajar('plantilla-catalogo-farmacias-real.csv', plantillaCsv(sucursales), 'text/csv;charset=utf-8')}
+          className="flex h-11 items-center gap-2 rounded-lg border border-linea bg-white px-3.5 text-[0.88rem] font-bold text-gris hover:border-azul hover:text-azul"
+        >
+          <Sheet className="size-4" aria-hidden="true" /> Descargar plantilla
+        </button>
+
+        <button
+          type="button"
           onClick={() =>
             bajar(
               `respaldo-farmacias-real-${fechaArchivo()}.json`,
@@ -121,9 +129,11 @@ export function CatalogoIO() {
       </div>
 
       <p className="mt-3 text-[0.78rem] leading-relaxed text-gris-2">
-        Columnas del CSV: <code>id, nombre, presentacion, laboratorio, principio_activo, categoria, ilustracion,
-        precio, bioequivalente, receta, frio, descripcion</code> y una columna de stock por sucursal
-        (<code>{sucursales.map((s) => `stock_${s.id}`).join(', ')}</code>). Solo <code>nombre</code> es obligatorio.
+        Columnas del CSV: <code>nombre, presentacion, laboratorio, principio_activo</code> (o{' '}
+        <code>activo</code>), <code>categoria, precio, bioequivalente, receta, frio, descripcion</code> y, por cada
+        sucursal, <code>stock_&lt;id&gt;</code>, <code>precio_&lt;id&gt;</code> (vacío = precio de lista) y{' '}
+        <code>visible_&lt;id&gt;</code>. Solo <code>nombre</code> es obligatorio; el <code>id</code> se genera si va
+        vacío. La plantilla trae el formato y las categorías válidas.
       </p>
 
       {aviso && (
