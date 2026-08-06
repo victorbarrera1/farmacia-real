@@ -1,9 +1,11 @@
-import { SUCURSALES } from '../data/sucursales';
+import { getSucursales } from '../data/repo';
+import { useSucursales } from './useDatos';
 import { useStore } from '../store/StoreContext';
 import type { Sucursal } from '../types';
 
-/** Sucursal seleccionada (con fallback a la primera). */
+/** Sucursal seleccionada (con fallback a la primera vigente). */
 export function useSucursalActual(): Sucursal {
   const { estado } = useStore();
-  return SUCURSALES.find((s) => s.id === estado.sucursal) ?? SUCURSALES[0];
+  const sucursales = useSucursales();
+  return sucursales.find((s) => s.id === estado.sucursal) ?? sucursales[0] ?? getSucursales()[0];
 }

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { SUCURSALES } from '../../data/sucursales';
+import { useSucursales } from '../../hooks/useDatos';
 
 const DIA: Record<number, string> = {
   0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday',
@@ -7,14 +7,16 @@ const DIA: Record<number, string> = {
 
 /**
  * Inyecta datos estructurados (schema.org Pharmacy por sucursal) para que
- * Google pueda mostrarlas en búsquedas y Maps. Se generan desde SUCURSALES
- * para no desincronizarse al editar los datos.
+ * Google pueda mostrarlas en búsquedas y Maps. Se generan desde las
+ * sucursales vigentes para no desincronizarse al editarlas.
  */
 export function StructuredData() {
+  const sucursales = useSucursales();
+
   useEffect(() => {
     const json = {
       '@context': 'https://schema.org',
-      '@graph': SUCURSALES.map((s) => ({
+      '@graph': sucursales.map((s) => ({
         '@type': 'Pharmacy',
         '@id': location.origin + location.pathname + '#' + s.id,
         name: 'Farmacias Real — ' + s.nombre,
@@ -44,7 +46,7 @@ export function StructuredData() {
     et.textContent = JSON.stringify(json);
     document.head.appendChild(et);
     return () => { et.remove(); };
-  }, []);
+  }, [sucursales]);
 
   return null;
 }

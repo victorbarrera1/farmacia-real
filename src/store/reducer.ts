@@ -1,6 +1,6 @@
 import type { Orden } from '../types';
 import type { AppState, Cajon } from './state';
-import { SUCURSALES } from '../data/sucursales';
+import { getSucursales } from '../data/repo';
 
 export type Action =
   | { type: 'sucursal'; id: string }
@@ -10,13 +10,16 @@ export type Action =
   | { type: 'orden'; orden: Orden }
   | { type: 'agregar'; id: string }
   | { type: 'cambiar'; id: string; delta: number }
+  | { type: 'vaciarPedido' }
   | { type: 'abrirCajon'; cajon: Exclude<Cajon, null> }
-  | { type: 'cerrarCajones' };
+  | { type: 'cerrarCajones' }
+  | { type: 'abrirDetalle'; id: string }
+  | { type: 'cerrarDetalle' };
 
 export function reducer(estado: AppState, accion: Action): AppState {
   switch (accion.type) {
     case 'sucursal':
-      if (!SUCURSALES.some((s) => s.id === accion.id)) return estado;
+      if (!getSucursales().some((s) => s.id === accion.id)) return estado;
       return { ...estado, sucursal: accion.id };
 
     case 'categoria':
@@ -44,11 +47,20 @@ export function reducer(estado: AppState, accion: Action): AppState {
       return { ...estado, pedido };
     }
 
+    case 'vaciarPedido':
+      return { ...estado, pedido: {} };
+
     case 'abrirCajon':
-      return { ...estado, cajon: accion.cajon };
+      return { ...estado, cajon: accion.cajon, detalle: null };
 
     case 'cerrarCajones':
       return { ...estado, cajon: null };
+
+    case 'abrirDetalle':
+      return { ...estado, detalle: accion.id, cajon: null };
+
+    case 'cerrarDetalle':
+      return { ...estado, detalle: null };
 
     default:
       return estado;

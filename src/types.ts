@@ -28,6 +28,8 @@ export interface Categoria {
   et: string;
   /** id del ícono en el sprite SVG. */
   ico: IconId;
+  /** Bajada corta (se usa en el mega-menú). */
+  sub?: string;
 }
 
 /** Ilustración de producto (80×80). */
@@ -49,6 +51,8 @@ export interface Producto {
   be?: boolean;
   rec?: boolean;
   frio?: boolean;
+  /** Descripción opcional (se muestra en el detalle del producto). */
+  desc?: string;
   /** Unidades por sucursal, en el mismo orden que SUCURSALES. */
   st: number[];
 }

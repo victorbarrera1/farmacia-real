@@ -1,7 +1,7 @@
 import { Icon } from '../icons/Icon';
 import { Logo } from '../common/Logo';
-import { SUCURSALES } from '../../data/sucursales';
 import { useStore } from '../../store/StoreContext';
+import { useSucursales } from '../../hooks/useDatos';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { waLink, msgGeneral } from '../../lib/whatsapp';
 
@@ -15,10 +15,11 @@ const SECCIONES = [
 /** Pie del sitio. */
 export function Footer() {
   const { dispatch } = useStore();
+  const sucursales = useSucursales();
   const suc = useSucursalActual();
 
   return (
-    <footer className="bg-[#12241D] pb-[104px] pt-11 text-white/[0.66]">
+    <footer className="bg-azul-osc pb-[104px] pt-11 text-white/[0.66]">
       <div className="env">
         <div className="grid grid-cols-1 gap-7 border-b border-white/[0.11] pb-[26px] min-[760px]:grid-cols-[1.5fr_1fr_1fr]">
           <div>
@@ -54,12 +55,12 @@ export function Footer() {
           <div>
             <h4 className="mb-3 text-[0.78rem] font-extrabold uppercase tracking-[0.12em] text-white">Sucursales</h4>
             <ul>
-              {SUCURSALES.map((s) => (
+              {sucursales.map((s) => (
                 <li key={s.id} className="py-1.5 text-[0.92rem]">
                   <a
                     href="#ubicacion"
                     onClick={() => dispatch({ type: 'sucursal', id: s.id })}
-                    className="text-white/[0.72] no-underline hover:text-[#7FE3B0] hover:underline"
+                    className="text-white/[0.72] no-underline hover:text-white hover:underline"
                   >
                     {s.nombre}
                   </a>
@@ -73,7 +74,7 @@ export function Footer() {
             <ul>
               {SECCIONES.map((s) => (
                 <li key={s.href} className="py-1.5 text-[0.92rem]">
-                  <a href={s.href} className="text-white/[0.72] no-underline hover:text-[#7FE3B0] hover:underline">
+                  <a href={s.href} className="text-white/[0.72] no-underline hover:text-white hover:underline">
                     {s.et}
                   </a>
                 </li>

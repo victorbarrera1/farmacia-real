@@ -42,6 +42,17 @@ export function msgPedido(pedido: Pedido, suc: Sucursal): string {
   });
   t += `\n💰 Total referencial: *${clp(totalPedido(pedido))}*\n`;
   t += `📍 Retiro en sucursal *${suc.nombre}*\n${suc.direccion}\n`;
+
+  /* Si algo falta acá pero sí está en otro local, lo proponemos derecho. */
+  const enOtro = items
+    .filter(({ p }) => stockDe(p, suc.id) === 0 && otrosLocalesCon(p, suc.id).length > 0)
+    .map(({ p }) => `${p.n} (${otrosLocalesCon(p, suc.id).map((x) => x.s.corto).join(' / ')})`);
+  if (enOtro.length) {
+    t += `\nSegún la web, esto no está en ${suc.corto} pero sí en otro local:\n`;
+    enOtro.forEach((linea) => { t += `– ${linea}\n`; });
+    t += `¿Me lo apartan allá o lo traen a ${suc.corto}?\n`;
+  }
+
   if (items.some(({ p }) => p.rec)) t += `\n📄 Llevo la receta médica al retirar.`;
   t += `\n\n¿Me confirman disponibilidad y valor final? ¡Gracias!`;
   return t;

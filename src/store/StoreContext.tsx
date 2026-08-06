@@ -5,6 +5,7 @@ import {
 import type { AppState } from './state';
 import { estadoInicial, cargar, guardar } from './state';
 import { reducer, type Action } from './reducer';
+import { useSucursales } from '../hooks/useDatos';
 
 interface StoreValue {
   estado: AppState;
@@ -25,13 +26,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [anuncio, setAnuncio] = useState('');
   const anunciar = useCallback((texto: string) => setAnuncio(texto), []);
 
+  /* Suscribirse acá repinta toda la tienda cuando el panel edita datos. */
+  const sucursales = useSucursales();
+
   /* Persistimos solo cuando cambia lo que debe sobrevivir a recargas. */
   useEffect(() => { guardar(estado); }, [estado.sucursal, estado.pedido]);
 
-  /* Bloqueo de scroll del fondo cuando hay un cajón abierto. */
+  /* Si el panel eliminó la sucursal elegida, caemos a la primera vigente. */
   useEffect(() => {
-    document.body.classList.toggle('trabado', estado.cajon !== null);
-  }, [estado.cajon]);
+    if (!sucursales.some((s) => s.id === estado.sucursal) && sucursales[0]) {
+      dispatch({ type: 'sucursal', id: sucursales[0].id });
+    }
+  }, [sucursales, estado.sucursal]);
+
+  /* Bloqueo de scroll del fondo cuando hay un cajón o una ficha abierta. */
+  useEffect(() => {
+    document.body.classList.toggle('trabado', estado.cajon !== null || estado.detalle !== null);
+  }, [estado.cajon, estado.detalle]);
 
   return (
     <StoreContext.Provider value={{ estado, dispatch, anuncio, anunciar }}>
