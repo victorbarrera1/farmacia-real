@@ -17,7 +17,7 @@ import { PRODUCTOS as PRODUCTOS_ORIGINAL } from './productos';
    con `getSucursales()`. Cualquier cambio en las sucursales redimensiona
    los st[] de todos los productos (alta → 0; baja → se quita la posición).
 
-   TODO(api): sustituir leer*/guardar* por fetch a la API real
+   TODO(api): sustituir funciones de lectura/escritura por fetch a la API real
    (GET/POST/PUT/DELETE /api/productos y /api/sucursales) manteniendo
    esta misma superficie pública.
    ================================================================ */
