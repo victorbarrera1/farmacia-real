@@ -76,11 +76,16 @@ export function CatalogFilters({ enCajon = false, mostrarCategorias = true }: { 
       </div>
 
       <div className="faceta">
-        <span className="faceta-titulo block">Tipo</span>
-        <label className="flex min-h-10 cursor-pointer items-center gap-2.5 text-[0.92rem]">
-          <input type="checkbox" className="marca" checked={estado.soloBio} onChange={(e) => dispatch({ type: 'soloBio', on: e.target.checked })} /> Bioequivalente
+        <span className="faceta-titulo block">Bioequivalencia</span>
+        <label className="flex min-h-11 cursor-pointer items-center gap-2.5 text-[0.92rem] font-semibold">
+          <input type="checkbox" className="marca" checked={estado.soloBio} onChange={(e) => dispatch({ type: 'soloBio', on: e.target.checked })} />
+          Solo bioequivalentes
         </label>
-        <label className="flex min-h-10 cursor-pointer items-center gap-2.5 text-[0.92rem]">
+      </div>
+
+      <div className="faceta">
+        <span className="faceta-titulo block">Condición de venta</span>
+        <label className="flex min-h-11 cursor-pointer items-center gap-2.5 text-[0.92rem]">
           <input type="checkbox" className="marca" checked={estado.sinReceta} onChange={(e) => dispatch({ type: 'sinReceta', on: e.target.checked })} /> Sin receta médica
         </label>
       </div>
