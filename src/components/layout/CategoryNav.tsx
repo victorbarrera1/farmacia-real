@@ -10,17 +10,17 @@ export function CategoryNav() {
   return (
     <nav
       aria-label="Categorías"
-      className="sticky z-50 border-b border-linea bg-white"
+      className="sticky z-50 border-b border-linea/70 bg-white/95 backdrop-blur-md shadow-xs"
       style={{ top: 'var(--top-nav)' }}
     >
       <div className="env">
-        <div className="flex items-center gap-2 py-2">
+        <div className="flex items-center gap-2.5 py-2.5">
           <MegaMenu />
 
           <div
             role="group"
             aria-label="Accesos rápidos por categoría"
-            className="flex flex-1 gap-1.5 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-32px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex flex-1 gap-2 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-36px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-0.5"
           >
             {CATEGORIAS.map((c) => {
               const activa = c.id === estado.categoria;
@@ -30,13 +30,13 @@ export function CategoryNav() {
                   type="button"
                   aria-pressed={activa}
                   onClick={() => dispatch({ type: 'categoria', id: c.id })}
-                  className={`flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 text-[0.92rem] transition-all ${
+                  className={`flex min-h-[42px] shrink-0 items-center gap-2 rounded-full border px-4 text-[0.9rem] transition-all duration-200 ${
                     activa
-                      ? 'border-transparent bg-azul-pale font-bold text-azul-osc'
-                      : 'border-transparent bg-fondo font-semibold text-gris hover:bg-azul-pale hover:text-azul-osc'
+                      ? 'border-azul bg-azul font-bold text-white shadow-md'
+                      : 'border-slate-200/80 bg-slate-50 font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
-                  <Icon id={c.ico} className="size-[19px] shrink-0 text-azul" />
+                  <Icon id={c.ico} className={`size-[18px] shrink-0 ${activa ? 'text-white' : 'text-azul'}`} />
                   {c.et}
                 </button>
               );

@@ -21,7 +21,7 @@ export function Header() {
   /* La barra de categorías se pega justo bajo la cabecera: medimos su alto. */
   useStickyOffset(refCab);
 
-  /* Pulso del contador al crecer (guiño de "se agregó"). */
+  /* Pulso del contador al crecer */
   const [pulso, setPulso] = useState(false);
   const previo = useRef(n);
   useEffect(() => {
@@ -35,35 +35,35 @@ export function Header() {
   }, [n, menosMov]);
 
   return (
-    <header ref={refCab} className="sticky top-0 z-[60] bg-white shadow-[0_1px_0_var(--color-linea)]">
+    <header ref={refCab} className="sticky top-0 z-[60] border-b border-linea/60 bg-white/95 backdrop-blur-md shadow-xs">
       <div className="env">
-        <div className="flex h-[62px] items-center gap-3">
+        <div className="flex h-[66px] items-center gap-3.5">
           <Logo />
 
           <SearchBox className="hidden min-[900px]:flex" />
 
-          <div className="ml-auto flex shrink-0 items-center gap-[9px]">
-            {/* Selector de sucursal: en móvil vive en la BranchBar de abajo. */}
+          <div className="ml-auto flex shrink-0 items-center gap-2.5">
+            {/* Selector de sucursal */}
             <BranchPicker className="hidden min-[900px]:flex" />
 
             <button
               type="button"
               aria-label="Ver mi pedido"
               onClick={() => dispatch({ type: 'abrirCajon', cajon: 'pedido' })}
-              className="relative flex h-11 items-center gap-[9px] rounded-lg bg-rojo px-4 text-[0.94rem] font-bold text-white transition-colors hover:bg-rojo-osc"
+              className="relative flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-rojo to-rojo-osc px-4 text-[0.92rem] font-bold text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-105 active:scale-98"
             >
               <Icon id="i-bolsa" className="size-5" />
               <span className="hidden min-[600px]:inline">Mi pedido</span>
               {n > 0 && (
                 <>
                   <span
-                    className={`num grid h-[23px] min-w-[23px] place-items-center rounded-full bg-white px-1.5 text-[0.78rem] font-extrabold text-rojo ${
+                    className={`num grid h-[22px] min-w-[22px] place-items-center rounded-full bg-white px-1.5 text-[0.76rem] font-extrabold text-rojo shadow-xs ${
                       pulso ? 'animate-late' : ''
                     }`}
                   >
                     {n}
                   </span>
-                  <span className="num hidden border-l border-white/30 pl-[9px] text-[0.9rem] min-[1100px]:inline">
+                  <span className="num hidden border-l border-white/30 pl-2 text-[0.88rem] min-[1100px]:inline">
                     {clp(totalPedido(estado.pedido, suc.id))}
                   </span>
                 </>
@@ -72,8 +72,8 @@ export function Header() {
           </div>
         </div>
 
-        {/* Buscador móvil, en segunda línea */}
-        <div className="pb-[11px] min-[900px]:hidden">
+        {/* Buscador móvil */}
+        <div className="pb-3 min-[900px]:hidden">
           <SearchBox placeholder="Buscar remedio o marca…" />
         </div>
       </div>
