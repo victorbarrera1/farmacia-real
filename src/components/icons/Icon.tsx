@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import {
   MapPin, ShoppingBag, Search, X, LayoutGrid, Clock, Phone, Plus, Check,
   ArrowRight, TriangleAlert, Heart, Activity, Pill, Bike, ShieldCheck, Baby,
-  Droplet, Leaf, type LucideIcon,
+  Droplet, Leaf, Sparkles, type LucideIcon,
 } from 'lucide-react';
 import type { IconId, Ilustracion } from '../../types';
 
@@ -29,6 +29,7 @@ const MAPA: Partial<Record<IconId, LucideIcon>> = {
   'i-bebe': Baby,
   'i-gota': Droplet,
   'i-hoja': Leaf,
+  'i-perfume': Sparkles,
 };
 
 interface IconProps {

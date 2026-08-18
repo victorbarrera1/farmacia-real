@@ -1,5 +1,5 @@
 import type { Producto, Sucursal } from '../types';
-import { CATEGORIAS_VALIDAS, ILUSTRACIONES, nuevoIdProducto, sanearId, sanearProducto } from './dominio';
+import { CATEGORIAS_VALIDAS, ILUSTRACIONES, nuevoIdProducto, sanearId, sanearProducto } from './dominio.ts';
 
 /* ================================================================
    CSV DEL CATÁLOGO — lógica pura (sin React ni DOM).

@@ -1,89 +1,106 @@
 @import "tailwindcss";
 
 /* ==============================================================
-   FARMACIA REAL — Sistema de diseño moderno
+   FARMACIA REAL — Sistema de diseño
+   --------------------------------------------------------------
+   Tokens centralizados. Toda armonía (color, radios, espaciado,
+   sombras) sale de aquí; los componentes solo los consumen.
+
+   ESCALA DE RADIOS (regla concéntrica):  r_interno = r_externo − padding
+   - Tarjeta (externo) .......... rounded-2xl  20px
+   - Media anidada (inset 12px) . rounded-md    8px   (20 − 12 = 8) ✓
+   - Cajas de ícono (aislado) ... rounded-lg   12px
+   - Botones / inputs ........... rounded-lg   12px
+   - Sellos flotantes ........... rounded-sm    6px
+   - Chips / pills .............. rounded-full
    ============================================================== */
 
 @theme {
   /* --- Marca --- */
-  --color-azul: #1E2E5D;
-  --color-azul-osc: #0F172A;
-  --color-azul-medio: #3B5299;
-  --color-azul-pale: #EFF4FB;
-  --color-azul-borde: #CBD8EE;
-  --color-rojo: #E11D48;
-  --color-rojo-osc: #BE123C;
-  --color-rojo-pale: #FFE4E6;
-  --color-rojo-borde: #FDA4AF;
+  --color-azul: #1B2A55;
+  --color-azul-osc: #111B39;
+  --color-azul-medio: #33478A;
+  --color-azul-pale: #EEF1F8;
+  --color-azul-borde: #C7D0E6;
+  --color-rojo: #D6202A;
+  --color-rojo-osc: #AF1720;
+  --color-rojo-pale: #FDECED;
+  --color-rojo-borde: #F5C9CC;
 
-  /* --- Estado --- */
-  --color-ok: #16A34A;
-  --color-ok-pale: #DCFCE7;
-  --color-ambar: #D97706;
-  --color-ambar-pale: #FEF3C7;
-  --color-ambar-borde: #FDE68A;
-  --color-frio: #0284C7;
-  --color-frio-pale: #E0F2FE;
-  --color-frio-borde: #BAE6FD;
+  /* --- Estado (no de marca) --- */
+  --color-ok: #17864B;
+  --color-ok-pale: #E7F4EC;
+  --color-ambar: #9A6100;
+  --color-ambar-pale: #FFF5E0;
+  --color-ambar-borde: #EFD9A6;
+  --color-frio: #1B5E9C;
+  --color-frio-pale: #EAF2FA;
+  --color-frio-borde: #C8DCF0;
 
-  /* --- Neutros Slate --- */
-  --color-texto: #0F172A;
-  --color-gris: #475569;
-  --color-gris-2: #94A3B8;
-  --color-linea: #E2E8F0;
-  --color-linea-2: #F1F5F9;
-  --color-fondo: #F8FAFC;
+  /* --- Neutros --- */
+  --color-texto: #1A2033;
+  --color-gris: #5A6379;
+  --color-gris-2: #8A92A6;
+  --color-linea: #DFE3EC;
+  --color-linea-2: #EDF0F6;
+  --color-fondo: #F5F6FA;
   --color-blanco: #FFFFFF;
 
   /* --- WhatsApp --- */
   --color-wa: #25D366;
-  --color-wa-osc: #16A34A;
-  --color-wa-texto: #064E3B;
+  --color-wa-osc: #1DA851;
+  --color-wa-texto: #0A3D22;
 
-  /* --- Radios concéntricos --- */
+  /* --- Radios (escala concéntrica) --- */
   --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
-  --radius-2xl: 22px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
 
-  /* --- Sombras refinadas --- */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.05);
-  --shadow-hi: 0 12px 30px -4px rgba(15, 23, 42, 0.12), 0 6px 14px -4px rgba(15, 23, 42, 0.06);
+  /* --- Sombras --- */
+  --shadow-card: 0 1px 2px rgba(20, 28, 50, .05), 0 2px 8px rgba(20, 28, 50, .06);
+  --shadow-hi: 0 4px 14px rgba(20, 28, 50, .10), 0 12px 32px rgba(20, 28, 50, .12);
+  --shadow-barra: 0 2px 10px rgba(20, 28, 50, .07);
 
-  /* --- Tipografía moderna --- */
-  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* --- Alturas de las barras fijas (las mide useStickyOffset) --- */
+  --nav-abajo: 62px;
+
+  /* Tipografía retail neutral y rápida. La fuente exacta de Cruz Verde no
+     pudo verificarse públicamente; se evita fingir una coincidencia. */
+  --font-sans: Arial, Helvetica, Roboto, sans-serif;
 }
 
 /* ============================ BASE ============================ */
 @layer base {
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  html { -webkit-text-size-adjust: 100%; }
 
   body {
     font-family: var(--font-sans);
     background: var(--color-fondo);
     color: var(--color-texto);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
   body.trabado { overflow: hidden; }
 
-  h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); line-height: 1.15; letter-spacing: -0.03em; font-weight: 800; }
-  h2 { font-size: clamp(1.35rem, 3.2vw, 1.85rem); line-height: 1.2; letter-spacing: -0.025em; font-weight: 800; }
-  h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.35; }
+  h1 { font-size: clamp(1.6rem, 4.6vw, 2.3rem); line-height: 1.18; letter-spacing: -.02em; font-weight: 800; }
+  h2 { font-size: clamp(1.25rem, 3vw, 1.6rem); line-height: 1.25; letter-spacing: -.015em; font-weight: 800; }
+  h3 { font-size: 1.02rem; font-weight: 700; line-height: 1.35; }
 
   :focus-visible {
-    outline: 2.5px solid var(--color-azul);
+    outline: 3px solid var(--color-frio);
     outline-offset: 2px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-xs);
   }
 
+  /* Cifras alineadas (precios, contadores) */
   .num { font-variant-numeric: tabular-nums; }
 
+  /* Salto de contenido para teclado / lectores */
   .skip-link {
     position: absolute;
     left: 12px;
@@ -95,7 +112,6 @@
     border-radius: 0 0 var(--radius-md) var(--radius-md);
     font-weight: 700;
     text-decoration: none;
-    transition: top .18s ease;
   }
   .skip-link:focus { top: 0; }
 
@@ -107,127 +123,112 @@
   }
 }
 
-/* ==================== COMPONENTES ==================== */
+/* ==================== COMPONENTES PRIMITIVOS ==================== */
 @layer components {
+  /* --- Contenedor de ancho --- */
   .env {
     width: 100%;
     max-width: 1280px;
     margin-inline: auto;
-    padding-inline: 16px;
+    padding-inline: 14px;
   }
-  @media (min-width: 768px) { .env { padding-inline: 32px; } }
+  @media (min-width: 768px) { .env { padding-inline: 28px; } }
 
+  /* --- Botones (una sola geometría, variantes de color) --- */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
-    min-height: 48px;
-    padding: 12px 22px;
-    border-radius: var(--radius-lg);
-    font-size: 0.98rem;
+    min-height: 50px;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
-    transition: all .22s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .btn:hover { transform: translateY(-1.5px); }
-  .btn:active { transform: translateY(1px); }
-  .btn svg { width: 20px; height: 20px; flex: none; }
-  .btn-wa { background: var(--color-wa); color: var(--color-wa-texto); box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25); }
-  .btn-wa:hover { background: var(--color-wa-osc); color: #fff; box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4); }
-  .btn-azul { background: var(--color-azul); color: #fff; box-shadow: 0 2px 8px rgba(30, 46, 93, 0.25); }
-  .btn-azul:hover { background: var(--color-azul-osc); box-shadow: 0 6px 20px rgba(30, 46, 93, 0.35); }
-  .btn-borde { background: var(--color-blanco); border: 1.5px solid var(--color-linea); color: var(--color-texto); }
-  .btn-borde:hover { border-color: var(--color-azul); color: var(--color-azul); background: var(--color-azul-pale); }
-  .btn-blanco { background: #fff; color: var(--color-azul); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); }
-  .btn-blanco:hover { background: #fff; color: var(--color-azul-osc); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16); }
+  .btn svg { width: 21px; height: 21px; flex: none; }
+  .btn-wa { background: var(--color-wa); color: var(--color-wa-texto); }
+  .btn-wa:hover { background: var(--color-wa-osc); color: #fff; }
+  .btn-azul { background: var(--color-azul); color: #fff; }
+  .btn-azul:hover { background: var(--color-azul-osc); }
+  .btn-borde { background: var(--color-blanco); border: 2px solid var(--color-linea); color: var(--color-texto); }
+  .btn-borde:hover { border-color: var(--color-azul); color: var(--color-azul); }
+  .btn-blanco { background: #fff; color: var(--color-azul); }
+  .btn-blanco:hover { background: var(--color-azul-pale); }
   .btn-ancho { width: 100%; }
 
+  /* --- Tarjeta base: misma geometría para todas --- */
   .card {
     background: var(--color-blanco);
     border: 1px solid var(--color-linea);
     border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-card);
-    transition: transform .28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .28s ease, border-color .28s ease;
-  }
-  .card:hover {
-    box-shadow: var(--shadow-hi);
   }
 
+  /* --- Campo de texto --- */
   .field {
     width: 100%;
-    height: 48px;
-    border: 1.5px solid var(--color-linea);
+    height: 46px;
+    border: 2px solid var(--color-azul);
     border-radius: var(--radius-lg);
-    background: #F1F5F9;
-    font-size: 0.96rem;
-    font-weight: 500;
-    transition: all .2s ease;
+    background: var(--color-blanco);
+    font-size: 1rem;
   }
-  .field::placeholder { color: var(--color-gris-2); font-weight: 400; }
-  .field:focus { outline: none; background: #FFFFFF; border-color: var(--color-azul); box-shadow: 0 0 0 4px var(--color-azul-pale); }
+  .field::placeholder { color: var(--color-gris-2); }
+  .field:focus { outline: none; border-color: var(--color-azul-osc); box-shadow: 0 0 0 3px var(--color-azul-pale); }
 
-  .animate-late { animation: late .45s cubic-bezier(.34, 1.4, .64, 1); }
-  @keyframes late {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.35); }
-    100% { transform: scale(1); }
-  }
-
+  /* --- Interruptor "solo lo que hay hoy" --- */
   .switch {
     appearance: none;
-    width: 44px;
-    height: 24px;
+    width: 46px;
+    height: 26px;
     border-radius: 9999px;
     background: var(--color-linea);
     position: relative;
     flex: none;
     cursor: pointer;
-    transition: background-color .2s ease;
   }
   .switch::after {
     content: "";
     position: absolute;
-    top: 2px;
-    left: 2px;
+    top: 3px;
+    left: 3px;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
-    transition: transform .2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .22);
   }
   .switch:checked { background: var(--color-azul); }
   .switch:checked::after { transform: translateX(20px); }
 
+  /* --- Select de orden --- */
   .select-orden {
-    min-height: 42px;
+    min-height: 44px;
     padding: 0 36px 0 14px;
     border-radius: var(--radius-lg);
-    border: 1.5px solid var(--color-linea);
+    border: 1px solid var(--color-linea);
     background-color: var(--color-blanco);
-    font-size: .9rem;
+    font-size: .92rem;
     font-weight: 600;
     color: var(--color-texto);
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23475569' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%235A6379' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 13px center;
-    transition: border-color .18s ease;
   }
   .select-orden:hover { border-color: var(--color-azul); }
 
+  /* --- Cajones (drawers) --- */
   .velo {
     position: fixed;
     inset: 0;
     z-index: 80;
-    background: rgba(15, 23, 42, .6);
-    backdrop-filter: blur(4px);
+    background: rgba(17, 27, 57, .55);
     opacity: 0;
     pointer-events: none;
-    transition: opacity .28s ease;
   }
   .velo[data-abierto="si"] { opacity: 1; pointer-events: auto; }
 
@@ -245,11 +246,9 @@
     transform: translateY(102%);
     box-shadow: var(--shadow-hi);
     padding-bottom: env(safe-area-inset-bottom);
-    transition: transform .34s cubic-bezier(.32, .72, 0, 1);
     touch-action: none;
   }
   .cajon[data-abierto="si"] { transform: translateY(0); }
-  .cajon[data-arrastrando="si"] { transition: none; }
   @media (min-width: 720px) {
     .cajon {
       left: auto;
@@ -273,4 +272,270 @@
     border-radius: 9999px;
   }
   @media (min-width: 720px) { .tirador { display: none; } }
+}
+
+/* ============ PATRONES DE TIENDA (estilo retail farmacia) ============
+   Buscador protagonista, estantes horizontales, facetas, barra inferior
+   móvil y acordeones del pie. Misma paleta de marca: azul marino + rojo.
+   ==================================================================== */
+@layer components {
+  /* --- Buscador protagonista: píldora con botón integrado --- */
+  .busca {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    padding-left: 16px;
+    border: 2px solid var(--color-azul-borde);
+    border-radius: 9999px;
+    background: var(--color-blanco);
+  }
+  .busca:focus-within {
+    border-color: var(--color-azul);
+    box-shadow: 0 0 0 4px var(--color-azul-pale);
+  }
+  .busca input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--color-texto);
+  }
+  .busca input::placeholder { color: var(--color-gris-2); }
+  .busca input:focus { outline: none; }
+  .busca input::-webkit-search-cancel-button { display: none; }
+  .busca-boton {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 40px;
+    margin: 2px;
+    border-radius: 9999px;
+    background: var(--color-azul);
+    color: #fff;
+    flex: none;
+  }
+  .busca-boton:hover { background: var(--color-rojo); }
+
+  /* --- Panel de sugerencias del buscador --- */
+  .sugerencias {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 8px);
+    z-index: 80;
+    max-height: min(70vh, 460px);
+    overflow-y: auto;
+    background: var(--color-blanco);
+    border: 1px solid var(--color-linea);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-hi);
+    padding: 6px;
+  }
+
+  /* --- Estante horizontal de productos (scroll con snap) --- */
+  .estante {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(164px, 1fr);
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+  }
+  .estante > * { scroll-snap-align: start; }
+  @media (min-width: 680px) { .estante { grid-auto-columns: minmax(196px, 1fr); } }
+  @media (min-width: 1000px) { .estante { grid-auto-columns: minmax(216px, 1fr); } }
+
+  /* Flecha del estante (solo escritorio) */
+  .estante-flecha {
+    display: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-linea);
+    background: var(--color-blanco);
+    color: var(--color-azul);
+    box-shadow: var(--shadow-card);
+  }
+  .estante-flecha:hover { background: var(--color-azul); color: #fff; }
+  .estante-flecha:disabled { opacity: .35; pointer-events: none; }
+  @media (min-width: 900px) { .estante-flecha { display: grid; } }
+
+  /* --- Título de sección con acento rojo de marca --- */
+  .titulo-seccion {
+    position: relative;
+    padding-left: 14px;
+  }
+  .titulo-seccion::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    bottom: 3px;
+    width: 5px;
+    border-radius: 9999px;
+    background: var(--color-rojo);
+  }
+
+  /* --- Enlace del nav de categorías --- */
+  .nav-cat {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 0 10px;
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--color-texto);
+    white-space: nowrap;
+    border-radius: var(--radius-md);
+  }
+  .nav-cat::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 2px;
+    height: 3px;
+    border-radius: 9999px;
+    background: var(--color-rojo);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .nav-cat:hover { color: var(--color-azul); }
+  .nav-cat:hover::after { transform: scaleX(1); }
+  .nav-cat[aria-pressed="true"] { color: var(--color-azul-osc); font-weight: 800; }
+  .nav-cat[aria-pressed="true"]::after { transform: scaleX(1); }
+
+  /* --- Facetas del catálogo --- */
+  .faceta {
+    border-top: 1px solid var(--color-linea-2);
+    padding: 14px 0;
+  }
+  .faceta:first-child { border-top: 0; padding-top: 0; }
+  .faceta-titulo {
+    font-size: .8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--color-gris);
+    margin-bottom: 10px;
+  }
+  .marca {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    border: 2px solid var(--color-azul-borde);
+    border-radius: var(--radius-xs);
+    background: var(--color-blanco);
+    cursor: pointer;
+  }
+  .marca:checked {
+    background: var(--color-azul);
+    border-color: var(--color-azul);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.4 4.6 9 10 3.4' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 13px;
+  }
+  .marca[type="radio"] { border-radius: 9999px; }
+  .marca[type="radio"]:checked {
+    background-image: radial-gradient(circle, #fff 0 3px, transparent 4px);
+  }
+
+  /* --- Barra de navegación inferior (móvil) --- */
+  .nav-abajo {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 78;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    background: var(--color-blanco);
+    border-top: 1px solid var(--color-linea);
+    box-shadow: 0 -2px 14px rgba(20, 28, 50, .09);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  @media (min-width: 900px) { .nav-abajo { display: none; } }
+  .nav-abajo-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 58px;
+    padding: 6px 2px;
+    font-size: .68rem;
+    font-weight: 700;
+    color: var(--color-gris);
+    background: none;
+    text-decoration: none;
+  }
+  .nav-abajo-item[data-activo="si"], .nav-abajo-item:hover { color: var(--color-azul); }
+
+  /* --- Acordeón (pie en móvil) --- */
+  .acordeon-boton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 50px;
+    font-size: .8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  /* Oculta la barra de scroll sin perder el desplazamiento */
+  .sin-barra { scrollbar-width: none; -ms-overflow-style: none; }
+  .sin-barra::-webkit-scrollbar { display: none; }
+}
+
+/* ==============================================================
+   STOREFRONT SIN MOVIMIENTO
+   La tienda prioriza respuesta inmediata. Se acota a `.tienda` para no
+   interferir con indicadores funcionales del panel administrativo.
+   ============================================================== */
+.tienda,
+.tienda * {
+  scroll-behavior: auto !important;
+}
+.tienda *,
+.tienda *::before,
+.tienda *::after {
+  animation: none !important;
+  transition: none !important;
+}
+.tienda .card:hover {
+  transform: none !important;
+}
+
+/* Sidebar desktop: nunca puede ser más alto que el área visible. Las facetas
+   siguen accesibles con scroll interno mientras el catálogo permanece sticky. */
+@media (min-width: 1000px) {
+  .sidebar-catalogo {
+    max-height: calc(100dvh - var(--top-nav) - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 4px;
+    scrollbar-color: var(--color-azul-borde) transparent;
+    scrollbar-width: thin;
+  }
+  .sidebar-catalogo::-webkit-scrollbar { width: 6px; }
+  .sidebar-catalogo::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: var(--color-azul-borde);
+  }
+  .sidebar-catalogo::-webkit-scrollbar-track { background: transparent; }
 }

@@ -13,12 +13,12 @@ import type { Dia, Ilustracion, Producto, Sucursal, Tramo } from '../types';
    ================================================================ */
 
 export const ILUSTRACIONES: Ilustracion[] = [
-  'caja', 'frasco', 'tubo', 'bomba', 'tarro', 'paquete', 'aparato', 'inhalador', 'sobre',
+  'caja', 'frasco', 'tubo', 'bomba', 'tarro', 'paquete', 'aparato', 'inhalador', 'sobre', 'perfume',
 ];
 
 /** Categorías válidas (deben coincidir con src/data/categorias.ts). */
 export const CATEGORIAS_VALIDAS = [
-  'medicamentos', 'dermo', 'vitaminas', 'infantil', 'cuidado', 'equipos',
+  'medicamentos', 'dermo', 'perfumeria', 'vitaminas', 'infantil', 'cuidado', 'equipos',
 ];
 
 /** Largo máximo de los textos libres, para no inflar el almacenamiento. */

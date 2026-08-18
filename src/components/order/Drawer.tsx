@@ -1,6 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Icon } from '../icons/Icon';
-import { useDragToClose } from '../../hooks/useDragToClose';
 
 interface DrawerProps {
   abierto: boolean;
@@ -9,24 +8,16 @@ interface DrawerProps {
   subtitulo?: ReactNode;
   labelId: string;
   children: ReactNode;
-  /** Pie fijo del cajón (acciones). */
   footer?: ReactNode;
   cerrarLabel?: string;
 }
 
-/**
- * Cajón lateral / hoja inferior reutilizable. Maneja velo, foco al abrir,
- * cierre con Escape y arrastre-para-cerrar en móvil.
- */
+/** Cajón instantáneo reutilizable, sin transiciones ni gesto animado. */
 export function Drawer({
   abierto, onClose, titulo, subtitulo, labelId, children, footer, cerrarLabel = 'Cerrar',
 }: DrawerProps) {
-  const refCajon = useRef<HTMLElement>(null);
   const refCerrar = useRef<HTMLButtonElement>(null);
 
-  useDragToClose(refCajon, { enabled: abierto, onClose });
-
-  /* Foco al abrir + cierre con Escape. */
   useEffect(() => {
     if (!abierto) return;
     refCerrar.current?.focus();
@@ -37,18 +28,12 @@ export function Drawer({
     return () => document.removeEventListener('keydown', onKey);
   }, [abierto, onClose]);
 
+  if (!abierto) return null;
+
   return (
     <>
-      <div className="velo" data-abierto={abierto ? 'si' : 'no'} onClick={onClose} />
-      <aside
-        ref={refCajon}
-        className="cajon"
-        data-abierto={abierto ? 'si' : 'no'}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={labelId}
-      >
-        <span className="tirador" />
+      <div className="velo" data-abierto="si" onClick={onClose} />
+      <aside className="cajon" data-abierto="si" role="dialog" aria-modal="true" aria-labelledby={labelId}>
         <div className="flex items-start gap-3.5 border-b border-linea px-5 py-4">
           <div className="mr-auto">
             <h3 id={labelId} className="text-[1.14rem] font-extrabold">{titulo}</h3>
@@ -64,11 +49,9 @@ export function Drawer({
             <Icon id="i-x" className="size-[17px]" />
           </button>
         </div>
-
-        <div className="cajon-cuerpo flex-1 overflow-y-auto px-5 py-2 [-webkit-overflow-scrolling:touch] [touch-action:pan-y]">
+        <div className="flex-1 overflow-y-auto px-5 py-2 [-webkit-overflow-scrolling:touch]">
           {children}
         </div>
-
         {footer && <div className="border-t border-linea bg-fondo px-5 pb-5 pt-4">{footer}</div>}
       </aside>
     </>

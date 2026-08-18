@@ -35,7 +35,7 @@ export interface Categoria {
 /** Ilustración de producto (80×80). */
 export type Ilustracion =
   | 'caja' | 'frasco' | 'tubo' | 'bomba' | 'tarro'
-  | 'paquete' | 'aparato' | 'inhalador' | 'sobre';
+  | 'paquete' | 'aparato' | 'inhalador' | 'sobre' | 'perfume';
 
 export interface Producto {
   /** Se asigna en runtime a partir del índice: `p0`, `p1`, … */
@@ -72,6 +72,9 @@ export type Pedido = Record<string, number>;
 
 export type Orden = 'destacados' | 'precio-asc' | 'precio-desc' | 'nombre';
 
+/** Tramo de precio de las facetas del catálogo (en CLP). */
+export type RangoPrecio = 'todos' | 'hasta5' | '5a15' | '15a30' | 'sobre30';
+
 export type NivelStock = 'alto' | 'bajo' | 'cero';
 
 /** Ids de íconos disponibles en el sprite. */
@@ -79,4 +82,4 @@ export type IconId =
   | 'i-emblema' | 'i-cruz' | 'i-pin' | 'i-reloj' | 'i-tel' | 'i-wa' | 'i-ig'
   | 'i-lupa' | 'i-x' | 'i-mas' | 'i-check' | 'i-flecha' | 'i-bolsa' | 'i-alerta'
   | 'i-moto' | 'i-escudo' | 'i-pulso' | 'i-corazon' | 'i-pastilla' | 'i-gota'
-  | 'i-hoja' | 'i-bebe' | 'i-grilla';
+  | 'i-hoja' | 'i-bebe' | 'i-grilla' | 'i-perfume';

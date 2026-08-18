@@ -3,10 +3,10 @@
 Catálogo digital informativo con **reserva de stock por WhatsApp** y retiro en tienda
 para Farmacias Real (4 sucursales en Independencia y Ñuñoa).
 
-**React 19 + TypeScript + Vite 7 + Tailwind CSS v4 + react-router-dom v7**, íconos con
-lucide-react, y un **backend mínimo en Vercel Serverless Functions** (`api/`) con
-almacenamiento en Redis/KV. Sin backend configurado, el sitio funciona igual en modo
-local (localStorage).
+**React 19 + TypeScript + Next.js 15 (App Router) + Tailwind CSS v4**, íconos con
+lucide-react, y Route Handlers en `app/api/` apoyados por la lógica pura de
+`src/server/`. El almacenamiento compartido usa Redis/KV; sin backend configurado, el
+sitio conserva un modo local basado en `localStorage`.
 
 ## Modelo de operación (restricciones del proyecto)
 
@@ -24,8 +24,8 @@ DS 466/1984, ISP / MINSAL):
 - **Publicidad de fármacos (Art. 100).** Los productos de venta directa muestran precio.
   Los que requieren receta se presentan de forma neutral: sin promociones, CTA sin color
   promocional (*"Reservar con receta"*), **sin precio en el mensaje de WhatsApp**, aviso
-  de validación presencial por el Químico Farmacéutico, y el hero no promociona la
-  categoría de medicamentos.
+  de validación presencial por el Químico Farmacéutico y sin publicidad promocional
+  para medicamentos sujetos a receta.
 
 La sección **"Retiro en tienda y condiciones"** (`src/components/legal/Policies.tsx`) es
 un modal accesible desde el pie, el aviso del catálogo, la ficha de producto y el resumen
@@ -151,11 +151,11 @@ conviene bajarlo periódicamente y guardarlo fuera del navegador.
 
 ```bash
 npm install
-npm run dev        # tienda + panel + API local (http://localhost:5173)
-npm run build      # typecheck + build de producción (dist/)
+npm run dev        # tienda + panel + API local (http://localhost:3000)
+npm run build      # build de producción de Next.js
 npm run typecheck
-npm run test:api   # 40 pruebas de la API (auth, alcance por sucursal, CRUD,
-                   # invariantes de st/vis/px, pedidos, importación, límites)
+npm run test:api   # 44 pruebas: API + Perfumería + round-trip CSV, auth, CRUD,
+                   # invariantes de st/vis/px, pedidos, importación y límites
 npm run clave      # claves: admin, --sucursales (todas) o --sucursal <id>
 npm run seo        # regenera JSON-LD + sitemap.xml + robots.txt desde src/data/
 npm run og         # regenera public/og-farmacias-real.png (requiere Playwright)
@@ -163,61 +163,32 @@ npm run og         # regenera public/og-farmacias-real.png (requiere Playwright)
 
 ## SEO
 
-El JSON-LD (`schema.org` `Organization` + `WebSite` + 4 × `Pharmacy` con horarios) es
-**estático en `index.html`**: en una SPA lo inyectado por JavaScript puede no indexarse.
-Lo genera `npm run seo` desde `src/data/sucursales.ts`, así que no se desincroniza;
-`StructuredData.tsx` solo reemplaza el bloque si el panel editó las sucursales.
-
-También hay `canonical`, `og:*` con imagen 1200×630, `twitter:card`, `public/robots.txt`
-(bloquea `/panel` y `/api/`) y `public/sitemap.xml`.
-
-> El rewrite de `vercel.json` es `/((?!api/)[^.]*)`: solo reescribe rutas **sin
-> extensión**, para no tapar `robots.txt`, `sitemap.xml`, `og-*.png`, `/assets/*` ni las
-> funciones de `/api/`.
+Los metadatos, canonical, Open Graph, Twitter Card y JSON-LD (`Organization` +
+`WebSite` + 4 × `Pharmacy`) se publican desde `app/layout.tsx`. El grafo se genera a
+partir de `src/data/sucursales.ts`; `StructuredData.tsx` lo reemplaza en runtime solo
+si el panel modificó las sucursales. `public/robots.txt` bloquea `/panel` y `/api/`, y
+`public/sitemap.xml` expone la portada.
 
 **Ojo con el dominio:** `SITIO_URL` (en `src/config.ts`) es la URL canónica y hoy apunta
-a `https://farmaciareal.vercel.app`. `farmacia-real.vercel.app` responde con un deploy
-antiguo: conviene dejar un solo dominio (idealmente uno propio, tipo `farmaciasreal.cl`)
-y redirigir el otro. Al cambiarlo: editar `SITIO_URL` y correr `npm run seo`.
+a `https://farmaciareal.vercel.app`. Conviene consolidar un único dominio, idealmente
+propio. Al cambiarlo: editar `SITIO_URL` y correr `npm run seo`.
 
 ## Estructura
 
 ```
-api/                        Funciones serverless (Vercel)
-├─ _lib/http.ts             Firma común + adaptador Node, cookies, errores
-├─ _lib/almacen.ts          Driver Redis REST (KV/Upstash) o archivos (.data/)
-├─ _lib/auth.ts             scrypt + cookie HMAC HttpOnly + límite de intentos
-├─ _lib/datos.ts            Lectura/escritura del catálogo y de las reservas
-├─ estado.ts · sesion.ts    Capacidades · login/logout/estado de sesión
-├─ catalogo.ts              GET público · PUT completo · POST restaurar
-├─ productos.ts · sucursales.ts · stock.ts · pedidos.ts
+app/                        App Router: portada, /panel y Route Handlers /api/*
 src/
-├─ config.ts                SITIO_URL, hash local, claves de localStorage, umbrales
-├─ types.ts                 Tipos del dominio (contrato único)
-├─ data/
-│  ├─ sucursales.ts         Los 4 locales (con los WhatsApp pendientes marcados)
-│  ├─ categorias.ts · productos.ts
-│  └─ repo.ts               External store: hidrata de la API o de localStorage,
-│                           escrituras optimistas y suscripción para React
-├─ lib/
-│  ├─ dominio.ts            Saneamiento + CRUD puro + invariantes st/vis/px y
-│  │                        precio efectivo (mismo módulo en cliente y API)
-│  ├─ api.ts                Cliente fetch + detección de capacidades
-│  ├─ csv.ts                Exportar/importar catálogo y respaldos
-│  ├─ claveLocal.ts         PBKDF2 en el navegador (modo sin backend)
-│  ├─ stock.ts · pedido.ts · whatsapp.ts · pedidosLog.ts · format.ts · horarios.ts
-├─ store/                   Estado de la tienda (useReducer + Context + localStorage)
-├─ hooks/                   useDatos (productos/sucursales/sincronización/pedidos),
-│                           useCatalogo, useSucursalActual, useMediaQuery, …
-├─ pages/
-│  ├─ Storefront.tsx
-│  └─ panel/                Panel (login con alcance, pestañas, CRUD, CSV,
-│                           AjustesLocal = precios y visibilidad, métricas)
-├─ components/              icons · common · layout · sections · catalog ·
-│                           branches · order · legal · seo
-pruebas/api.test.mjs        Pruebas de la API (node --test)
-scripts/                    clave · generar-seo · generar-og · vite-api-dev
+├─ config.ts · types.ts     Configuración y contrato único del dominio
+├─ data/                    Sucursales, categorías, 38 productos demo y repositorio
+├─ lib/                     Dominio, CSV, stock, pedido, WhatsApp, SEO y utilidades
+├─ server/                  Auth, almacenamiento y handlers puros de la API
+├─ store/ · hooks/          Estado de tienda, sincronización y catálogo filtrado
+├─ views/                   Storefront público search-first y panel administrativo
+└─ components/              Layout, catálogo, sucursales, pedido, legal, iconos y SEO
+pruebas/                    API y pruebas de dominio/CSV de Perfumería (node --test)
+scripts/                    Claves, SEO e imagen Open Graph
 docs/API.md                 Endpoints y contratos JSON
+MASTER.md                   Decisiones visuales, responsive y política no-motion
 ```
 
 ## Datos pendientes del cliente
@@ -227,7 +198,7 @@ docs/API.md                 Endpoints y contratos JSON
   reservas de esos locales llegan al teléfono equivocado. El panel lo avisa en pantalla y
   `npm run seo` lo reporta. Se corrige en `src/data/sucursales.ts` o desde
   **/panel → Sucursales**.
-- **Catálogo real.** Los 30 productos son de demostración: cargar el real por CSV.
+- **Catálogo real.** Los 38 productos son de demostración (incluidos 8 de Perfumería): cargar el real por CSV.
 - **Clave del panel.** La provisional es débil; cambiarla con `npm run clave`.
 - **Emblema del logo.** Es una aproximación SVG (`SvgSprite.tsx`, id `i-emblema`):
   reemplazar por el archivo original cuando el dueño lo entregue.
@@ -239,28 +210,34 @@ catálogo, indicadores, el WhatsApp de destino y el título "Disponible en [sucu
 Si un producto no está en esa sucursal pero sí en otra, la tarjeta ofrece chips
 "Sí hay en:" y el mensaje de WhatsApp propone apartarlo allá o traerlo al local elegido.
 
-## Sistema de diseño
+## Sistema de diseño y storefront
 
-Todos los tokens (color, radios, sombras, tipografía) viven en `src/index.css` bajo
-`@theme`. Paleta de marca: **azul marino + rojo sobre blanco** (sin verdes ajenos a la
-marca; el verde solo se usa para WhatsApp y el estado "disponible").
+La especificación consolidada está en [`MASTER.md`](MASTER.md). Los tokens viven en
+`src/index.css`: azul marino y rojo de Farmacias Real sobre superficies blancas/pálidas;
+el verde se reserva para WhatsApp y disponibilidad. Como la tipografía exacta de Cruz
+Verde no pudo verificarse de forma concluyente ni licenciarse, se documentó la pila
+neutral de retail `Arial, Helvetica, Roboto, sans-serif` en vez de atribuir una fuente
+sin evidencia.
 
-**Escala de radios (regla concéntrica `r_interno = r_externo − padding`):**
+La portada es **search-first**: gate de ubicación de primera visita, cabecera compacta
+con búsqueda y sucursal, catálogo inmediato, sucursales compactas y pie. En escritorio
+(`>=1000px`) hay sidebar permanente de categorías y facetas; en móvil se separan el
+cajón de categorías y el de filtros. La grilla usa una columna hasta 374 px, dos desde
+375 px, tres desde 680 px y cuatro desde 1180 px cuando hay espacio junto al sidebar.
+Perfumería cubre fragancias, colonias, desodorantes, cuidado corporal y sets de regalo.
 
-| Elemento | Radio |
-|---|---|
-| Tarjeta (externo) | `rounded-2xl` 20px |
-| Media anidada (inset 12px) | `rounded-md` 8px (20−12) |
-| Cajas de ícono / botones | `rounded-lg` 12px |
-| Sellos flotantes | `rounded-sm` 6px |
-| Chips / pills | `rounded-full` |
+**Política no-motion:** la tienda pública no usa GSAP, Reveal, carruseles, autoplay,
+pulsos, parallax, smooth scrolling ni transiciones. Los drawers montan y desmontan de
+forma instantánea. La regla `.tienda` en `src/index.css` fuerza `animation: none`,
+`transition: none` y `scroll-behavior: auto`; el panel conserva únicamente indicadores
+funcionales como sus spinners de carga.
 
 ## Accesibilidad
 
-Región `aria-live` para anuncios, `aria-pressed` en filtros, skip-link, foco visible,
-`prefers-reduced-motion`, drag-to-close en cajones móviles, sticky offset medido,
-mega-menú con `aria-expanded`/Escape/clic fuera y modales con `role="dialog"`,
-`aria-modal` y cierre por Escape en capas (la capa superior no cierra la de abajo).
+Se mantienen región `aria-live`, `aria-pressed`, skip-link, foco visible, objetivos
+táctiles útiles de al menos 44 px, navegación de sugerencias por teclado, Escape y clic
+en backdrop para overlays, foco inicial y `role="dialog"`/`aria-modal`. Los drawers
+no permanecen ocultos como nodos de diálogo fuera de pantalla.
 
 ## Referencia
 

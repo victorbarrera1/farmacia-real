@@ -1,4 +1,4 @@
-import type { Orden } from '../types';
+import type { Orden, RangoPrecio } from '../types';
 import type { AppState, Cajon } from './state';
 import { getSucursales } from '../data/repo';
 
@@ -8,6 +8,11 @@ export type Action =
   | { type: 'busqueda'; q: string }
   | { type: 'soloStock'; on: boolean }
   | { type: 'orden'; orden: Orden }
+  | { type: 'lab'; lab: string }
+  | { type: 'soloBio'; on: boolean }
+  | { type: 'sinReceta'; on: boolean }
+  | { type: 'precio'; rango: RangoPrecio }
+  | { type: 'limpiarFiltros' }
   | { type: 'agregar'; id: string }
   | { type: 'cambiar'; id: string; delta: number }
   | { type: 'vaciarPedido' }
@@ -16,13 +21,17 @@ export type Action =
   | { type: 'abrirDetalle'; id: string }
   | { type: 'cerrarDetalle' }
   | { type: 'abrirLegal' }
-  | { type: 'cerrarLegal' };
+  | { type: 'cerrarLegal' }
+  | { type: 'abrirGate' }
+  | { type: 'cerrarGate' };
 
 export function reducer(estado: AppState, accion: Action): AppState {
   switch (accion.type) {
     case 'sucursal':
       if (!getSucursales().some((s) => s.id === accion.id)) return estado;
-      return { ...estado, sucursal: accion.id };
+      /* Los laboratorios marcados pueden no existir en el otro local: se
+         limpian para no dejar el catálogo vacío sin explicación. */
+      return { ...estado, sucursal: accion.id, labs: [] };
 
     case 'categoria':
       return { ...estado, categoria: accion.id };
@@ -35,6 +44,25 @@ export function reducer(estado: AppState, accion: Action): AppState {
 
     case 'orden':
       return { ...estado, orden: accion.orden };
+
+    case 'lab': {
+      const labs = estado.labs.includes(accion.lab)
+        ? estado.labs.filter((l) => l !== accion.lab)
+        : [...estado.labs, accion.lab];
+      return { ...estado, labs };
+    }
+
+    case 'soloBio':
+      return { ...estado, soloBio: accion.on };
+
+    case 'sinReceta':
+      return { ...estado, sinReceta: accion.on };
+
+    case 'precio':
+      return { ...estado, precio: accion.rango };
+
+    case 'limpiarFiltros':
+      return { ...estado, labs: [], soloBio: false, sinReceta: false, precio: 'todos', soloStock: false };
 
     case 'agregar': {
       const pedido = { ...estado.pedido, [accion.id]: (estado.pedido[accion.id] || 0) + 1 };
@@ -69,6 +97,12 @@ export function reducer(estado: AppState, accion: Action): AppState {
 
     case 'cerrarLegal':
       return { ...estado, legal: false };
+
+    case 'abrirGate':
+      return { ...estado, gate: true, cajon: null, detalle: null };
+
+    case 'cerrarGate':
+      return { ...estado, gate: false };
 
     default:
       return estado;

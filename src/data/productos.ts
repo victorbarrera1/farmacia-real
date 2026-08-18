@@ -44,6 +44,16 @@ const RAW: Omit<Producto, 'id' | 'vis' | 'px'>[] = [
   { n: 'Oxímetro de pulso', pres: '1 unidad', lab: 'Genérico', act: 'Saturación', cat: 'equipos', il: 'aparato', p: 12990, st: [6, 3, 0, 4] },
   { n: 'Test de embarazo', pres: '1 unidad', lab: 'Evatest', act: 'Diagnóstico', cat: 'equipos', il: 'sobre', p: 4990, st: [16, 9, 12, 10] },
   { n: 'Cintas para glicemia', pres: 'Caja 50 un.', lab: 'Accu-Chek', act: 'Glicemia', cat: 'equipos', il: 'sobre', p: 23990, frio: true, st: [5, 0, 7, 3] },
+
+  /* Perfumería — productos de demostración, reemplazables desde panel/CSV. */
+  { n: 'Eau de parfum floral', pres: 'Frasco 50 ml', lab: 'Línea Real Demo', act: 'Fragancia floral', cat: 'perfumeria', il: 'perfume', p: 17990, st: [12, 7, 9, 10], desc: 'Fragancia femenina floral de demostración para la categoría Perfumería.' },
+  { n: 'Eau de toilette amaderada', pres: 'Frasco 100 ml', lab: 'Línea Real Demo', act: 'Fragancia amaderada', cat: 'perfumeria', il: 'perfume', p: 19990, st: [8, 5, 6, 11], desc: 'Fragancia masculina amaderada de demostración.' },
+  { n: 'Colonia infantil suave', pres: 'Frasco 120 ml', lab: 'Cuidado Demo', act: 'Colonia suave', cat: 'perfumeria', il: 'perfume', p: 6990, st: [16, 9, 12, 8] },
+  { n: 'Body mist frutos rojos', pres: 'Spray 200 ml', lab: 'Línea Real Demo', act: 'Bruma corporal', cat: 'perfumeria', il: 'perfume', p: 8990, st: [14, 6, 10, 13] },
+  { n: 'Desodorante corporal fresco', pres: 'Aerosol 150 ml', lab: 'Cuidado Demo', act: 'Desodorante', cat: 'perfumeria', il: 'frasco', p: 3990, st: [22, 15, 18, 12] },
+  { n: 'Crema corporal perfumada', pres: 'Frasco 250 ml', lab: 'Cuidado Demo', act: 'Hidratación corporal', cat: 'perfumeria', il: 'bomba', p: 7990, st: [10, 4, 7, 9] },
+  { n: 'Set fragancia y crema corporal', pres: '2 unidades', lab: 'Línea Real Demo', act: 'Set de regalo', cat: 'perfumeria', il: 'paquete', p: 24990, st: [5, 2, 4, 6] },
+  { n: 'Loción after shave', pres: 'Frasco 100 ml', lab: 'Cuidado Demo', act: 'Cuidado post afeitado', cat: 'perfumeria', il: 'perfume', p: 9990, st: [9, 3, 5, 7] },
 ];
 
 /**

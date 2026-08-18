@@ -1,53 +1,28 @@
-import { useRef } from 'react';
+'use client';
+
 import { Icon } from '../icons/Icon';
 import { useStore } from '../../store/StoreContext';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { cantidadPedido } from '../../lib/pedido';
 import { waLink, msgGeneral } from '../../lib/whatsapp';
-import { gsap, useGSAP } from '../../lib/gsap';
 
-/** Botón flotante de WhatsApp. Se oculta si hay un cajón o la barra móvil. */
+/** Acceso directo de escritorio; en móvil no cubre productos ni la barra inferior. */
 export function FloatingWa() {
   const { estado } = useStore();
   const suc = useSucursalActual();
-  const movil = useMediaQuery('(max-width: 719px)');
-  const hayPedido = cantidadPedido(estado.pedido) > 0;
-  const refBot = useRef<HTMLAnchorElement>(null);
+  const oculto = estado.cajon !== null || estado.detalle !== null || estado.legal || estado.gate;
 
-  /* Con un cajón abierto o la barra de pedido móvil visible, estorba. */
-  const oculto = estado.cajon !== null || (movil && hayPedido);
-
-  /* Respiración suave del ícono para llamar la atención sin ser invasivo. */
-  useGSAP(() => {
-    const mq = gsap.matchMedia();
-    mq.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.to('[data-wa-pulso]', {
-        scale: 1.14,
-        duration: 1.1,
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-      });
-    });
-    return () => mq.revert();
-  }, { scope: refBot });
+  if (oculto) return null;
 
   return (
     <a
-      ref={refBot}
       href={waLink(msgGeneral(suc), suc)}
       target="_blank"
       rel="noopener"
-      className={`fixed right-4 z-[70] flex min-h-14 items-center gap-2.5 rounded-full bg-wa px-5 text-[0.98rem] font-extrabold text-wa-texto no-underline shadow-[0_4px_16px_rgba(37,211,102,0.4),0_2px_6px_rgba(0,0,0,0.1)] transition-[background-color,opacity] hover:bg-wa-osc hover:text-white ${
-        oculto ? 'pointer-events-none opacity-0' : ''
-      }`}
-      style={{ bottom: 'calc(16px + env(safe-area-inset-bottom))' }}
+      aria-label="Escríbenos por WhatsApp"
+      className="fixed bottom-5 right-5 z-[70] hidden min-h-12 items-center gap-2 rounded-full bg-wa px-5 text-[0.94rem] font-extrabold text-wa-texto no-underline shadow-card hover:bg-wa-osc hover:text-white min-[900px]:flex"
     >
-      <span data-wa-pulso className="inline-flex">
-        <Icon id="i-wa" className="size-[25px]" />
-      </span>
-      <span className="hidden min-[520px]:inline">Escríbenos</span>
+      <Icon id="i-wa" className="size-[22px]" />
+      Escríbenos
     </a>
   );
 }

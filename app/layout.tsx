@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
 import type { ReactNode } from 'react';
 import '../src/index.css';
 import { SITIO_URL } from '../src/config';
@@ -71,17 +70,10 @@ export const viewport: Viewport = {
   themeColor: '#1B2A55',
 };
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-  variable: '--font-jakarta',
-});
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es-CL">
-      <body className={plusJakartaSans.className}>
+      <body>
         <a className="skip-link" href="#catalogo">Saltar al catálogo</a>
         <script
           type="application/ld+json"

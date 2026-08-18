@@ -144,7 +144,7 @@ export function ProductModal() {
                 <div
                   role="group"
                   aria-label={`Cantidad de ${p.n}`}
-                  className={`flex min-h-[50px] flex-auto items-center justify-between overflow-hidden rounded-lg border-2 ${
+                  className={`flex min-h-[50px] flex-auto items-center justify-between overflow-hidden rounded-full border-2 ${
                     p.rec ? 'border-azul bg-azul-pale' : 'border-rojo bg-rojo-pale'
                   }`}
                 >

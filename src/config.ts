@@ -47,6 +47,8 @@ export const UMBRAL_STOCK_BAJO = 8;
 export const CLAVES = {
   /** Estado de la tienda: sucursal elegida + reserva en curso. */
   estado: 'fr_estado',
+  /** "Ya elegí dónde retiro": evita repetir el modal de ubicación. */
+  ubicacion: 'fr_ubicacion',
   /** Catálogo editado desde el panel (solo modo sin backend). */
   productos: 'fr_admin_productos',
   /** Sucursales editadas desde el panel (solo modo sin backend). */

@@ -43,9 +43,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.body.classList.toggle(
       'trabado',
-      estado.cajon !== null || estado.detalle !== null || estado.legal,
+      estado.cajon !== null || estado.detalle !== null || estado.legal || estado.gate,
     );
-  }, [estado.cajon, estado.detalle, estado.legal]);
+  }, [estado.cajon, estado.detalle, estado.legal, estado.gate]);
 
   return (
     <StoreContext.Provider value={{ estado, dispatch, anuncio, anunciar }}>

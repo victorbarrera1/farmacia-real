@@ -1,11 +1,12 @@
-import { ChevronDown } from 'lucide-react';
-import { Icon } from '../icons/Icon';
+'use client';
+
+import { ChevronDown, MapPin } from 'lucide-react';
 import { useStore } from '../../store/StoreContext';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 import { estaAbierto, textoHoy } from '../../lib/horarios';
 
 /**
- * Selector de sucursal en formato "Retiras en: [sucursal] ▾".
+ * Selector de sucursal en formato "Retiro en tienda / [sucursal] ▾".
  * Abre el cajón con las sucursales; el stock de toda la tienda depende de esto.
  */
 export function BranchPicker({ className = '' }: { className?: string }) {
@@ -19,12 +20,12 @@ export function BranchPicker({ className = '' }: { className?: string }) {
       onClick={() => dispatch({ type: 'abrirCajon', cajon: 'suc' })}
       aria-haspopup="dialog"
       title={`Retiras en ${suc.nombre} · ${textoHoy(suc)}`}
-      className={`flex h-11 max-w-[260px] items-center gap-2.5 rounded-lg border-2 border-azul-borde bg-azul-pale px-3 text-left transition-colors hover:border-azul hover:bg-white ${className}`}
+      className={`h-12 max-w-[270px] items-center gap-2.5 rounded-full border-2 border-azul-borde bg-white px-4 text-left hover:border-azul hover:bg-azul-pale ${className}`}
     >
-      <Icon id="i-pin" className="size-[19px] shrink-0 text-azul" />
+      <MapPin className="size-[19px] shrink-0 text-azul" aria-hidden="true" />
       <span className="min-w-0 leading-tight">
         <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.06em] text-gris">
-          Retiras en
+          Retiro en tienda
         </span>
         <b className="flex items-center gap-1.5 truncate text-[0.9rem] font-extrabold text-azul-osc">
           <span

@@ -1,57 +1,56 @@
+'use client';
+
 import { StoreProvider } from '../store/StoreContext';
 import { SvgSprite } from '../components/icons/SvgSprite';
 import { LiveAnnouncer } from '../components/common/LiveAnnouncer';
 import { TopBar } from '../components/layout/TopBar';
 import { Header } from '../components/layout/Header';
 import { BranchBar } from '../components/layout/BranchBar';
-import { CategoryNav } from '../components/layout/CategoryNav';
-import { Banner } from '../components/sections/Banner';
-import { Steps } from '../components/sections/Steps';
+import { LocationGate } from '../components/layout/LocationGate';
+import { MobileNav } from '../components/layout/MobileNav';
 import { Catalog } from '../components/catalog/Catalog';
 import { ProductModal } from '../components/catalog/ProductModal';
 import { PoliciesModal } from '../components/legal/Policies';
 import { Branches } from '../components/branches/Branches';
-import { Services } from '../components/sections/Services';
-import { Location } from '../components/sections/Location';
 import { Footer } from '../components/layout/Footer';
 import { OrderDrawer } from '../components/order/OrderDrawer';
 import { BranchDrawer } from '../components/order/BranchDrawer';
+import { FiltersDrawer } from '../components/order/FiltersDrawer';
+import { MenuDrawer } from '../components/order/MenuDrawer';
 import { FloatingWa } from '../components/order/FloatingWa';
-import { MobileOrderBar } from '../components/order/MobileOrderBar';
 import { StructuredData } from '../components/seo/StructuredData';
 
-/** Página pública: la tienda con catálogo y pedido por WhatsApp. */
+/** Storefront público: búsqueda y catálogo inmediatos, reserva por WhatsApp. */
 export function Storefront() {
   return (
     <StoreProvider>
-      <SvgSprite />
-      <LiveAnnouncer />
+      <div className="tienda">
+        <SvgSprite />
+        <LiveAnnouncer />
 
-      <TopBar />
-      <Header />
-      <BranchBar />
-      <CategoryNav />
+        <TopBar />
+        <Header />
+        <BranchBar />
 
-      <main>
-        <Banner />
-        <Steps />
-        <Catalog />
-        <Branches />
-        <Services />
-        <Location />
-      </main>
+        <main>
+          <Catalog />
+          <Branches />
+        </main>
 
-      <Footer />
+        <Footer />
 
-      {/* Capas flotantes / superpuestas */}
-      <OrderDrawer />
-      <BranchDrawer />
-      <ProductModal />
-      <PoliciesModal />
-      <FloatingWa />
-      <MobileOrderBar />
+        <OrderDrawer />
+        <BranchDrawer />
+        <FiltersDrawer />
+        <MenuDrawer />
+        <ProductModal />
+        <PoliciesModal />
+        <LocationGate />
+        <FloatingWa />
+        <MobileNav />
 
-      <StructuredData />
+        <StructuredData />
+      </div>
     </StoreProvider>
   );
 }

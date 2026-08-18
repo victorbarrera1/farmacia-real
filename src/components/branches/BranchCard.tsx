@@ -1,53 +1,31 @@
 import { Icon } from '../icons/Icon';
 import type { Sucursal } from '../../types';
-import { textoHoy } from '../../lib/horarios';
+import { estaAbierto, textoHoy } from '../../lib/horarios';
 
-/** Tarjeta de sucursal (seleccionable). Se usa en la grilla y en el cajón. */
-export function BranchCard({
-  suc,
-  elegida,
-  onSelect,
-}: {
-  suc: Sucursal;
-  elegida: boolean;
-  onSelect: () => void;
-}) {
+/** Tarjeta compacta de sucursal para selector y bloque institucional. */
+export function BranchCard({ suc, elegida, onSelect }: { suc: Sucursal; elegida: boolean; onSelect: () => void }) {
+  const abierto = estaAbierto(suc);
   return (
     <button
       type="button"
       aria-pressed={elegida}
       onClick={onSelect}
-      className={`group flex h-full flex-col gap-2 rounded-2xl border-2 p-5 text-left transition-colors ${
-        elegida
-          ? 'border-azul bg-azul-pale'
-          : 'border-transparent bg-fondo hover:border-azul-borde hover:bg-azul-pale'
+      className={`flex h-full min-h-[170px] flex-col gap-2 rounded-xl border p-4 text-left ${
+        elegida ? 'border-azul bg-azul-pale' : 'border-linea bg-white hover:border-azul-borde'
       }`}
     >
-      {elegida && (
-        <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-azul px-2.5 py-1 text-[0.72rem] font-extrabold text-white">
-          <Icon id="i-check" className="size-3" /> Elegida
-        </span>
-      )}
-      <span className="text-[0.72rem] font-extrabold uppercase tracking-[0.1em] text-azul">{suc.comuna}</span>
-      <span className="text-[1.1rem] font-extrabold leading-tight tracking-[-0.02em]">{suc.nombre}</span>
-
-      <span className="flex items-start gap-[9px] text-[0.88rem] leading-snug text-gris">
-        <Icon id="i-pin" className="mt-[3px] size-4 shrink-0 text-azul" />
-        {suc.direccion}
+      <span className="flex items-center justify-between gap-2">
+        <span className="text-[0.72rem] font-extrabold uppercase tracking-[0.08em] text-azul">{suc.comuna}</span>
+        {elegida && <span className="rounded-full bg-azul px-2 py-0.5 text-[0.7rem] font-bold text-white">Elegida</span>}
       </span>
-      <span className="flex items-start gap-[9px] text-[0.88rem] leading-snug text-gris">
-        <Icon id="i-reloj" className="mt-[3px] size-4 shrink-0 text-azul" />
-        {textoHoy(suc)}
+      <strong className="text-[1.02rem] font-extrabold leading-tight">{suc.nombre}</strong>
+      <span className="flex items-start gap-2 text-[0.84rem] leading-snug text-gris">
+        <Icon id="i-pin" className="mt-0.5 size-4 shrink-0 text-azul" /> {suc.direccion}
       </span>
-      <span className="flex items-start gap-[9px] text-[0.88rem] leading-snug text-gris">
-        <Icon id="i-tel" className="mt-[3px] size-4 shrink-0 text-azul" />
-        {suc.telefono}
+      <span className={`mt-auto flex items-center gap-2 text-[0.82rem] font-bold ${abierto ? 'text-ok' : 'text-gris'}`}>
+        <span className={`size-2 rounded-full ${abierto ? 'bg-ok' : 'bg-gris-2'}`} /> {textoHoy(suc)}
       </span>
-
-      <span className="mt-1 flex items-center gap-[7px] text-[0.9rem] font-bold text-azul">
-        {elegida ? 'Viendo este catálogo' : 'Ver el stock de este local'}
-        <Icon id="i-flecha" className="size-[15px] transition-transform group-hover:translate-x-1" />
-      </span>
+      <span className="font-bold text-azul">{elegida ? 'Viendo este local' : 'Ver stock de este local'}</span>
     </button>
   );
 }

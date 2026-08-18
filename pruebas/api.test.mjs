@@ -104,7 +104,7 @@ describe('GET /api/catalogo (público)', () => {
     const { estado, datos } = await llamar('/api/catalogo');
     assert.equal(estado, 200);
     assert.equal(datos.sucursales.length, 4);
-    assert.equal(datos.productos.length, 30);
+    assert.equal(datos.productos.length, 38);
     for (const prod of datos.productos) assert.equal(prod.st.length, 4);
     assert.equal(datos.persistente, true);
   });
@@ -276,7 +276,7 @@ describe('CRUD de sucursales e invariante de st[]', () => {
     const { estado, datos } = await llamar('/api/catalogo?accion=restaurar', { metodo: 'POST' });
     assert.equal(estado, 200);
     assert.equal(datos.sucursales.length, 4);
-    assert.equal(datos.productos.length, 30);
+    assert.equal(datos.productos.length, 38);
     for (const prod of datos.productos) assert.equal(prod.st.length, 4);
   });
 });
@@ -609,6 +609,6 @@ describe('PUT /api/catalogo (importación) sanea las filas sucias', () => {
 
   it('deja el catálogo de fábrica listo para las siguientes pruebas', async () => {
     const { datos } = await llamar('/api/catalogo?accion=restaurar', { metodo: 'POST' });
-    assert.equal(datos.productos.length, 30);
+    assert.equal(datos.productos.length, 38);
   });
 });
