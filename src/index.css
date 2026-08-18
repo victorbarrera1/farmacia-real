@@ -60,8 +60,8 @@
   --radius-2xl: 20px;
 
   /* --- Sombras --- */
-  --shadow-card: 0 1px 2px rgba(20, 28, 50, .05), 0 2px 8px rgba(20, 28, 50, .06);
-  --shadow-hi: 0 4px 14px rgba(20, 28, 50, .10), 0 12px 32px rgba(20, 28, 50, .12);
+  --shadow-card: 0 1px 3px rgba(17, 27, 57, 0.04), 0 4px 14px rgba(17, 27, 57, 0.06);
+  --shadow-hi: 0 12px 30px -4px rgba(17, 27, 57, 0.12), 0 6px 12px -4px rgba(17, 27, 57, 0.06);
 
   /* --- Tipografía --- */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -137,15 +137,17 @@
     justify-content: center;
     gap: 9px;
     min-height: 50px;
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: var(--radius-lg);
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
-    transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+    transition: all .22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
-  .btn:active { transform: translateY(1px); }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); }
+  .btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
   .btn svg { width: 21px; height: 21px; flex: none; }
   .btn-wa { background: var(--color-wa); color: var(--color-wa-texto); }
   .btn-wa:hover { background: var(--color-wa-osc); color: #fff; }
@@ -162,6 +164,11 @@
     background: var(--color-blanco);
     border: 1px solid var(--color-linea);
     border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
+    transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover {
+    box-shadow: var(--shadow-hi);
   }
 
   /* --- Campo de texto --- */

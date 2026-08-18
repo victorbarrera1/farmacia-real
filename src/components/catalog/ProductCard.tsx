@@ -3,7 +3,6 @@ import { Sellos } from '../common/Sello';
 import type { Producto } from '../../types';
 import { clp } from '../../lib/format';
 import { conDescuento, etStock, nivelDe, otrosLocalesCon, precioDe, stockDe } from '../../lib/stock';
-import { waLink, msgProducto } from '../../lib/whatsapp';
 import { useStore } from '../../store/StoreContext';
 import { useSucursalActual } from '../../hooks/useSucursalActual';
 
@@ -20,9 +19,7 @@ const PUNTO_NIVEL = {
 } as const;
 
 /**
- * Tarjeta de producto. Geometría armonizada:
- * tarjeta rounded-2xl (20px) + p-3 (12px) → imagen rounded-md (8px), concéntrica.
- * El bloque inferior usa mt-auto para que la acción quede alineada entre tarjetas.
+ * Tarjeta de producto con hover lift y micro-interacciones suaves.
  */
 export function ProductCard({ p }: { p: Producto }) {
   const { estado, dispatch, anunciar } = useStore();
@@ -47,47 +44,47 @@ export function ProductCard({ p }: { p: Producto }) {
   }
 
   return (
-    <article className="card flex h-full flex-col p-3 transition-[box-shadow,border-color] hover:border-azul-borde hover:shadow-hi">
-      {/* Imagen — radio concéntrico con la tarjeta (20 − 12 = 8) */}
-      <div className="relative mb-[11px]">
+    <article className="card group flex h-full flex-col p-3.5 transition-all duration-300 hover:-translate-y-1.5 hover:border-azul/30 hover:shadow-hi">
+      {/* Imagen — radio concéntrico con la tarjeta */}
+      <div className="relative mb-3">
         <button
           type="button"
           onClick={verFicha}
           aria-label={`Ver ficha de ${p.n}`}
-          className={`grid aspect-square w-full place-items-center overflow-hidden rounded-md bg-fondo ${
+          className={`grid aspect-square w-full place-items-center overflow-hidden rounded-xl bg-gradient-to-b from-fondo to-linea-2/50 p-2 transition-transform duration-300 group-hover:scale-[1.02] ${
             agotado ? 'opacity-50' : ''
           }`}
         >
-          <Ilu il={p.il} className="size-[74%]" />
+          <Ilu il={p.il} className="size-[78%] drop-shadow-sm transition-transform duration-300 group-hover:scale-105" />
         </button>
         <Sellos p={p} />
       </div>
 
       <span className="text-[0.7rem] font-bold uppercase tracking-[0.06em] text-gris-2">{p.lab}</span>
-      <h3 className="mt-[3px] text-[0.98rem] font-semibold leading-[1.32]">
+      <h3 className="mt-1 text-[0.98rem] font-bold leading-[1.32] text-texto">
         <button
           type="button"
           onClick={verFicha}
-          className="line-clamp-2 text-left hover:text-azul hover:underline"
+          className="line-clamp-2 text-left transition-colors duration-200 hover:text-azul"
         >
           {p.n}
         </button>
       </h3>
-      <p className="mt-[3px] text-[0.84rem] text-gris">{p.pres}</p>
+      <p className="mt-1 text-[0.84rem] text-gris">{p.pres}</p>
 
       {/* Bloque inferior alineado al fondo */}
-      <div className="mt-auto">
-        <span className={`mt-[9px] inline-flex items-center gap-1.5 text-[0.82rem] font-bold ${COLOR_NIVEL[nivel]}`}>
-          <span className={`size-[7px] shrink-0 rounded-full ${PUNTO_NIVEL[nivel]}`} />
+      <div className="mt-auto pt-3">
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[0.78rem] font-bold ${COLOR_NIVEL[nivel]} ${
+          nivel === 'alto' ? 'bg-ok-pale' : nivel === 'bajo' ? 'bg-ambar-pale' : 'bg-linea-2'
+        }`}>
+          <span className={`size-[6px] shrink-0 rounded-full ${PUNTO_NIVEL[nivel]}`} />
           {etStock(u)}
         </span>
 
-        <div className="mt-[9px]">
-          <b className="num block text-[1.42rem] font-extrabold leading-[1.1] tracking-[-0.03em]">
+        <div className="mt-2.5">
+          <b className="num block text-[1.45rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-azul-osc">
             {clp(precio)}
           </b>
-          {/* Precio propio del local: se muestra junto al de lista para que se
-              entienda de dónde sale, sin lenguaje promocional. */}
           {especial ? (
             <span className="text-[0.74rem] text-gris-2">
               precio en {suc.corto} · lista <s className="num">{clp(p.p)}</s>
@@ -99,145 +96,53 @@ export function ProductCard({ p }: { p: Producto }) {
           )}
         </div>
 
-        <Accion
-          agotado={agotado}
-          receta={!!p.rec}
-          enPedido={enPedido}
-          onAgregar={agregar}
-          onCambiar={cambiar}
-          waHref={waLink(msgProducto(p, suc), suc)}
-          nombre={p.n}
-        />
-
-        {p.rec && (
-          <p className="mt-2 text-[0.74rem] leading-snug text-gris-2">
-            Venta bajo receta médica: se valida en el local con el Químico Farmacéutico.
-          </p>
-        )}
-
-        {agotado && <OtrosLocales p={p} sucId={suc.id} onIr={(id, nombre) => { dispatch({ type: 'sucursal', id }); anunciar('Cambiaste a ' + nombre); }} />}
+        {/* Acciones de pedido */}
+        <div className="mt-3">
+          {agotado ? (
+            <div className="text-center">
+              <span className="text-[0.8rem] font-bold text-gris-2">Sin stock en este local</span>
+              {otrosLocalesCon(p, suc.id).length > 0 && (
+                <button
+                  type="button"
+                  onClick={verFicha}
+                  className="mt-1 block w-full text-[0.76rem] font-semibold text-azul hover:underline"
+                >
+                  Ver en otros locales
+                </button>
+              )}
+            </div>
+          ) : enPedido > 0 ? (
+            <div className="flex items-center justify-between rounded-lg border border-azul-borde bg-azul-pale p-1">
+              <button
+                type="button"
+                onClick={() => cambiar(-1)}
+                aria-label="Disminuir cantidad"
+                className="grid size-8 place-items-center rounded-md bg-white text-azul shadow-sm transition-transform active:scale-95 hover:bg-azul hover:text-white"
+              >
+                -
+              </button>
+              <span className="num text-[0.94rem] font-extrabold text-azul">{enPedido}</span>
+              <button
+                type="button"
+                onClick={() => cambiar(1)}
+                aria-label="Aumentar cantidad"
+                className="grid size-8 place-items-center rounded-md bg-white text-azul shadow-sm transition-transform active:scale-95 hover:bg-azul hover:text-white"
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={agregar}
+              className="btn btn-azul w-full !min-h-[42px] !py-2 !text-[0.92rem] shadow-sm hover:shadow-md"
+            >
+              <Icon id="i-bolsa" className="size-4" />
+              Reservar
+            </button>
+          )}
+        </div>
       </div>
     </article>
-  );
-}
-
-function Accion({
-  agotado, receta, enPedido, onAgregar, onCambiar, waHref, nombre,
-}: {
-  agotado: boolean;
-  /** Producto con venta bajo receta: acción neutral, sin énfasis promocional. */
-  receta: boolean;
-  enPedido: number;
-  onAgregar: () => void;
-  onCambiar: (delta: number) => void;
-  waHref: string;
-  nombre: string;
-}) {
-  if (agotado) {
-    return (
-      <a
-        href={waHref}
-        target="_blank"
-        rel="noopener"
-        className="mt-[11px] flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg bg-wa text-[0.95rem] font-bold text-wa-texto no-underline transition-colors hover:bg-wa-osc hover:text-white"
-      >
-        <Icon id="i-wa" className="size-[18px]" /> Consultar
-      </a>
-    );
-  }
-
-  if (enPedido > 0) {
-    return (
-      <div
-        role="group"
-        aria-label={`Cantidad de ${nombre}`}
-        className={`mt-[11px] flex min-h-[46px] items-center justify-between overflow-hidden rounded-lg border-2 ${
-          receta ? 'border-azul bg-azul-pale' : 'border-rojo bg-rojo-pale'
-        }`}
-      >
-        <button
-          type="button"
-          aria-label={`Quitar una unidad de ${nombre}`}
-          onClick={() => onCambiar(-1)}
-          className={`grid w-[46px] self-stretch place-items-center text-[1.35rem] font-bold leading-none ${
-            receta ? 'text-azul-osc hover:bg-azul-borde' : 'text-rojo-osc hover:bg-rojo-borde'
-          }`}
-        >
-          −
-        </button>
-        <span className={`num text-[1rem] font-extrabold ${receta ? 'text-azul-osc' : 'text-rojo-osc'}`}>
-          {enPedido} en tu pedido
-        </span>
-        <button
-          type="button"
-          aria-label={`Agregar otra unidad de ${nombre}`}
-          onClick={() => onCambiar(1)}
-          className={`grid w-[46px] self-stretch place-items-center text-[1.35rem] font-bold leading-none ${
-            receta ? 'text-azul-osc hover:bg-azul-borde' : 'text-rojo-osc hover:bg-rojo-borde'
-          }`}
-        >
-          +
-        </button>
-      </div>
-    );
-  }
-
-  /* Con receta: botón neutral (sin color promocional) y texto informativo. */
-  if (receta) {
-    return (
-      <button
-        type="button"
-        onClick={onAgregar}
-        className="mt-[11px] flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg border-2 border-azul bg-white text-[0.95rem] font-bold text-azul transition-colors hover:bg-azul-pale"
-      >
-        <Icon id="i-mas" className="size-[18px]" /> Reservar con receta
-      </button>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={onAgregar}
-      className="mt-[11px] flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg bg-rojo text-[0.95rem] font-bold text-white transition-colors hover:bg-rojo-osc"
-    >
-      <Icon id="i-mas" className="size-[18px]" /> Agregar
-    </button>
-  );
-}
-
-function OtrosLocales({
-  p, sucId, onIr,
-}: {
-  p: Producto;
-  sucId: string;
-  onIr: (id: string, nombre: string) => void;
-}) {
-  const disp = otrosLocalesCon(p, sucId);
-
-  return (
-    <div className="mt-2.5 border-t border-dashed border-linea pt-2.5">
-      {disp.length ? (
-        <>
-          <b className="mb-1.5 block text-[0.78rem] font-bold text-texto">Sí hay en:</b>
-          <div className="flex flex-wrap gap-1.5">
-            {disp.map((x) => (
-              <button
-                key={x.s.id}
-                type="button"
-                onClick={() => onIr(x.s.id, x.s.nombre)}
-                className="inline-flex min-h-11 items-center rounded-full border border-azul-borde bg-azul-pale px-3.5 py-[5px] text-left text-[0.8rem] font-bold text-azul-osc transition-colors hover:border-azul hover:bg-azul hover:text-white"
-              >
-                {x.s.corto || x.s.nombre}
-              </button>
-            ))}
-          </div>
-        </>
-      ) : (
-        <p className="text-[0.79rem] leading-snug text-gris-2">
-          No queda en ninguna sucursal. Escríbenos y te lo pedimos.
-        </p>
-      )}
-    </div>
   );
 }

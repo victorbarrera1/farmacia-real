@@ -1,0 +1,99 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{utf8}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+% Definición de colores elegantes
+\definecolor{primary}{HTML}{0052CC}
+\definecolor{secondary}{HTML}{172B4D}
+\definecolor{accent}{HTML}{00875A}
+\definecolor{lightgray}{HTML}{F4F5F7}
+
+% Configuración de títulos
+\titleformat{\section}{\large\bfseries\color{primary}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalfont\bfseries\color{secondary}}{}{0em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=primary
+}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \bfseries Propuesta Técnica y Comercial}\\[0.3em]
+    {\Large \color{primary} E-commerce e Infraestructura Digital a Medida}\\[0.5em]
+    {\small \textbf{Cliente:} Farmacia Real \quad|\quad \textbf{Fecha:} Agosto 2026 \quad|\quad \textbf{Preparado por:} Desarrollo Digital}
+\end{center}
+
+\vspace{0.5em}
+
+\section{Resumen Ejecutivo y Propuesta de Valor}
+Desarrollo de una plataforma de comercio electrónico independiente, de alta velocidad y sin costos fijos mensuales de software. A diferencia de soluciones como Shopify o Jumpseller, la solución propuesta otorga \textbf{propiedad total del código y datos}, eliminando mensualidades y operando sobre infraestructura serverless de nivel empresarial.
+
+\section{Diferenciación Técnica (Stack Ecosistema Cloudflare)}
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Servidor y Edge Compute:} Cloudflare Pages \& Workers (Ejecución en Santiago de Chile, 0 ms cold start).
+    \item \textbf{Base de Datos Serverless:} Cloudflare D1 (SQLite distribuido) con ORM Drizzle en TypeScript.
+    \item \textbf{Almacenamiento de Imágenes:} Cloudflare R2 (Almacenamiento ilimitado con 0 costo de transferencia).
+    \item \textbf{Seguridad y Rendimiento:} Certificado SSL/TLS automático, protección DDoS y CDN global incluidas.
+\end{itemize}
+
+\section{Módulos del Sistema}
+
+\subsection{1. Tienda Online (Front-Office Cliente)}
+\begin{itemize}[leftmargin=1.5em]
+    \item Catálogo optimizado para dispositivos móviles y motores de búsqueda (SEO).
+    \item Buscador rápido de medicamentos y productos por categoría.
+    \item Carrito de compras y flujo de pago (Checkout) integrado.
+    \item Notificaciones automáticas por correo al confirmar cada compra.
+\end{itemize}
+
+\subsection{2. Panel de Administración (Back-Office Dueño/Farmacia)}
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Gestión de Catálogo (CRUD):} Crear, editar precios, ajustar stock y cargar fotos fácilmente.
+    \item \textbf{Control de Pedidos:} Panel en tiempo real con estados (\textit{Pendiente}, \textit{Pagado}, \textit{Despachado}).
+    \item \textbf{Acceso Seguro:} Autenticación protegida por credenciales para el personal autorizado.
+\end{itemize}
+
+\section{Análisis de Costos: Plataforma SaaS vs. Solución Propia}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Concepto} & \textbf{SaaS Tradicional (Shopify / Jumpseller)} & \textbf{Solución A Medida (Propuesta)} \\
+\midrule
+Licencia / Software & \$30.000 -- \$70.000 CLP / mes & \textbf{\$0 CLP / mes} \\
+Servidor y Hosting & Incluido en mensualidad & \textbf{\$0 CLP / mes} (Plan Free Cloudflare) \\
+Dominio (.cl) & \$10.990 CLP / año & \textbf{\$10.990 CLP / año} (Único costo fijo) \\
+Comisión Pasarela & 3,19\% + IVA por venta & \textbf{3,19\% + IVA por venta} (Mercado Pago) \\
+Propiedad del Código & Nula (Arriendo de software) & \textbf{100\% Propiedad del Cliente} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Operativa de Pago (Integración Mercado Pago)}
+\begin{enumerate}[leftmargin=1.5em]
+    \item El cliente realiza la compra y paga con Débito (Webpay), Crédito o Mercado Pago.
+    \item Mercado Pago procesa la transacción de forma segura (Cumplimiento PCI-DSS).
+    \item La comisión se descuenta automáticamente al momento de la venta.
+    \item El monto neto se liquida directamente en la cuenta bancaria de la Farmacia.
+    \item \textbf{Principio Financiero:} Si un mes no existen ventas, el costo operativo es cero.
+\end{enumerate}
+
+\section{Plan de Implementación y Entregables}
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Fase 1 (Semana 1):} Levantamiento de requerimientos, arquitectura de datos y prototipo visual.
+    \item \textbf{Fase 2 (Semanas 2-3):} Programación backend (Workers + D1), tienda frontend e integración de pagos.
+    \item \textbf{Fase 3 (Semana 4):} Pruebas integrales de compra, capacitación al personal y despliegue a producción.
+\end{itemize}
+
+\end{document}

@@ -1,36 +1,34 @@
 import { Reveal } from '../common/Reveal';
 
 const PASOS = [
-  { n: 1, t: 'Elige tu sucursal', d: 'El catálogo muestra solo el stock disponible en ese local.' },
-  { n: 2, t: 'Arma tu reserva', d: 'Agrega los productos que necesitas. No hay pago en línea ni despacho a domicilio.' },
-  { n: 3, t: 'Retira y paga en el local', d: 'Confirmamos disponibilidad por WhatsApp, dejamos tu reserva lista y pagas al retirar en caja.' },
+  { n: '1', t: 'Elige tu sucursal', d: 'El catálogo muestra el stock actualizado disponible en ese local específico.' },
+  { n: '2', t: 'Arma tu reserva', d: 'Agrega los medicamentos y productos que necesitas en tu lista de pedido.' },
+  { n: '3', t: 'Retira y paga en local', d: 'Confirmamos por WhatsApp, dejamos tu paquete listo y pagas al retirar en caja.' },
 ] as const;
 
 /** Tres pasos: cómo funciona el sitio. */
 export function Steps() {
   return (
-    <section className="border-b border-linea bg-white">
+    <section className="relative -mt-3 z-10 py-6">
       <div className="env">
-        <ul className="grid grid-cols-1 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-3">
           {PASOS.map((p, i) => (
             <Reveal
-              as="li"
+              as="div"
               key={p.n}
-              delay={i * 0.12}
-              className={`flex items-start gap-3.5 py-5 md:py-6 md:pr-[22px] ${
-                i > 0 ? 'border-t border-linea-2 md:border-l md:border-t-0 md:border-linea md:pl-[22px]' : ''
-              }`}
+              delay={i * 0.1}
+              className="card group flex items-start gap-4 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-azul/25 hover:shadow-hi"
             >
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-azul-pale text-[1rem] font-extrabold text-azul">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-azul-pale to-azul-borde/40 text-[1.1rem] font-extrabold text-azul shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:bg-azul group-hover:text-white">
                 {p.n}
               </span>
               <div>
-                <h3 className="text-[1rem]">{p.t}</h3>
-                <p className="mt-[3px] text-[0.9rem] leading-relaxed text-gris">{p.d}</p>
+                <h3 className="text-[1.02rem] font-bold text-azul-osc transition-colors group-hover:text-azul">{p.t}</h3>
+                <p className="mt-1 text-[0.88rem] leading-relaxed text-gris">{p.d}</p>
               </div>
             </Reveal>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

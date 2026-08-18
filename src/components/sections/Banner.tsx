@@ -26,8 +26,8 @@ const PROMOS: { cat: string; et: string; d: string; ico: IconId }[] = [
 
 const BENEFICIOS = [
   { Ico: Store, et: 'Reserva tu stock y retíralo en el local' },
-  { Ico: Banknote, et: 'Pago presencial en caja, sin pagos en línea' },
-  { Ico: Snowflake, et: 'Cadena de frío para lo que la necesita' },
+  { Ico: Banknote, et: 'Pago presencial en caja, sin cobros en línea' },
+  { Ico: Snowflake, et: 'Cadena de frío garantizada' },
 ];
 
 /** Hero de promociones con CTAs y accesos directos por categoría. */
@@ -79,77 +79,86 @@ export function Banner() {
     <section
       ref={refHero}
       id="inicio"
-      className="relative overflow-hidden bg-azul text-white"
-      style={{ backgroundImage: 'linear-gradient(135deg, var(--color-azul) 0%, var(--color-azul-osc) 100%)' }}
+      className="relative overflow-hidden bg-azul text-white shadow-xl"
+      style={{
+        backgroundImage:
+          'radial-gradient(circle at 85% 15%, rgba(214, 32, 42, 0.22) 0%, transparent 45%), radial-gradient(circle at 10% 85%, rgba(51, 71, 138, 0.35) 0%, transparent 55%), linear-gradient(135deg, var(--color-azul) 0%, var(--color-azul-osc) 100%)'
+      }}
     >
-      {/* Cruces decorativas de marca */}
+      {/* Cruces decorativas de marca con resplandor sutil */}
       <span
         aria-hidden="true"
         data-cruz
-        className="absolute -right-[60px] -top-[70px] size-[290px] bg-white opacity-[0.07]"
+        className="pointer-events-none absolute -right-[60px] -top-[70px] size-[320px] bg-white opacity-[0.06] blur-[0.5px]"
         style={{ clipPath: CRUZ }}
       />
       <span
         aria-hidden="true"
         data-cruz
-        className="absolute -bottom-[120px] right-[210px] hidden size-[210px] bg-rojo opacity-[0.12] min-[1100px]:block"
+        className="pointer-events-none absolute -bottom-[120px] right-[230px] hidden size-[230px] bg-rojo opacity-[0.14] blur-[0.5px] min-[1100px]:block"
         style={{ clipPath: CRUZ }}
       />
 
-      <div className="env relative z-[2] grid grid-cols-1 items-center gap-7 py-[clamp(26px,5vw,46px)] min-[1000px]:grid-cols-[1.05fr_1fr]">
+      <div className="env relative z-[2] grid grid-cols-1 items-center gap-8 py-[clamp(32px,6vw,56px)] min-[1000px]:grid-cols-[1.05fr_1fr]">
         <div>
-          <span data-hero className="inline-flex items-center gap-2 rounded-full bg-rojo px-3 py-1 text-[0.78rem] font-extrabold uppercase tracking-[0.08em]">
+          <span data-hero className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-rojo/90 px-3.5 py-1.5 text-[0.8rem] font-extrabold uppercase tracking-[0.08em] shadow-sm backdrop-blur-sm">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-white" />
+            </span>
             <Icon id="i-cruz" className="size-3.5" /> Catálogo y reserva
           </span>
 
-          <h1 data-hero className="mt-3 max-w-[22ch]">Busca tu remedio y revisa si lo tenemos hoy</h1>
-          <p data-hero className="mt-[11px] max-w-[54ch] text-[1.03rem] text-white/90">
-            Cada local maneja su propio stock. Elige tu sucursal, arma tu lista y te reservamos los productos para
-            retiro en tienda. No es una tienda en línea: el pago y la entrega son presenciales en el local.
+          <h1 data-hero className="mt-3.5 max-w-[22ch] drop-shadow-sm">
+            Busca tu remedio y revisa si lo tenemos hoy
+          </h1>
+          <p data-hero className="mt-3 max-w-[54ch] text-[1.05rem] leading-relaxed text-white/90">
+            Cada local maneja su propio stock en tiempo real. Elige tu sucursal, arma tu lista y te reservamos los productos para
+            retiro en tienda. Sin pagos en línea: el pago y la entrega son presenciales en caja.
           </p>
 
-          <div data-hero className="mt-[22px] flex flex-wrap gap-2.5">
-            <a href="#catalogo" className="btn btn-blanco flex-auto min-w-[210px] sm:flex-none">
+          <div data-hero className="mt-6 flex flex-wrap gap-3">
+            <a href="#catalogo" className="btn btn-blanco flex-auto min-w-[210px] shadow-lg hover:shadow-xl sm:flex-none">
               <Icon id="i-lupa" /> Ver el catálogo
             </a>
             <a
               href={waLink(msgGeneral(suc), suc)}
               target="_blank"
               rel="noopener"
-              className="btn btn-wa flex-auto min-w-[210px] sm:flex-none"
+              className="btn btn-wa flex-auto min-w-[210px] shadow-lg hover:shadow-xl sm:flex-none"
             >
               <Icon id="i-wa" /> Consulta por WhatsApp
             </a>
           </div>
 
-          <ul data-hero className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+          <ul data-hero className="mt-6 flex flex-wrap gap-2.5">
             {BENEFICIOS.map(({ Ico, et }) => (
-              <li key={et} className="flex items-center gap-2 text-[0.86rem] text-white/85">
-                <Ico className="size-[17px] shrink-0 text-white/70" aria-hidden="true" /> {et}
+              <li key={et} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.08] px-3.5 py-1.5 text-[0.84rem] font-medium text-white/90 backdrop-blur-sm shadow-sm">
+                <Ico className="size-4 shrink-0 text-white/80" aria-hidden="true" /> {et}
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Accesos promocionales por categoría */}
-        <div data-hero-grid className="grid grid-cols-2 gap-2.5">
+        {/* Accesos promocionales por categoría con Glassmorphism */}
+        <div data-hero-grid className="grid grid-cols-2 gap-3.5">
           {PROMOS.map((p) => (
             <button
               key={p.cat}
               type="button"
               onClick={() => irA(p.cat, p.et)}
-              className="group flex flex-col gap-2 rounded-2xl bg-white/[0.11] p-4 text-left backdrop-blur-[2px] transition-colors hover:bg-white"
+              className="group flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.10] p-4.5 text-left shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-white hover:bg-white hover:shadow-2xl"
             >
-              <span className="grid size-11 place-items-center rounded-lg bg-white text-azul">
+              <span className="grid size-11 place-items-center rounded-xl bg-white text-azul shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:bg-azul group-hover:text-white">
                 <Icon id={p.ico} className="size-[22px]" />
               </span>
-              <b className="text-[1rem] font-extrabold leading-tight text-white group-hover:text-azul-osc">
+              <b className="text-[1.02rem] font-extrabold leading-tight text-white transition-colors duration-200 group-hover:text-azul-osc">
                 {p.et}
               </b>
-              <span className="text-[0.82rem] leading-snug text-white/80 group-hover:text-gris">{p.d}</span>
-              <span className="mt-auto flex items-center gap-1.5 pt-1 text-[0.84rem] font-bold text-white group-hover:text-rojo">
+              <span className="text-[0.82rem] leading-snug text-white/80 transition-colors duration-200 group-hover:text-gris">{p.d}</span>
+              <span className="mt-auto flex items-center gap-1.5 pt-1.5 text-[0.84rem] font-bold text-white transition-colors duration-200 group-hover:text-rojo">
                 Ver productos
-                <Icon id="i-flecha" className="size-[15px] transition-transform group-hover:translate-x-1" />
+                <Icon id="i-flecha" className="size-[15px] transition-transform duration-200 group-hover:translate-x-1.5" />
               </span>
             </button>
           ))}
