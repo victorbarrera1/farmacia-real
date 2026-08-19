@@ -28,8 +28,14 @@ const columnaPrecio = (s: Sucursal): string => `precio_${s.id}`;
 /** Visibilidad en la tienda de esa sucursal (`si` / `no`). */
 const columnaVisible = (s: Sucursal): string => `visible_${s.id}`;
 
+/** Un valor de texto que empieza así, Excel/Sheets lo puede interpretar como
+ *  fórmula al abrir el CSV ("CSV injection"). Solo aplica a texto libre
+ *  (nombre, laboratorio, descripción, etc.); nunca a números calculados. */
+const FORMULA_PELIGROSA = /^[=+\-@]/;
+
 const escapar = (v: string | number | undefined): string => {
-  const t = String(v ?? '');
+  let t = String(v ?? '');
+  if (typeof v === 'string' && FORMULA_PELIGROSA.test(t)) t = `'${t}`;
   return /[";\n\r,\t]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
 };
 

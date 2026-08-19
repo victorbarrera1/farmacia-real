@@ -1,7 +1,9 @@
 # API de Farmacias Real
 
-Backend mínimo en **Vercel Serverless Functions** (carpeta `api/`), en el mismo
-proyecto que la tienda. Sin frameworks ni SDKs: solo `fetch` y `node:crypto`.
+Backend mínimo en **Next.js Route Handlers** (`app/api/*/route.ts`), delgados
+adaptadores que delegan en la lógica pura de `src/server/api/*` y
+`src/server/_lib/*` — mismo proyecto que la tienda, sin frameworks ni SDKs
+extra: solo `fetch` y `node:crypto`.
 
 - **Base:** `https://<dominio>/api`
 - **Formato:** JSON en ambos sentidos. Toda respuesta trae `ok: true|false`.
@@ -36,10 +38,13 @@ También se aceptan `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`.
 
 ## Autenticación
 
-Un solo rol (el dueño / equipo de la farmacia).
+Dos roles: **admin general** (`ADMIN_PASS_HASH`) y **encargado de sucursal**
+(una clave por local en `SUCURSAL_PASS_HASHES`). El token lleva el alcance
+(`sucursalId` vacío = admin global) y cada handler lo vuelve a validar en el
+servidor (`exigirAcceso` / `exigirAdmin` en `src/server/_lib/auth.ts`).
 
-1. `POST /api/sesion` con la clave → el servidor la compara contra el hash
-   **scrypt** (`ADMIN_PASS_HASH`) con `timingSafeEqual`.
+1. `POST /api/sesion` con la clave (y `sucursalId` opcional) → el servidor la
+   compara contra el hash **scrypt** correspondiente con `timingSafeEqual`.
 2. Devuelve una cookie `fr_sesion=<vencimiento>.<HMAC-SHA256>`, con
    `HttpOnly; SameSite=Lax; Path=/; Max-Age=43200` (+ `Secure` en https).
    JavaScript de la página no puede leerla.
@@ -166,10 +171,10 @@ y `unidades` se recalculan en el servidor si no cuadran.
 ## Cómo se prueba
 
 ```bash
-npm run test:api      # 40 pruebas: auth, alcance por sucursal, CRUD, invariantes
+npm run test:api      # 44 pruebas: auth, alcance por sucursal, CRUD, invariantes
                       # de st/vis/px, pedidos, saneamiento de importación, límites
-npm run dev           # monta api/ en el dev server (scripts/vite-api-dev.ts)
-curl -s localhost:5173/api/estado | jq
+npm run dev           # next dev — tienda, panel y app/api/* juntos
+curl -s localhost:3000/api/estado | jq
 ```
 
 ## Pendientes conocidos

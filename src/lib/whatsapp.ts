@@ -1,7 +1,8 @@
 import type { Pedido, Producto, Sucursal } from '../types';
+import { INCLUIR_RECETA_EN_TOTAL_WHATSAPP } from '../config';
 import { clp } from './format';
 import { stockDe, otrosLocalesCon, precioDe } from './stock';
-import { itemsPedido, totalPedido } from './pedido';
+import { itemsPedido } from './pedido';
 
 /* ================================================================
    Mensajes de WhatsApp.
@@ -52,7 +53,17 @@ export function msgPedido(pedido: Pedido, suc: Sucursal): string {
     if (stockDe(p, suc.id) === 0) t += ` · ⚠️ aparece sin stock en la web`;
     t += `\n`;
   });
-  t += `\n💰 Total referencial: *${clp(totalPedido(pedido, suc.id))}* (se confirma en caja)\n`;
+  /* El total del mensaje puede excluir productos con receta (ver
+     INCLUIR_RECETA_EN_TOTAL_WHATSAPP en config.ts): así el mensaje nunca
+     revela su precio, ni siquiera agregado dentro del total. */
+  const hayReceta = items.some(({ p }) => p.rec);
+  const totalMostrado = items
+    .filter(({ p }) => INCLUIR_RECETA_EN_TOTAL_WHATSAPP || !p.rec)
+    .reduce((a, { precio, c }) => a + precio * c, 0);
+  const notaReceta = hayReceta && !INCLUIR_RECETA_EN_TOTAL_WHATSAPP
+    ? ' (no incluye productos con receta; se confirma en caja)'
+    : ' (se confirma en caja)';
+  t += `\n💰 Total referencial: *${clp(totalMostrado)}*${notaReceta}\n`;
   t += `📍 Retiro y pago presencial en la sucursal *${suc.nombre}*\n${suc.direccion}\n`;
 
   /* Si algo falta acá pero sí está en otro local, lo proponemos derecho. */

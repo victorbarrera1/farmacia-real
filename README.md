@@ -44,7 +44,7 @@ de la reserva.
 | | Con backend (recomendado) | Sin backend (solo desarrollo) |
 |---|---|---|
 | Datos | Redis/KV vía `api/` — compartidos entre dispositivos | localStorage del navegador que edita |
-| Clave del panel | Validada en el servidor (scrypt) + cookie `HttpOnly` firmada | Hash PBKDF2 en el navegador, solo si defines `VITE_ADMIN_PASS_HASH`/`_SALT` (**no es control de acceso real**) |
+| Clave del panel | Validada en el servidor (scrypt) + cookie `HttpOnly` firmada | Hash PBKDF2 en el navegador, solo si defines `NEXT_PUBLIC_ADMIN_PASS_HASH`/`_SALT` (**no es control de acceso real**) |
 | Roles | Admin general + una clave por sucursal | Solo admin |
 | Reservas | `POST /api/pedidos`: el dueño ve las de todas las visitas | Solo las de ese navegador |
 
@@ -78,8 +78,8 @@ La primera vez, el panel ofrece **subir al servidor** las ediciones que quedaron
 localStorage (o descartarlas).
 
 Para desarrollo local: copiar `.env.example` a `.env` (con `ALMACEN=archivo` los datos
-quedan en `.data/`). `npm run dev` monta las funciones de `api/` en el dev server
-(`scripts/vite-api-dev.ts`), así que no se necesita `vercel dev`.
+quedan en `.data/`). `npm run dev` (`next dev`) ya sirve tienda, panel y las rutas de
+`app/api/*` juntos, así que no se necesita `vercel dev`.
 
 > El hash del `ADMIN_PASS_HASH` usa `:` como separador (no `$`) porque los cargadores de
 > `.env` interpretan `$algo` como interpolación de variables.

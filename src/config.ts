@@ -40,6 +40,29 @@ export const CLAVE_LOCAL = {
 /** Duración de la sesión del panel, en horas (modo sin backend). */
 export const ADMIN_SESION_HORAS = 12;
 
+/**
+ * MENSAJE DE WHATSAPP — productos con receta
+ * ----------------------------------------------------------------
+ * El mensaje de reserva nunca muestra el precio POR LÍNEA de un producto
+ * con receta (`p.rec`) — eso ya lo hace `src/lib/whatsapp.ts`. Esta bandera
+ * decide si el precio de esos productos igual se suma dentro del
+ * "Total referencial" agregado del pedido:
+ *
+ *  - `false` (valor por defecto): el total excluye los productos con
+ *    receta; si el pedido tiene alguno, el mensaje aclara que ese valor
+ *    se confirma en caja. Es la opción consistente con lo que ya declara
+ *    el README ("sin precio en el mensaje de WhatsApp" para receta).
+ *  - `true`: el total sí incluye el valor de los productos con receta
+ *    (comportamiento anterior). Si el pedido tiene solo productos con
+ *    receta, el total terminaría revelando su precio igual.
+ *
+ * ⚠️ Confirmar con el dueño / asesor legal antes de publicar — ver
+ * PLAN-SUCURSALES.md. No afecta el total que se muestra en el carrito
+ * dentro del sitio (eso es para quien arma su propio pedido, no es
+ * publicidad hacia terceros).
+ */
+export const INCLUIR_RECETA_EN_TOTAL_WHATSAPP = false;
+
 /** Umbral de "stock bajo" (unidades) usado en tienda y panel. */
 export const UMBRAL_STOCK_BAJO = 8;
 
