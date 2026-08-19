@@ -64,7 +64,7 @@ export function ProductModal() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="tDetalle"
-        className="relative z-10 max-h-[92vh] w-full max-w-[860px] overflow-y-auto rounded-t-2xl border border-linea bg-white shadow-hi min-[720px]:rounded-2xl"
+        className="relative z-10 max-h-[90dvh] w-full max-w-[860px] overflow-y-auto overscroll-contain rounded-t-2xl border border-linea bg-white shadow-hi pb-[env(safe-area-inset-bottom,0px)] min-[720px]:max-h-[88vh] min-[720px]:rounded-2xl"
       >
         <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-linea bg-white px-5 py-3.5">
           <b className="mr-auto text-[0.78rem] font-extrabold uppercase tracking-[0.1em] text-gris-2">
@@ -159,7 +159,7 @@ export function ProductModal() {
                     −
                   </button>
                   <span className={`num text-[1rem] font-extrabold ${p.rec ? 'text-azul-osc' : 'text-rojo-osc'}`}>
-                    {enPedido} en tu pedido
+                    {enPedido} en tu cotización
                   </span>
                   <button
                     type="button"
@@ -177,7 +177,7 @@ export function ProductModal() {
                   type="button"
                   onClick={() => {
                     dispatch({ type: 'agregar', id: p.id });
-                    anunciar(`${p.n} agregado a tu pedido.`);
+                    anunciar(`${p.n} agregado a tu cotización.`);
                   }}
                   className={
                     p.rec
@@ -185,7 +185,7 @@ export function ProductModal() {
                       : 'btn flex-auto bg-rojo text-white hover:bg-rojo-osc'
                   }
                 >
-                  <Icon id="i-mas" /> {p.rec ? 'Reservar con receta' : 'Agregar al pedido'}
+                  <Icon id="i-mas" /> {p.rec ? 'Cotizar con receta' : 'Agregar a cotización'}
                 </button>
               )}
               <button type="button" onClick={cerrar} className="btn btn-borde">
@@ -194,10 +194,10 @@ export function ProductModal() {
             </div>
 
             <p className="mt-3 text-[0.8rem] leading-relaxed text-gris-2">
-              La reserva no es una compra en línea: confirma disponibilidad y el pago se realiza presencialmente en
+              La cotización no es una compra en línea: confirma disponibilidad y el pago se realiza presencialmente en
               caja al retirar.{' '}
               <PoliciesLink className="font-bold text-azul underline hover:text-azul-osc">
-                Ver políticas de reserva
+                Ver condiciones del catálogo
               </PoliciesLink>
             </p>
 

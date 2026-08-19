@@ -45,7 +45,7 @@ export function MenuDrawer() {
           <Store className="size-[19px] shrink-0" aria-hidden="true" /><span className="min-w-0 flex-1 truncate">Cambiar de sucursal</span><MapPin className="size-4" aria-hidden="true" />
         </button>
         <a href="#sucursales" onClick={() => dispatch({ type: 'cerrarCajones' })} className="mt-1 flex min-h-12 items-center rounded-lg px-3 font-semibold text-texto no-underline hover:bg-fondo">Nuestras sucursales</a>
-        <PoliciesLink className="flex min-h-12 w-full items-center rounded-lg px-3 text-left font-semibold text-texto hover:bg-fondo">Políticas de reserva y términos</PoliciesLink>
+        <PoliciesLink className="flex min-h-12 w-full items-center rounded-lg px-3 text-left font-semibold text-texto hover:bg-fondo">Condiciones del catálogo y términos</PoliciesLink>
         <a href={waLink(msgGeneral(suc), suc)} target="_blank" rel="noopener" className="btn btn-wa btn-ancho mt-2"><Icon id="i-wa" /> Consultar por WhatsApp</a>
       </div>
     </Drawer>

@@ -72,7 +72,7 @@ export function LocationGate() {
   }
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto min-[560px]:items-center min-[560px]:p-6">
+    <div className="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-0 min-[560px]:items-center min-[560px]:p-6">
       <div className="fixed inset-0 bg-azul-osc/70 backdrop-blur-[2px]" aria-hidden="true" />
 
       <div
@@ -82,21 +82,24 @@ export function LocationGate() {
         aria-labelledby="tGate"
         aria-describedby="dGate"
         tabIndex={-1}
-        className="relative z-10 w-full max-w-[560px] overflow-hidden rounded-t-2xl bg-white shadow-hi min-[560px]:rounded-2xl"
+        className="relative z-10 flex max-h-[90dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-2xl bg-white shadow-hi min-[560px]:max-h-[85vh] min-[560px]:rounded-2xl"
       >
         {/* Encabezado de marca */}
-        <div className="bg-azul px-6 pb-5 pt-6 text-white">
+        <div className="shrink-0 bg-azul px-5 pb-4 pt-3.5 text-white min-[560px]:px-6 min-[560px]:pb-5 min-[560px]:pt-6">
+          <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/25 min-[560px]:hidden" aria-hidden="true" />
           <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[0.74rem] font-extrabold uppercase tracking-[0.08em]">
             <Store className="size-3.5" aria-hidden="true" /> Retiro en tienda
           </span>
-          <h2 id="tGate" className="mt-3 text-white">¿En qué local vas a retirar?</h2>
-          <p id="dGate" className="mt-2 text-[0.95rem] leading-snug text-white/85">
+          <h2 id="tGate" className="mt-2.5 text-[1.28rem] font-extrabold leading-snug text-white min-[560px]:mt-3 min-[560px]:text-[1.5rem]">
+            ¿En qué local vas a retirar?
+          </h2>
+          <p id="dGate" className="mt-1.5 text-[0.88rem] leading-snug text-white/85 min-[560px]:mt-2 min-[560px]:text-[0.95rem]">
             Cada sucursal tiene su propio stock y sus propios precios. Elige una y te mostramos solo lo que hay
             ahí hoy. Puedes cambiarla cuando quieras.
           </p>
         </div>
 
-        <div className="px-5 py-4 min-[560px]:px-6">
+        <div className="flex-1 overflow-y-auto px-5 py-4 overscroll-contain min-[560px]:px-6 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]">
           {/* Comuna */}
           {comunas.length > 1 && (
             <>
@@ -172,7 +175,7 @@ export function LocationGate() {
           </button>
 
           <p className="mt-3 text-center text-[0.8rem] leading-snug text-gris-2">
-            Catálogo informativo con reserva por WhatsApp: no hay pago en línea ni despacho a domicilio, el pago y la
+            Catálogo informativo con cotización por WhatsApp: no hay pago en línea ni despacho a domicilio, el pago y la
             entrega son presenciales en el local.
           </p>
         </div>

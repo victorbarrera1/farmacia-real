@@ -5,7 +5,7 @@ import { itemsPedido, totalPedido } from './pedido';
 
 /* ================================================================
    Mensajes de WhatsApp.
-   El sitio NO vende en línea: acá se arma una *reserva* de stock para
+   El sitio NO vende en línea: acá se arma una *cotización* de stock para
    retiro presencial. Los textos lo dicen explícitamente para no inducir
    a error (pago y entrega presenciales; receta validada en el local).
    ================================================================ */
@@ -30,21 +30,21 @@ export function msgProducto(p: Producto, suc: Sucursal): string {
   t += `\n`;
   if (p.rec) t += `📄 Sé que requiere receta médica y la presento en el local.\n`;
   t += `\n📍 Sucursal: *${suc.nombre}* (${suc.direccion})\n`;
-  if (u > 0) return t + `\n¿Me lo pueden reservar para retirarlo y pagarlo en el local?`;
+  if (u > 0) return t + `\n¿Me pueden confirmar disponibilidad y precio para retirarlo en el local?`;
 
   const disp = otrosLocalesCon(p, suc.id);
   t += disp.length
-    ? `\nEn la web aparece sin stock acá, pero sí en ${disp.map((x) => x.s.nombre).join(' y ')}.\n¿Me lo pueden apartar allá o traerlo a ${suc.nombre}?`
-    : `\nEn la web aparece sin stock. ¿Cuándo les llega o me lo pueden pedir?`;
+    ? `\nEn la web aparece sin stock acá, pero sí en ${disp.map((x) => x.s.nombre).join(' y ')}.\n¿Tienen disponibilidad allá o pueden consultar si lo traen a ${suc.nombre}?`
+    : `\nEn la web aparece sin stock. ¿Cuándo les llega o me lo pueden consultar?`;
   return t;
 }
 
-/** Mensaje con la reserva completa (cotización para retiro en tienda). */
+/** Mensaje con la cotización completa para retiro en tienda. */
 export function msgPedido(pedido: Pedido, suc: Sucursal): string {
   const items = itemsPedido(pedido, suc.id);
   if (!items.length) return msgGeneral(suc);
 
-  let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero *cotizar y reservar* estos productos para retirarlos en el local:\n\n`;
+  let t = `¡Hola Farmacias Real! 👋\nVi su página web y quiero *cotizar* estos productos para retirarlos en el local:\n\n`;
   items.forEach(({ p, c, precio }) => {
     t += `• *${p.n}* — ${p.pres}\n  ${c} ${c === 1 ? 'unidad' : 'unidades'}`;
     if (!p.rec) t += ` · ${clp(precio * c)}`;
@@ -62,7 +62,7 @@ export function msgPedido(pedido: Pedido, suc: Sucursal): string {
   if (enOtro.length) {
     t += `\nSegún la web, esto no está en ${suc.corto} pero sí en otro local:\n`;
     enOtro.forEach((linea) => { t += `– ${linea}\n`; });
-    t += `¿Me lo apartan allá o lo traen a ${suc.corto}?\n`;
+    t += `¿Tienen disponibilidad allá o se puede consultar para ${suc.corto}?\n`;
   }
 
   if (items.some(({ p }) => p.rec)) {

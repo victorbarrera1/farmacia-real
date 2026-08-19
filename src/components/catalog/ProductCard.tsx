@@ -40,7 +40,7 @@ export function ProductCard({ p }: { p: Producto }) {
 
   function agregar() {
     dispatch({ type: 'agregar', id: p.id });
-    anunciar(`${p.n} agregado a tu pedido.`);
+    anunciar(`${p.n} agregado a tu cotización.`);
   }
   function cambiar(delta: number) {
     dispatch({ type: 'cambiar', id: p.id, delta });
@@ -179,7 +179,7 @@ function Accion({
         </button>
         <span className={`num text-[1rem] font-extrabold ${receta ? 'text-azul-osc' : 'text-rojo-osc'}`}>
           {enPedido}
-          <span className="sr-only"> en tu pedido</span>
+          <span className="sr-only"> en tu cotización</span>
         </span>
         <button
           type="button"
@@ -203,7 +203,7 @@ function Accion({
         onClick={onAgregar}
         className="mt-2.5 flex min-h-[46px] w-full items-center justify-center gap-2 rounded-full border-2 border-azul bg-white text-[0.94rem] font-bold text-azul hover:bg-azul-pale"
       >
-        <Plus className="size-[18px]" aria-hidden="true" /> Reservar con receta
+        <Plus className="size-[18px]" aria-hidden="true" /> Cotizar con receta
       </button>
     );
   }
@@ -214,7 +214,7 @@ function Accion({
       onClick={onAgregar}
       className="mt-2.5 flex min-h-[46px] w-full items-center justify-center gap-2 rounded-full bg-rojo text-[0.94rem] font-bold text-white hover:bg-rojo-osc"
     >
-      <ShoppingBag className="size-[17px]" aria-hidden="true" /> Agregar
+      <ShoppingBag className="size-[17px]" aria-hidden="true" /> Cotizar
     </button>
   );
 }

@@ -97,7 +97,7 @@ export function grafoJSONLD(): Record<string, unknown> {
         inLanguage: 'es-CL',
         publisher: { '@id': `${SITIO_URL}/#organizacion` },
         description:
-          'Catálogo informativo con reserva de stock por WhatsApp y retiro presencial en las sucursales de Farmacias Real.',
+          'Catálogo informativo con cotización por WhatsApp y retiro presencial en las sucursales de Farmacias Real.',
       },
       ...farmacias,
     ],

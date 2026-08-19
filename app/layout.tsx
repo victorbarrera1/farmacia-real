@@ -13,9 +13,9 @@ import { ClientInit } from './ClientInit';
    solo lo reemplaza en runtime si el panel edita las sucursales.
    ================================================================ */
 
-const TITULO = 'Farmacias Real · Catálogo y reserva por WhatsApp en Independencia y Ñuñoa';
+const TITULO = 'Farmacias Real · Catálogo y cotización por WhatsApp en Independencia y Ñuñoa';
 const DESCRIPCION =
-  'Farmacias Real: 4 sucursales en Independencia y Ñuñoa. Busca tu remedio, revisa el stock de tu local y resérvalo por WhatsApp. Retiro y pago presencial en la farmacia, sin venta en línea.';
+  'Farmacias Real: 4 sucursales en Independencia y Ñuñoa. Busca tu remedio, revisa el stock de tu local y cotízalo por WhatsApp. Retiro y pago presencial en la farmacia, sin venta en línea.';
 const OG_IMAGEN = `${SITIO_URL}/og-farmacias-real.png`;
 
 export const metadata: Metadata = {
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'Farmacias Real',
     url: `${SITIO_URL}/`,
-    title: 'Farmacias Real · Catálogo y reserva por WhatsApp',
+    title: 'Farmacias Real · Catálogo y cotización por WhatsApp',
     description:
-      '4 sucursales en Independencia y Ñuñoa. Revisa el stock de tu local y reserva por WhatsApp. Retiro y pago presencial en la farmacia.',
+      '4 sucursales en Independencia y Ñuñoa. Revisa el stock de tu local y cotiza por WhatsApp. Retiro y pago presencial en la farmacia.',
     locale: 'es_CL',
     images: [
       {
@@ -49,15 +49,15 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         type: 'image/png',
-        alt: 'Farmacias Real — catálogo con stock por sucursal y reserva por WhatsApp',
+        alt: 'Farmacias Real — catálogo con stock por sucursal y cotización por WhatsApp',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Farmacias Real · Catálogo y reserva por WhatsApp',
+    title: 'Farmacias Real · Catálogo y cotización por WhatsApp',
     description:
-      '4 sucursales en Independencia y Ñuñoa. Revisa el stock de tu local y reserva por WhatsApp. Retiro y pago presencial.',
+      '4 sucursales en Independencia y Ñuñoa. Revisa el stock de tu local y cotiza por WhatsApp. Retiro y pago presencial.',
     images: [OG_IMAGEN],
   },
   icons: {
@@ -68,6 +68,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#1B2A55',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

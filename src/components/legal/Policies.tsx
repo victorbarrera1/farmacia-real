@@ -4,12 +4,12 @@ import { Icon } from '../icons/Icon';
 import { useStore } from '../../store/StoreContext';
 
 /* ================================================================
-   POLÍTICAS DE RESERVA Y TÉRMINOS DEL SERVICIO
+   CONDICIONES DEL CATÁLOGO Y TÉRMINOS DEL SERVICIO
    ----------------------------------------------------------------
    Cumplimiento normativa sanitaria chilena (Código Sanitario,
    DS 466/84 sobre farmacias, ISP / MINSAL):
 
-   · La web es un catálogo informativo con reserva de stock, NO una
+   · La web es un catálogo informativo con cotización de stock, NO una
      tienda de venta a distancia: no hay pasarela de pago, ni carrito
      con checkout, ni despacho a domicilio.
    · El pago y la entrega son presenciales en el local autorizado.
@@ -18,14 +18,14 @@ import { useStore } from '../../store/StoreContext';
    · La información de productos con receta es neutral e informativa:
      sin publicidad inductiva, ofertas ni promociones (Art. 100).
 
-   Accesible desde el pie de página y desde el resumen de la reserva.
+   Accesible desde el pie de página y desde el resumen de cotización.
    ================================================================ */
 
 const PUNTOS = [
   {
     Ico: PackageSearch,
     t: 'Naturaleza de la plataforma',
-    d: 'Este sitio es un catálogo de información de productos y de reserva previa de stock en la sucursal que elijas. No constituye una tienda de venta en línea: no se realizan transacciones ni se perfeccionan ventas a través de la web. Los precios publicados son referenciales e informativos, y pueden variar sin previo aviso.',
+    d: 'Este sitio es un catálogo de información de productos y de cotización previa en la sucursal que elijas. No constituye una tienda de venta en línea: no se realizan transacciones ni se perfeccionan ventas a través de la web. Los precios publicados son referenciales e informativos, y pueden variar sin previo aviso.',
   },
   {
     Ico: Banknote,
@@ -35,12 +35,12 @@ const PUNTOS = [
   {
     Ico: FileText,
     t: 'Validación de recetas médicas',
-    d: 'La venta de medicamentos sujetos a la condición de venta bajo receta médica está condicionada a la presentación y verificación presencial de la receta —física o electrónica— por parte del Químico Farmacéutico de turno en la sucursal. Sin receta válida, la reserva no se puede completar.',
+    d: 'La venta de medicamentos sujetos a la condición de venta bajo receta médica está condicionada a la presentación y verificación presencial de la receta —física o electrónica— por parte del Químico Farmacéutico de turno en la sucursal. Sin receta válida, no se puede realizar la entrega.',
   },
   {
     Ico: BadgeCheck,
-    t: 'Disponibilidad de stock',
-    d: 'La reserva por WhatsApp confirma una disponibilidad estimada según la información del sistema. El stock final se consolida al momento de la atención en el mostrador, por lo que puede variar respecto a lo mostrado en el sitio.',
+    t: 'Disponibilidad y stock',
+    d: 'La cotización por WhatsApp consulta una disponibilidad estimada según la información del sistema. El stock final y precio se confirman al momento de la atención presencial en el mostrador.',
   },
   {
     Ico: Store,
@@ -49,7 +49,7 @@ const PUNTOS = [
   },
 ];
 
-/** Modal con las políticas de reserva y términos del servicio. */
+/** Modal con las condiciones del catálogo y términos del servicio. */
 export function PoliciesModal() {
   const { estado, dispatch } = useStore();
   const refCerrar = useRef<HTMLButtonElement>(null);
@@ -73,14 +73,14 @@ export function PoliciesModal() {
   const cerrar = () => dispatch({ type: 'cerrarLegal' });
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-end justify-center overflow-y-auto min-[720px]:items-center min-[720px]:p-6">
+    <div className="fixed inset-0 z-[110] flex items-end justify-center overflow-y-auto p-0 min-[720px]:items-center min-[720px]:p-6">
       <div className="fixed inset-0 bg-azul-osc/55" onClick={cerrar} aria-hidden="true" />
 
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="tLegal"
-        className="relative z-10 max-h-[92vh] w-full max-w-[760px] overflow-y-auto rounded-t-2xl border border-linea bg-white shadow-hi min-[720px]:rounded-2xl"
+        className="relative z-10 max-h-[90dvh] w-full max-w-[760px] overflow-y-auto overscroll-contain rounded-t-2xl border border-linea bg-white shadow-hi pb-[env(safe-area-inset-bottom,0px)] min-[720px]:max-h-[88vh] min-[720px]:rounded-2xl"
       >
         <div className="sticky top-0 z-10 flex items-start gap-3 border-b border-linea bg-white px-5 py-4">
           <div className="mr-auto">
@@ -88,13 +88,13 @@ export function PoliciesModal() {
               Retiro en tienda y condiciones
             </h2>
             <p className="mt-0.5 text-[0.85rem] text-gris">
-              Políticas de reserva y términos del servicio
+              Condiciones del catálogo y términos del servicio
             </p>
           </div>
           <button
             ref={refCerrar}
             type="button"
-            aria-label="Cerrar políticas"
+            aria-label="Cerrar condiciones"
             onClick={cerrar}
             className="grid size-11 shrink-0 place-items-center rounded-full bg-fondo text-gris hover:bg-linea hover:text-texto"
           >
@@ -106,8 +106,8 @@ export function PoliciesModal() {
           <div className="flex items-start gap-3 rounded-xl border border-azul-borde bg-azul-pale px-4 py-3.5 text-[0.9rem] leading-relaxed text-azul-osc">
             <Icon id="i-alerta" className="mt-0.5 size-[19px] shrink-0 text-azul" />
             <p>
-              <b className="font-extrabold">Catálogo informativo con reserva.</b> Farmacias Real usa este sitio para
-              informar productos y reservar stock por WhatsApp. <b className="font-extrabold">No hay pago en línea ni
+              <b className="font-extrabold">Catálogo informativo con cotización.</b> Farmacias Real usa este sitio para
+              informar productos y cotizar por WhatsApp. <b className="font-extrabold">No hay pago en línea ni
               despacho a domicilio</b>: pagas y retiras presencialmente en el local.
             </p>
           </div>
@@ -150,7 +150,7 @@ export function PoliciesLink({ className = '', children }: { className?: string;
   const { dispatch } = useStore();
   return (
     <button type="button" onClick={() => dispatch({ type: 'abrirLegal' })} className={className}>
-      {children ?? 'Políticas de reserva y términos'}
+      {children ?? 'Condiciones del catálogo y términos'}
     </button>
   );
 }

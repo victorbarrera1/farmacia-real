@@ -41,12 +41,12 @@ export function Header() {
             <BranchPicker className="hidden min-[1000px]:flex" />
             <button
               type="button"
-              aria-label={n ? `Ver mi pedido, ${n} productos` : 'Ver mi pedido'}
+              aria-label={n ? `Ver mi cotización, ${n} productos` : 'Ver mi cotización'}
               onClick={() => dispatch({ type: 'abrirCajon', cajon: 'pedido' })}
               className="relative flex h-11 items-center gap-2 rounded-full bg-rojo px-3.5 text-[0.94rem] font-bold text-white hover:bg-rojo-osc min-[560px]:px-5"
             >
               <ShoppingBag className="size-5" aria-hidden="true" />
-              <span className="hidden min-[560px]:inline">Mi pedido</span>
+              <span className="hidden min-[560px]:inline">Mi cotización</span>
               {n > 0 && (
                 <>
                   <span className="num grid h-[23px] min-w-[23px] place-items-center rounded-full bg-white px-1.5 text-[0.78rem] font-extrabold text-rojo">

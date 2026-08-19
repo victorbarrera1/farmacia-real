@@ -241,12 +241,12 @@
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: 88vh;
+    max-height: min(88dvh, 88vh);
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     transform: translateY(102%);
     box-shadow: var(--shadow-hi);
     padding-bottom: env(safe-area-inset-bottom);
-    touch-action: none;
+    touch-action: pan-y;
   }
   .cajon[data-abierto="si"] { transform: translateY(0); }
   @media (min-width: 720px) {

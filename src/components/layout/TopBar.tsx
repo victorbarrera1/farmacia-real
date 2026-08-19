@@ -14,7 +14,7 @@ export function TopBar() {
     <div className="bg-azul-osc text-[0.83rem] text-white">
       <div className="env flex h-9 items-center gap-5 overflow-x-auto sin-barra">
         <span className="flex items-center gap-[7px] whitespace-nowrap text-white/90">
-          <Store className="size-3.5 opacity-85" aria-hidden="true" /> Reserva y retira en tu local
+          <Store className="size-3.5 opacity-85" aria-hidden="true" /> Cotiza y retira en tu local
         </span>
         <span className="hidden items-center gap-[7px] whitespace-nowrap text-white/90 min-[620px]:flex">
           <Banknote className="size-3.5 opacity-85" aria-hidden="true" /> Pago presencial en caja

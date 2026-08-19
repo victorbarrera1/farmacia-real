@@ -24,6 +24,10 @@ npm-debug.log*
 
 # datos del driver de archivos de la API (desarrollo local)
 .data
+tmp/
+output/
+__pycache__/
+*.pyc
 
 # variables de entorno (usar .env.example como plantilla)
 .env

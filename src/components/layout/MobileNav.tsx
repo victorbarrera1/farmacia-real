@@ -53,7 +53,7 @@ export function MobileNav() {
       <button
         type="button"
         aria-haspopup="dialog"
-        aria-label={n ? `Ver mi pedido, ${n} productos` : 'Ver mi pedido'}
+        aria-label={n ? `Ver mi cotización, ${n} productos` : 'Ver mi cotización'}
         data-activo={estado.cajon === 'pedido' ? 'si' : 'no'}
         className="nav-abajo-item"
         onClick={() => dispatch({ type: 'abrirCajon', cajon: 'pedido' })}
@@ -66,7 +66,7 @@ export function MobileNav() {
             </span>
           )}
         </span>
-        {n > 0 ? <span className="num">{clp(totalPedido(estado.pedido, suc.id))}</span> : 'Mi pedido'}
+        {n > 0 ? <span className="num">{clp(totalPedido(estado.pedido, suc.id))}</span> : 'Mi cotización'}
       </button>
     </nav>
   );

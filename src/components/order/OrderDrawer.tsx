@@ -19,7 +19,7 @@ export function OrderDrawer() {
   const agotados = items.filter(({ p }) => stockDe(p, suc.id) === 0);
 
   const subtitulo = n
-    ? `${n} ${n === 1 ? 'producto' : 'productos'} · reserva para retiro en ${suc.nombre}`
+    ? `${n} ${n === 1 ? 'producto' : 'productos'} · cotización para retiro en ${suc.nombre}`
     : 'Aún no agregas productos';
 
   const footer = (
@@ -29,7 +29,7 @@ export function OrderDrawer() {
         <span className="num text-[1.7rem] font-extrabold tracking-[-0.03em]">{clp(totalPedido(estado.pedido, suc.id))}</span>
       </div>
       <p className="mb-3 text-[0.8rem] leading-normal text-gris-2">
-        Esto no es una compra ni un pago en línea: es una <b className="font-bold text-gris">reserva de stock</b>. El
+        Esto no es una compra ni un pago en línea: es una <b className="font-bold text-gris">cotización de catálogo</b>. El
         pago y la entrega son presenciales en el local. Te respondemos por WhatsApp confirmando disponibilidad y valor
         final.
       </p>
@@ -40,7 +40,7 @@ export function OrderDrawer() {
         onClick={() => registrarPedido(items, suc)}
         className="btn btn-wa btn-ancho"
       >
-        <Icon id="i-wa" /> Cotizar / Reservar por WhatsApp
+        <Icon id="i-wa" /> Cotizar por WhatsApp
       </a>
       <p className="mt-3 flex items-center justify-center gap-2 text-[0.85rem] text-gris">
         <Icon id="i-pin" className="size-[15px] shrink-0 text-azul" /> Retiras en{' '}
@@ -48,14 +48,14 @@ export function OrderDrawer() {
       </p>
       <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4">
         <PoliciesLink className="min-h-11 px-2 text-[0.83rem] font-bold text-azul underline hover:text-azul-osc">
-          Políticas de reserva y términos
+          Condiciones del catálogo y términos
         </PoliciesLink>
         <button
           type="button"
           onClick={() => dispatch({ type: 'vaciarPedido' })}
           className="min-h-11 px-2 text-[0.83rem] font-semibold text-gris hover:text-rojo hover:underline"
         >
-          Vaciar reserva
+          Vaciar cotización
         </button>
       </div>
     </>
@@ -65,18 +65,18 @@ export function OrderDrawer() {
     <Drawer
       abierto={estado.cajon === 'pedido'}
       onClose={() => dispatch({ type: 'cerrarCajones' })}
-      titulo="Mi pedido"
+      titulo="Mi cotización"
       subtitulo={subtitulo}
       labelId="tPed"
-      cerrarLabel="Cerrar pedido"
+      cerrarLabel="Cerrar cotización"
       footer={items.length ? footer : undefined}
     >
       {!items.length ? (
         <div className="px-4 py-14 text-center text-gris">
           <Icon id="i-bolsa" className="mx-auto mb-3.5 size-[52px] text-linea" />
-          <b className="mb-[7px] block text-[1.1rem] font-extrabold text-texto">Tu pedido está vacío</b>
+          <b className="mb-[7px] block text-[1.1rem] font-extrabold text-texto">Tu cotización está vacía</b>
           <p className="mx-auto max-w-[34ch] text-[0.92rem]">
-            Agrega productos del catálogo y te los reservamos en el local que elijas. No pagas nada aquí: el pago y la
+            Agrega productos del catálogo y los cotizas para el local que elijas. No pagas nada aquí: el pago y la
             entrega son presenciales.
           </p>
         </div>

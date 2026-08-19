@@ -44,7 +44,7 @@ export function Catalog() {
               </h1>
               <p className="mt-1 text-[0.95rem] text-gris">
                 {titulo} disponibles para retiro en <b className="font-bold text-texto">{suc.nombre}</b>.
-                Busca, filtra y arma tu reserva para enviarla por WhatsApp.
+                Busca, filtra y cotiza por WhatsApp.
               </p>
             </div>
 
